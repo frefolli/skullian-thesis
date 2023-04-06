@@ -1,0 +1,95 @@
+\chapter{Tree Sitter}
+
+\textbf{Tree Sitter} e' un parser generator molto efficiente quando si tratta di rianalizzare un file che ha subito delle modifiche. Infatti e' in grado generare in maniera incrementale l'albero risultante contanto solo delle modifiche subite dal file in questione.
+Oltre a questo evidente vantaggio a differenza dei suoi concorrenti principali possiede anche dei language binding molto convenienti.
+
+\section{In Rust}
+
+Per utilizzare \textbf{tree sitter} in \textbf{rust} prima di tutto e' necessario importare le necessarie dipendenze. Nel file Cargo.toml:
+
+\begin{verbatim}
+  [dependencies]
+  tree-sitter = "*"
+  tree-sitter-java = "*"
+\end{verbatim}
+
+Se si vuole utilizzare il parser tree sitter per il java per esempio si inserisca tra le dipendenze \textbf{tree-sitter-java}. In generale per un linguaggio \textbf{x} e' necessario importare ed utilizzare la libreria \textbf{tree-sitter-x}. La lista dei linguaggi supportati e' disponibile sul sito del progetto Tree Sitter.
+Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente snippet:
+
+\begin{verbatim}
+  let mut the_parser = tree_sitter::Parser::new();
+  let the_language = tree_sitter_java::language();
+  the_parser.set_language(the_language);
+  let tree = the_parser.parse(the_text);
+\end{verbatim}
+
+La variabile \textbf{tree : tree\_sitter::Tree} conterra' l'albero generato da tree sitter.
+\textbf{TODO: spiega come generare il tree con il diff}
+
+\section{DSL}
+
+Tree Sitter definisce un Domain Specific Language per ogni linguaggio di programmazione che supporta. Nel caso del programma java:
+
+\begin{verbatim}
+class Main {
+	public static void main(String[] args) {
+    	// comment
+    }
+}
+\end{verbatim}
+
+si ottiene il seguente albero:
+
+\begin{verbatim}
+(program
+  (class_declaration
+    name: (identifier)
+    body: (class_body
+            (method_declaration
+              (modifiers)
+              type: (void_type)
+              name: (identifier)
+              parameters: (formal_parameters
+                            (formal_parameter
+                              type: (array_type
+                                      element: (type_identifier)
+                                      dimensions: (dimensions))
+                              name: (identifier)))
+              body: (block
+                      (line_comment))))))
+\end{verbatim}
+
+Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'albero in DSL per generare un grafo a partire dall'AST.
+In generale un query e' specificata in questo modo:
+
+\begin{verbatim}
+(parent_tag (child_tag)@child_tag_node)@parent_tag_node
+\end{verbatim}
+
+Questa query matcha tutte le occorrenze di \textbf{parent\_tag} ove e' presente un \textbf{child\_tag} come figlio. Si noti che questa query matcha una occorrenza di \textbf{parent\_tag} una volta per ogni suo figlio di tipo \textbf{child\_tag}. \textbf{@child\_tag\_node} identifica il nodo dell'AST \textbf{child\_tag}.
+Ad ogni query e' possibile accompagnare un blocco di codice che specifica le operazioni da effettuare. Ogni istruzione e' indicata in formato \textbf{function arg0 arg1 ...}. In pratica lisp senza parentesi nel blocco principale! Richiamando l'esempio precendente:
+
+\begin{verbatim}
+(parent_tag (child_tag)@child_tag_node)@parent_tag_node {
+  node the_node
+  attr (the_node) property = "value"
+}
+\end{verbatim}
+
+La funzione \textbf{node} dichiara un nodo del grafo generato, mentre la funzione \textbf{attr} aggiunge attributi dal nodo del grafo.
+
+\paragraph{proprieta' di nodi e archi}
+
+Ad ogni nodo e' possibile accompagnare il tipo \textbf{type} che puo' assumere i seguenti valori:
+
+\begin{itemize}
+  \item "push\_symbol"
+  \item "pop\_symbol"
+\end{itemize}
+
+Push e Pop sono le operazioni sul SymbolStack. Questo stack e' utilizzato durante la ricerca dei name binding di uno stack\_graph. In generale e' bene ricordare che una \textbf{push} deve essere associata ad un nodo di reference e una \textbf{pop} ad un nodo di definizione.
+I nodi possono contenere anche informazioni "di debug", che nella pratica posso essere utilizzate per tenere traccia di tutta una serie di informazioni, come per esempio il tipo "semantico" di un nodo (classe, funzione ... etc) e anche per scopi di debug. Per assegnare il valore \textbf{varname} ad un nodo si assegna con \textbf{attr} l'attributo \textbf{debug\_varname}. Queste informazioni saranno accessibili da un programma che usa la libreria \textbf{stack-graphs} (richiesta da \textbf{tree-sitter-stack-graphs})
+
+\paragraph{funzioni particolari}
+
+E' presente una funzione \textbf{source-text} che dato un nodo AST restituisce la stringa che rappresenta quel nodo.

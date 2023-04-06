@@ -1,0 +1,17 @@
+\chapter{Introduzione}
+
+\section{Caso di Studio}
+
+Arcan e' un tool sviluppato dalla startup Arcan Tech in grado di analizzare un progetto e calcolare il relativo tecnical debt e gli eventuali architectural smells. Per farlo si serve di un Dependency Graph, che crea usando delle chiamate ai language server (o librerie affini) dei linguaggi usati nel progetto.
+Questo processo tuttavia risulta lento a causa del fatto che generalmente queste tecnologie non sono pensate per assolvere solo a questo scopo e di conseguenza contengono degli strati piu' sofisticati che appesantiscono l'esecuzione degli stessi. Non esistono tecnologie alternative che siano production ready o che assolvano a questi scopi e che siano competitive rispetto alle performance.
+
+\section{L'Idea}
+
+Dato questo technological gap si vuole studiare la fattibilita' di un sistema che usi l'analisi statica lessicale per ricavare le stesse informazioni in maniera piu' efficiente.
+Si vuole anche rendere il piu' possibile indipendente il metodo rispetto ai linguaggi di programmazione analizzati.
+L'idea e' quella di combinare le librerie Tree Sitter e Stack Graph con una serie di algoritmi specifici del problema per ottenere un sistema funzionante ed efficiente.
+
+\section{Soluzione}
+
+Usando il DSL \textbf{Tree Sitter Stack Graph} si costruisce una grammatica (PL-specific, quindi una per ogni linguaggio di programmazione) che possa essere utilizata per costruire a runtime lo \textbf{Stack Graph} del progetto.
+Quindi si combina la risoluzione simbolica dello Stack Graph con un algoritmo di esplorazione dello stesso per costruire il Dependency Graph (questo Pl-independent).
