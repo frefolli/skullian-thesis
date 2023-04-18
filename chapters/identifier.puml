@@ -1,0 +1,17 @@
+@startuml
+
+namespace node {
+    entity scope
+    entity push_start
+    entity push_end
+    entity pop_start
+    entity pop_end
+}
+
+node.pop_end - node.pop_start
+node.scope ---> node.pop_start
+node.push_start - node.push_end
+node.push_end ---> node.scope
+
+
+@enduml

@@ -1,5 +1,5 @@
 @all:
-	pdflatex thesis.tex && pdflatex thesis.tex && cp thesis.pdf static/ && static-server -p 8080 static
+	pdflatex thesis.tex && pdflatex thesis.tex
 
 clean:
 	rm -rf $$(find . -name "*.aux" -not -path '*/.*')
