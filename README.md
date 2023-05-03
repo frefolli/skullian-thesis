@@ -1,0 +1,77 @@
+# Scaletta Programmatica
+
+- Introduzione &cross;
+    - Caso di studio - Arcan &cross;
+      - Architectural Smell e Dipendenze &cross;
+      - Tool Arcan &cross;
+    - Arcan Dependency Graph &cross;
+      - Nodi &cross;
+      - Archi &cross;
+    - Limitazioni Tecniche &cross;
+      - Uso di un LSP diverso per ogni linguaggio &cross;
+      - Basse prestazioni (salvo Java per Jdt) &cross;
+    - Alcune librerie utili &cross;
+      - Tree Sitter &cross;
+      - Stack Graph &cross;
+      - Tree Sitter Stack Graph &cross;
+    - La soluzione proposta &cross;
+      - Stack Graph &cross;
+      - Name Resolution &cross;
+      - Explorazione Ricorsiva &cross;
+    - Valuzione dei risultati &cross;
+      - Benchmark &cross;
+      - Scaffolding &cross;
+      - Arcan &cross;
+    - Sommario dei Capitoli &cross;
+- Tree Sitter &cross;
+    - Introduzione &cross;
+    - Esempio &cross;
+    - In Rust &cross;
+    - Il DSL (query) &cross;
+- Stack Graph &cross;
+    - Introduzione &cross;
+    - Esempio &cross;
+    - In Rust &cross;
+    - Tree Sitter Stack Graph &cross;
+- Grammatica TSG &cross;
+    - Language Dependency &cross;
+    - Algoritmo di Name Resolution di Stack Graph &cross;
+    - Aciclicita' &cross;
+    - Componenti Base &cross;
+      - Identificatori &cross;
+      - Package &cross;
+      - Classi, Interfacce, Enum e Annotazioni &cross;
+      - Metodi &cross;
+      - Variabili &cross;
+      - Dichiarazioni di Tipo &cross;
+      - Ereditarieta' &cross;
+      - Accesso ai Campi &cross;
+      - Chiamata di Metodi &cross;
+      - Inclusione &cross;
+      - Modificatori &cross;
+- Dependency Graph &cross;
+    - Introduzione &cross;
+    - Esempio &cross;
+    - Costruzione &cross;
+      - Name Resolution &cross;
+      - Esplorazione Ricorsiva &cross;
+    - Esportazione &cross;
+- Analisi di Qualita' &cross;
+    - Approccio di Testing &cross;
+    - Scaffolding &cross;
+    - Benchmark &cross;
+    - Performance &cross;
+- Valutazione e Comparazione &cross;
+    - Scaffolding &cross;
+    - Benchmark &cross;
+      - Risultati &cross;
+      - Arcan &cross;
+    - Performance &cross;
+    - Limiti &cross;
+      - Dimensione dello Stack Graph &cross;
+      - Analisi non Differenziali &cross;
+      - Language Dependency &cross;
+[//]: <> (- Socialismo e Barbarie &cross;)
+[//]: <> (  - Scarica barile sul neo liberismo &cross;)
+[//]: <> (  - Insulti gratuiti a Istituto Liberale &cross;)
+[//]: <> (  - Ode alla Carrozza Vicinale Piano Ribassato &cross;)

@@ -1,6 +1,9 @@
 \chapter{Tree Sitter}
 
-\textbf{Tree Sitter} e' un parser generator molto efficiente quando si tratta di rianalizzare un file che ha subito delle modifiche. Infatti e' in grado generare in maniera incrementale l'albero risultante contanto solo delle modifiche subite dal file in questione.
+\section{Introduzione}
+
+\textbf{Tree Sitter} e' un parser generator molto efficiente quando si tratta di rianalizzare un file che ha subito delle modifiche.
+Infatti e' in grado generare in maniera incrementale l'albero risultante contanto solo delle modifiche subite dal file in questione.
 Oltre a questo evidente vantaggio a differenza dei suoi concorrenti principali possiede anche dei language binding molto convenienti.
 
 \section{In Rust}
@@ -26,9 +29,9 @@ Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente 
 La variabile \textbf{tree : tree\_sitter::Tree} conterra' l'albero generato da tree sitter.
 \textbf{TODO: spiega come generare il tree con il diff}
 
-\section{DSL}
+\section{Esempio}
 
-Tree Sitter definisce un Domain Specific Language per ogni linguaggio di programmazione che supporta. Nel caso del programma java:
+Con il seguente file java:
 
 \begin{verbatim}
 class Main {
@@ -38,7 +41,7 @@ class Main {
 }
 \end{verbatim}
 
-si ottiene il seguente albero:
+si ottiene il seguente albero sintattico:
 
 \begin{verbatim}
 (program
@@ -58,6 +61,10 @@ si ottiene il seguente albero:
               body: (block
                       (line_comment))))))
 \end{verbatim}
+
+\section{DSL}
+
+Tree Sitter definisce un Domain Specific Language per ogni linguaggio di programmazione che supporta. Si ragiona in considerazione dell'esempio di cui sopra.
 
 Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'albero in DSL per generare un grafo a partire dall'AST.
 In generale un query e' specificata in questo modo:
