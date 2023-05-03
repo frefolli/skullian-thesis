@@ -71,6 +71,7 @@
       - Dimensione dello Stack Graph &cross;
       - Analisi non Differenziali &cross;
       - Language Dependency &cross;
+
 [//]: <> (- Socialismo e Barbarie &cross;)
 [//]: <> (  - Scarica barile sul neo liberismo &cross;)
 [//]: <> (  - Insulti gratuiti a Istituto Liberale &cross;)
