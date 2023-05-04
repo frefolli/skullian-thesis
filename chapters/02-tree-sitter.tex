@@ -2,13 +2,21 @@
 
 \section{Introduzione}
 
-\textbf{Tree Sitter} e' un parser generator molto efficiente quando si tratta di rianalizzare un file che ha subito delle modifiche.
-Infatti e' in grado generare in maniera incrementale l'albero risultante contanto solo delle modifiche subite dal file in questione.
-Oltre a questo evidente vantaggio a differenza dei suoi concorrenti principali possiede anche dei language binding molto convenienti.
+\textbf{Tree Sitter} \cite{tree_sitter} e' un software in grado di generare un parser (con lexer incorporato) per costruire l'Abstract Syntax Tree di un testo basandosi su un file di configurazione che descriva la grammatica del linguaggio considerato.
+
+%TODO: quote
+Il tool genera un parser in linguaggio \textbf{C} e del codice extra che funge da language binding in modo tale da poter chiamare il nuovo parser con un linguaggio di programmazione a piacere.
+
+%TODO: quote
+L'aspetto che piu' lo differenzia rispetto ai suoi competitori e' la possibilita' di fare analisi incrementali.
+E' particolarmente efficiente quando si tratta di dover rianalizzare un file che ha subito delle modifiche.
+
+%TODO: quote
+E' in grado generare l'albero sintattico del nuovo file sorgente utilizzando come base l'albero sintattico obsoleto e una struttura dati che contiene le modifiche che ha subito il file nel suo complesso.
 
 \section{In Rust}
 
-Per utilizzare \textbf{tree sitter} in \textbf{rust} prima di tutto e' necessario importare le necessarie dipendenze. Nel file Cargo.toml:
+Per utilizzare \textbf{tree sitter} in \textbf{rust} prima di tutto e' necessario importare delle dipendenze. Nel file Cargo.toml:
 
 \begin{verbatim}
   [dependencies]
@@ -16,7 +24,11 @@ Per utilizzare \textbf{tree sitter} in \textbf{rust} prima di tutto e' necessari
   tree-sitter-java = "*"
 \end{verbatim}
 
-Se si vuole utilizzare il parser tree sitter per il java per esempio si inserisca tra le dipendenze \textbf{tree-sitter-java}. In generale per un linguaggio \textbf{x} e' necessario importare ed utilizzare la libreria \textbf{tree-sitter-x}. La lista dei linguaggi supportati e' disponibile sul sito del progetto Tree Sitter.
+%TODO: quote
+Se si vuole utilizzare il parser tree sitter per il java per esempio si deve inserire tra le dipendenze \textbf{tree-sitter-java}.
+In generale per un linguaggio \textbf{x} e' necessario importare ed utilizzare la libreria \textbf{tree-sitter-x}.
+La lista dei linguaggi supportati e' disponibile sul sito del progetto Tree Sitter.
+
 Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente snippet:
 
 \begin{verbatim}
@@ -27,7 +39,8 @@ Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente 
 \end{verbatim}
 
 La variabile \textbf{tree : tree\_sitter::Tree} conterra' l'albero generato da tree sitter.
-\textbf{TODO: spiega come generare il tree con il diff}
+
+%TODO: spiega come generare il tree con il diff
 
 \section{Esempio}
 
@@ -64,17 +77,27 @@ si ottiene il seguente albero sintattico:
 
 \section{DSL}
 
-Tree Sitter definisce un Domain Specific Language per ogni linguaggio di programmazione che supporta. Si ragiona in considerazione dell'esempio di cui sopra.
+%TODO: quote
+L'albero sintattico e' graficamente rappresentato attraverso delle \textbf{sexp} che usano identificatori e struttura definiti dalla grammatica del linguaggio.
+\textbf{Tree sitter} definisce un \textbf{Domain Specific Language} tramite il quale eseguire delle query ad un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
+Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific},  la sintassi generale del \textbf{DSL} e' universale.
 
-Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'albero in DSL per generare un grafo a partire dall'AST.
+%TODO: quote
+Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'albero in DSL per generare un grafo qualsiasi a partire dall'AST.
 In generale un query e' specificata in questo modo:
 
 \begin{verbatim}
 (parent_tag (child_tag)@child_tag_node)@parent_tag_node
 \end{verbatim}
 
-Questa query matcha tutte le occorrenze di \textbf{parent\_tag} ove e' presente un \textbf{child\_tag} come figlio. Si noti che questa query matcha una occorrenza di \textbf{parent\_tag} una volta per ogni suo figlio di tipo \textbf{child\_tag}. \textbf{@child\_tag\_node} identifica il nodo dell'AST \textbf{child\_tag}.
-Ad ogni query e' possibile accompagnare un blocco di codice che specifica le operazioni da effettuare. Ogni istruzione e' indicata in formato \textbf{function arg0 arg1 ...}. In pratica lisp senza parentesi nel blocco principale! Richiamando l'esempio precendente:
+Questa query trova tutte le occorrenze di \textbf{parent\_tag} dove e' presente un \textbf{child\_tag} come figlio.
+Si noti che questa query identifica un'occorrenza nel testo di \textbf{parent\_tag} una volta per ogni suo figlio di tipo \textbf{child\_tag}.
+
+Ad ogni nodo dell'albero sintattico e' possibile associare un identificatore univoco all'interno della query, per esempio \textbf{@child\_tag\_node} identifica il nodo dell'AST \textbf{child\_tag}.
+
+Ad ogni query e' possibile accompagnare un blocco di codice che specifica le operazioni da effettuare.
+Ogni istruzione e' indicata in formato \textbf{function arg0 arg1 ...}.
+La sintassi delle istruzioni richiama l'uso del paradigma funzionale, infatti essa e' molto simile a linguaggi che usano sexp per applicare delle funzioni, come per esempio \textbf{LISP}.
 
 \begin{verbatim}
 (parent_tag (child_tag)@child_tag_node)@parent_tag_node {
@@ -94,9 +117,16 @@ Ad ogni nodo e' possibile accompagnare il tipo \textbf{type} che puo' assumere i
   \item "pop\_symbol"
 \end{itemize}
 
-Push e Pop sono le operazioni sul SymbolStack. Questo stack e' utilizzato durante la ricerca dei name binding di uno stack\_graph. In generale e' bene ricordare che una \textbf{push} deve essere associata ad un nodo di reference e una \textbf{pop} ad un nodo di definizione.
-I nodi possono contenere anche informazioni "di debug", che nella pratica posso essere utilizzate per tenere traccia di tutta una serie di informazioni, come per esempio il tipo "semantico" di un nodo (classe, funzione ... etc) e anche per scopi di debug. Per assegnare il valore \textbf{varname} ad un nodo si assegna con \textbf{attr} l'attributo \textbf{debug\_varname}. Queste informazioni saranno accessibili da un programma che usa la libreria \textbf{stack-graphs} (richiesta da \textbf{tree-sitter-stack-graphs})
+Push e Pop sono le operazioni sul SymbolStack.
+Questo stack e' utilizzato durante la ricerca dei name binding di uno stack\_graph.
+
+In generale e' bene ricordare che una \textbf{push} deve essere associata ad un nodo di reference e una \textbf{pop} ad un nodo di definizione.
+
+I nodi possono contenere anche informazioni "di debug", che nella pratica posso essere utilizzate per tenere traccia di tutta una serie di informazioni, come per esempio il tipo "semantico" di un nodo (classe, funzione ... etc) o anche per scopi di debug.
+Per assegnare il valore \textbf{varname} ad un nodo si assegna con \textbf{attr} l'attributo \textbf{debug\_varname}.
+
+Queste informazioni saranno accessibili da un programma che usa la libreria \textbf{stack-graphs} (richiesta da \textbf{tree-sitter-stack-graphs})
 
 \paragraph{funzioni particolari}
 
-E' presente una funzione \textbf{source-text} che dato un nodo AST restituisce la stringa che rappresenta quel nodo.
+La funzione \textbf{source-text} che dato un nodo AST restituisce la stringa che rappresenta quel nodo.
