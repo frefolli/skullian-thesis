@@ -60,6 +60,7 @@
     - Algoritmo di Name Resolution di Stack Graph &cross;
     - Aciclicita' &cross;
     - Componenti Base &cross;
+      - File &cross;
       - Identificatori &cross;
       - Package &cross;
       - Classi, Interfacce, Enum e Annotazioni &cross;
@@ -75,12 +76,28 @@
     - Introduzione &cross;
     - Esempio &cross;
     - Costruzione &cross;
+      - Identificazione dei target
+      - Caricamento Lazy della TSG
+      - Parsing con Stack Graph incrementale
       - Name Resolution &cross;
+        - Identificazione delle reference
+        - Risoluzione intelligente delle reference
       - Esplorazione Ricorsiva &cross;
+        - Identificazione del tipo di nodo
+        - Fully Qualified Name
+        - Relazioni di parentela
+        - Identificazione delle dipendenze
+        - Creazione di scope
+        - Passo ricorsivo
     - Esportazione &cross;
+      - GraphML
+      - PUML
+      - Cytoscape
 - Analisi di Qualita' &cross;
     - Approccio di Testing &cross;
     - Scaffolding &cross;
+      - Test YAML
+      - Generatore di Test
     - Benchmark &cross;
     - Performance &cross;
 - Valutazione e Comparazione &cross;
