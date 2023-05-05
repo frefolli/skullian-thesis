@@ -24,37 +24,37 @@
       - Arcan &cross;
     - Sommario dei Capitoli &cross;
 - Tree Sitter &cross;
-    - Introduzione &cross;
-    - Esempio &cross;
-    - In Rust &cross;
+    - Introduzione &check;
+    - Esempio &check;
+    - In Rust &check;
     - Il Query Language &cross;
-      - Sintassi
-      - Field
-      - Nodi anonimi
-      - Wildcard
-      - Negazione
-      - Quantificatori
-      - Identificatori
-      - Raggruppamenti
-      - Alternative
-      - Ancoramento
-      - Predicati
+      - Sintassi &check;
+      - Field &check;
+      - Nodi anonimi &check;
+      - Wildcard &check;
+      - Negazione &check;
+      - Quantificatori &check;
+      - Identificatori &check;
+      - Raggruppamenti &cross;
+      - Alternative &cross;
+      - Ancoramento &cross;
+      - Predicati &cross;
 - Stack Graph &cross;
     - Introduzione &cross;
     - Esempio &cross;
     - In Rust &cross;
     - Il Domain Specific Language &cross;
-      - Sintassi
-      - Variabili
-      - Nodi
-      - Archi
-      - Attributi
-      - Alias
-      - Condizionali
-      - Operazioni sulle Stringhe
-      - Iterazioni
-      - Debugging
-      - Complementazioni
+      - Sintassi &cross;
+      - Variabili &cross;
+      - Nodi &cross;
+      - Archi &cross;
+      - Attributi &cross;
+      - Alias &cross;
+      - Condizionali &cross;
+      - Operazioni sulle Stringhe &cross;
+      - Iterazioni &cross;
+      - Debugging &cross;
+      - Complementazioni &cross;
 - Grammatica TSG &cross;
     - Language Dependency &cross;
     - Algoritmo di Name Resolution di Stack Graph &cross;
@@ -76,28 +76,28 @@
     - Introduzione &cross;
     - Esempio &cross;
     - Costruzione &cross;
-      - Identificazione dei target
-      - Caricamento Lazy della TSG
-      - Parsing con Stack Graph incrementale
+      - Identificazione dei target &cross;
+      - Caricamento Lazy della TSG &cross;
+      - Parsing con Stack Graph incrementale &cross;
       - Name Resolution &cross;
-        - Identificazione delle reference
-        - Risoluzione intelligente delle reference
+        - Identificazione delle reference &cross;
+        - Risoluzione intelligente delle reference &cross;
       - Esplorazione Ricorsiva &cross;
-        - Identificazione del tipo di nodo
-        - Fully Qualified Name
-        - Relazioni di parentela
-        - Identificazione delle dipendenze
-        - Creazione di scope
-        - Passo ricorsivo
+        - Identificazione del tipo di nodo &cross;
+        - Fully Qualified Name &cross;
+        - Relazioni di parentela &cross;
+        - Identificazione delle dipendenze &cross;
+        - Creazione di scope &cross;
+        - Passo ricorsivo &cross;
     - Esportazione &cross;
-      - GraphML
-      - PUML
-      - Cytoscape
+      - GraphML &cross;
+      - PUML &cross;
+      - Cytoscape &cross;
 - Analisi di Qualita' &cross;
     - Approccio di Testing &cross;
     - Scaffolding &cross;
-      - Test YAML
-      - Generatore di Test
+      - Test YAML &cross;
+      - Generatore di Test &cross;
     - Benchmark &cross;
     - Performance &cross;
 - Valutazione e Comparazione &cross;

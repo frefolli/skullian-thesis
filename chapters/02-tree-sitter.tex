@@ -6,6 +6,7 @@
 
 %TODO: quote
 Il tool genera un parser in linguaggio \textbf{C} e del codice extra che funge da language binding in modo tale da poter chiamare il nuovo parser con un linguaggio di programmazione a piacere.
+Il software generato e' privo di dipendenze, questo ne assicura la portabilita'.
 
 %TODO: quote
 L'aspetto che piu' lo differenzia rispetto ai suoi competitori e' la possibilita' di fare analisi incrementali.
@@ -75,7 +76,7 @@ si ottiene il seguente albero sintattico:
                       (line_comment))))))
 \end{verbatim}
 
-\section{DSL}
+\section{Query Language}
 
 %TODO: quote
 L'albero sintattico e' graficamente rappresentato attraverso delle \textbf{sexp} che usano identificatori e struttura definiti dalla grammatica del linguaggio.
@@ -84,49 +85,71 @@ Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific},  la 
 
 %TODO: quote
 Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'albero in DSL per generare un grafo qualsiasi a partire dall'AST.
-In generale un query e' specificata in questo modo:
+
+\paragraph{sintassi}
 
 \begin{verbatim}
-(parent_tag (child_tag)@child_tag_node)@parent_tag_node
+(tagA (tagB (tagC)) (tagD))
 \end{verbatim}
 
-Questa query trova tutte le occorrenze di \textbf{parent\_tag} dove e' presente un \textbf{child\_tag} come figlio.
-Si noti che questa query identifica un'occorrenza nel testo di \textbf{parent\_tag} una volta per ogni suo figlio di tipo \textbf{child\_tag}.
+Il query language non si discosta dalla rappresentazione in sexp.
+Ogni nodo e' rappresentato tramite una sexp dove gli identificatori sono i nomi dei node dell'AST.
+La stringa del testo a cui un nodo fa riferimento non e' esplicitamente contenuta ne' nella rappresentazione dell'AST, ne' nella query.
+Un engine che applica delle query puo' fornire un'API per ottenere le informazioni corrispondenti ai nodi.
 
-Ad ogni nodo dell'albero sintattico e' possibile associare un identificatore univoco all'interno della query, per esempio \textbf{@child\_tag\_node} identifica il nodo dell'AST \textbf{child\_tag}.
-
-Ad ogni query e' possibile accompagnare un blocco di codice che specifica le operazioni da effettuare.
-Ogni istruzione e' indicata in formato \textbf{function arg0 arg1 ...}.
-La sintassi delle istruzioni richiama l'uso del paradigma funzionale, infatti essa e' molto simile a linguaggi che usano sexp per applicare delle funzioni, come per esempio \textbf{LISP}.
+\paragraph{field}
 
 \begin{verbatim}
-(parent_tag (child_tag)@child_tag_node)@parent_tag_node {
-  node the_node
-  attr (the_node) property = "value"
-}
+(tagA B: (tagB (tagC)) D: (tagD))
 \end{verbatim}
 
-La funzione \textbf{node} dichiara un nodo del grafo generato, mentre la funzione \textbf{attr} aggiunge attributi dal nodo del grafo.
+In una query e' possibile specificare i field del nodo che si vogliono riconoscere.
+In questo modo e' possibile selezionare costrutti che per esempio fanno uso dei field per ordinare i valori in una sexp.
+Si noti che l'accesso al field e' unico, ad ogni field e' associato al piu' un nodo.
+Introdurre il field nella query esclude le occorrenze di tagA che non hanno per esempio associato un valore al field B.
 
-\paragraph{proprieta' di nodi e archi}
+\paragraph{nodi anonimi}
 
-Ad ogni nodo e' possibile accompagnare il tipo \textbf{type} che puo' assumere i seguenti valori:
+\begin{verbatim}
+(tagA "string")
+\end{verbatim}
 
-\begin{itemize}
-  \item "push\_symbol"
-  \item "pop\_symbol"
-\end{itemize}
+Puo' risultare utile specificare al query engine una query siffatta.
+Ad essa saranno associate tutte le occorrenze di tagA che contengano nodi la cui string nel testo sia uguale a "string".
+E' importante sottolineare che la struttura del nodo associato a "string" puo' essere complessa a piacere.
 
-Push e Pop sono le operazioni sul SymbolStack.
-Questo stack e' utilizzato durante la ricerca dei name binding di uno stack\_graph.
+\paragraph{wildcard}
 
-In generale e' bene ricordare che una \textbf{push} deve essere associata ad un nodo di reference e una \textbf{pop} ad un nodo di definizione.
+\begin{verbatim}
+(tagA (_))
+\end{verbatim}
 
-I nodi possono contenere anche informazioni "di debug", che nella pratica posso essere utilizzate per tenere traccia di tutta una serie di informazioni, come per esempio il tipo "semantico" di un nodo (classe, funzione ... etc) o anche per scopi di debug.
-Per assegnare il valore \textbf{varname} ad un nodo si assegna con \textbf{attr} l'attributo \textbf{debug\_varname}.
+Un altro modo per specificare un nodo che con valore indefinito ma senza introdurre vincoli sulle stringhe del testo sono le wildcard.
 
-Queste informazioni saranno accessibili da un programma che usa la libreria \textbf{stack-graphs} (richiesta da \textbf{tree-sitter-stack-graphs})
+\paragraph{negatori}
 
-\paragraph{funzioni particolari}
+\begin{verbatim}
+(tagA !tagB)
+\end{verbatim}
 
-La funzione \textbf{source-text} che dato un nodo AST restituisce la stringa che rappresenta quel nodo.
+E' anche possibile specificare nodi da non trovare nella sexp per definire un match.
+Questa feature e' particolarmente rilevante quando si vuole dividere le query in casi per diminuire la complessita' del programma non dovendo fare affidamento su un unica query molto complessa e inutilmente generale.
+
+\paragraph{quantificatori}
+
+\begin{verbatim}
+(tagA (tagB)+ (tagC)? (tagD)*)
+\end{verbatim}
+
+La negazione di un nodo fa parte di una categoria piu' grande, i quantificatori.
+E' utile poter esprimere una query che raggruppi potenzialmente piu' nodi dello stesso tipo in un unico risultato, specialmente se l'engine permette di poter iterare sui nodi del risultato.
+La semantica e' quella tipica delle espressioni regolari.
+
+\paragraph{identificatori}
+
+\begin{verbatim}
+(tagA (_)@child)@top
+\end{verbatim}
+
+E' possibile associare ad ognun nodo del risultato della query un nodo utilizzando la notazione $(node)@id$.
+Se l'engine supporta linguaggi di scripting o strumenti affini torna utile potersi riferire ai singoli nodi.
