@@ -27,12 +27,34 @@
     - Introduzione &cross;
     - Esempio &cross;
     - In Rust &cross;
-    - Il DSL (query) &cross;
+    - Il Query Language &cross;
+      - Sintassi
+      - Field
+      - Nodi anonimi
+      - Wildcard
+      - Negazione
+      - Quantificatori
+      - Identificatori
+      - Raggruppamenti
+      - Alternative
+      - Ancoramento
+      - Predicati
 - Stack Graph &cross;
     - Introduzione &cross;
     - Esempio &cross;
     - In Rust &cross;
-    - Tree Sitter Stack Graph &cross;
+    - Il Domain Specific Language &cross;
+      - Sintassi
+      - Variabili
+      - Nodi
+      - Archi
+      - Attributi
+      - Alias
+      - Condizionali
+      - Operazioni sulle Stringhe
+      - Iterazioni
+      - Debugging
+      - Complementazioni
 - Grammatica TSG &cross;
     - Language Dependency &cross;
     - Algoritmo di Name Resolution di Stack Graph &cross;
