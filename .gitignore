@@ -9,4 +9,5 @@
 *.run.xml
 *.bcf
 *-blx.bib
+*.toc
 thesis.pdf

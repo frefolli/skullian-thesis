@@ -1,5 +1,5 @@
 @all:
-	pdflatex thesis && biber thesis && pdflatex thesis && pdflatex thesis 
+	pdflatex thesis && bibtex thesis && pdflatex thesis && pdflatex thesis 
 
 clean:
 	rm -rf $$(find . -name "*.aux" -not -path '*/.*')
@@ -12,3 +12,4 @@ clean:
 	rm -rf $$(find . -name "*.bcf" -not -path '*/.*')
 	rm -rf $$(find . -name "*.blg" -not -path '*/.*')
 	rm -rf $$(find . -name "*.run.xml" -not -path '*/.*')
+	rm -rf $$(find . -name "*.toc" -not -path '*/.*')

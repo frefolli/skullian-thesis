@@ -1,13 +1,57 @@
 \chapter{Stack Graph}
 
 \section{Introduzione}
-%TODO
+%TODO: quote
+Stack Graph e' un modello di grafo nato per risolvere il problema della navigazione simbolica del codice.
+Attraverso la costruzione di un grafo con nodi detti di "scope", "push" e "pop" permette di effettuare una ricerca di una reference fino alla sua definizione.
+
+Questa ricerca e' una vera e propria visita del grafo, che utilizza da una parte un Symbol Stack per tenere traccia dei simboli incontrati nella ricerca, e dall'altra tipi differenti di nodi visitabili che prescrivono come operare sul Symbol Stack e di conseguenza stabilire se un arco e' percorribile e se un percorso e' definito "completo".
+Un percorso e' detto tale se e solo se il Symbol Stack e' svuotato.
+
+Un nodo "push" inserisce un simbolo nel Symbol Stack quando e' attraversato dalla visita.
+Vice versa un nodo "pop" rimuove un simbolo dal Symbol Stack.
+In particolare questo limita gli archi percorribili in base a se e' possibile rimuovere il simbolo del nodo "pop".
 
 \section{Esempio}
-%TODO
+%TODO: esempio stupido del programma Java del capitolo precedente
 
 \section{In Rust}
-%TODO
+%TODO: codice per caricare la TSG e usare Stack Graph
 
-\section{Tree Sitter Stack Graph}
-%TODO
+\section{Domain Specific Language}
+
+%TODO: quote
+La libreria \textbf{Tree Sitter Stack Graph} funge da query engine per il Query Language definito da Tree Sitter e permette attraverso un linguaggio di scripting di costruire a runtime un grafo di tipo Stack Graph a partire da un file analizzato con Tree Sitter.
+
+\paragraph{sintassi}
+%TODO: blocchi di codice, sexp
+
+\paragraph{variabili}
+%TODO: let, var, set, FILEPATH, ROOT_NODE
+
+\paragraph{nodi}
+%TODO: node
+
+\paragraph{archi}
+%TODO: edge
+
+\paragraph{attributi}
+%TODO: attr(node), attr(node -> node)
+
+\paragraph{alias}
+%TODO: shorthands
+
+\paragraph{istruzioni condizionali}
+%TODO: if - else
+
+\paragraph{operazioni sulle stringhe}
+%TODO: join, replace, path normalize
+
+\paragraph{iterazioni}
+%TODO: for each
+
+\paragraph{debugging}
+%TODO: print
+
+\paragraph{complementi}
+%TODO: debug_defkind

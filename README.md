@@ -40,7 +40,7 @@
       - Alternative &check;
       - Predicati &check;
 - Stack Graph &cross;
-    - Introduzione &cross;
+    - Introduzione &check;
     - Esempio &cross;
     - In Rust &cross;
     - Il Domain Specific Language &cross;
