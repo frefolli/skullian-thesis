@@ -8,4 +8,5 @@
 *.bbl
 *.run.xml
 *.bcf
+*-blx.bib
 thesis.pdf

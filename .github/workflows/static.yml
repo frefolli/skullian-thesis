@@ -35,6 +35,7 @@ jobs:
         with:
           root_file: |
             thesis.tex
+          pre_compile: "pdflatex thesis && bibtex thesis && pdflatex thesis"
           work_in_root_file_dir: true
       - name: Create Static Dist Directory
         run: | 
