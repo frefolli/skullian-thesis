@@ -35,10 +35,10 @@
       - Negazione &check;
       - Quantificatori &check;
       - Identificatori &check;
-      - Raggruppamenti &cross;
-      - Alternative &cross;
-      - Ancoramento &cross;
-      - Predicati &cross;
+      - Raggruppamenti &check;
+      - Ancoramento &check;
+      - Alternative &check;
+      - Predicati &check;
 - Stack Graph &cross;
     - Introduzione &cross;
     - Esempio &cross;

@@ -132,7 +132,7 @@ Un altro modo per specificare un nodo che con valore indefinito ma senza introdu
 (tagA !tagB)
 \end{verbatim}
 
-E' anche possibile specificare nodi da non trovare nella sexp per definire un match.
+E' anche possibile specificare field da non trovare nella sexp per definire un match.
 Questa feature e' particolarmente rilevante quando si vuole dividere le query in casi per diminuire la complessita' del programma non dovendo fare affidamento su un unica query molto complessa e inutilmente generale.
 
 \paragraph{quantificatori}
@@ -153,3 +153,70 @@ La semantica e' quella tipica delle espressioni regolari.
 
 E' possibile associare ad ognun nodo del risultato della query un nodo utilizzando la notazione $(node)@id$.
 Se l'engine supporta linguaggi di scripting o strumenti affini torna utile potersi riferire ai singoli nodi.
+
+\paragraph{raggruppamenti}
+
+\begin{verbatim}
+(
+  (tagA)
+  (tagB)
+)
+\end{verbatim}
+
+Con questa sintatti si va a cercare una qualsiasi occorrenza nell'AST in cui i due nodi sono in sequenza e figli dello stesso nodo.
+Questo significa pero' che vi possono essere nodi frapposti tra quelli elencati nella query.
+
+\paragraph{ancoramento}
+
+\begin{verbatim}
+(parent (child)@c1 . (child)@c2)
+\end{verbatim}
+
+Un metodo di raggruppamento piu' forte e' il seguente.
+Il carattere "." coincide con un operatore di concatenazione, e viene usato per esplicitare la posizione dei nodi all'interno di un nodo padre.
+A differenza dei raggruppamenti semplici, qui il gruppo di nodi e' considerato in serie.
+Non vi potranno essere nodi compresi tra quelli che corrispondono al match.
+
+\begin{verbatim}
+(parent . (child)@c1)
+\end{verbatim}
+
+E' anche possibile esplicitare l'ancoramento rispetto ad un lato.
+Per cui interporre l'operatore di concatenazione tra il parent tag e il nodo child permette di esplicitare che quel nodo child e' il primo nodo figlio del nodo parent.
+
+\begin{verbatim}
+(parent (child)@c1 .)
+\end{verbatim}
+
+Allo stesso modo e' possibile indicare l'ultimo nodo figlio.
+
+\paragraph{alternative}
+
+\begin{verbatim}
+[
+  (tagA)
+  (tagB)
+]@tag
+\end{verbatim}
+
+Se in una query due nodi o configurazioni di nodi possono essere trattati allo stesso modo, puo' risultare utile comprimere la query con questo costrutto.
+Come in un'espressione regolare, la query trova un'occorrenza in cui uno dei nodi tra le parentesi quadre combacia con quello reale.
+
+
+\paragraph{predicati}
+
+\begin{verbatim}
+(
+  (parent
+    (child)@A
+    (child)@B
+  )
+  (#pred? @A @B)
+)
+\end{verbatim}
+
+Tree sitter descrive l'uso di alcuni predicati che permettono di asserire condizioni ulteriori di match.
+I predicati implementati in pratica non fanno parte di uno standard, Tree Sitter si limita ad esporli ad un engine che a sua volta deve implementare e supportare il loro uso.
+
+Nel caso proposto si applica un predicato \emph{pred} ai nodi argomenti \emph{A} e \emph{B}.
+E' possibile anche usare come argomenti delle stringhe.
