@@ -4,4 +4,8 @@
 *.out
 *.ilg
 *.ind
+*.blg
+*.bbl
+*.run.xml
+*.bcf
 thesis.pdf

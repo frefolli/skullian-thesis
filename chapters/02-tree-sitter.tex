@@ -2,22 +2,18 @@
 
 \section{Introduzione}
 
-\textbf{Tree Sitter} \cite{tree_sitter} e' un software in grado di generare un parser (con lexer incorporato) per costruire l'Abstract Syntax Tree di un testo basandosi su un file di configurazione che descriva la grammatica del linguaggio considerato.
+\textbf{Tree Sitter} \cite{TreeSitter} e' un software in grado di generare un parser (con lexer incorporato) per costruire l'Abstract Syntax Tree di un testo basandosi su un file di configurazione che descriva la grammatica del linguaggio considerato.
 
-%TODO: quote
-Il tool genera un parser in linguaggio \textbf{C} e del codice extra che funge da language binding in modo tale da poter chiamare il nuovo parser con un linguaggio di programmazione a piacere.
+Il tool \cite{TreeSitterCreatingParsers} genera un parser in linguaggio \textbf{C} e del codice extra che funge da language binding in modo tale da poter chiamare il nuovo parser con un linguaggio di programmazione a piacere.
 Il software generato e' privo di dipendenze, questo ne assicura la portabilita'.
 
-%TODO: quote
-L'aspetto che piu' lo differenzia rispetto ai suoi competitori e' la possibilita' di fare analisi incrementali.
+L'aspetto che piu' lo differenzia rispetto ai suoi competitori e' la possibilita' di fare analisi incrementali \cite{TreeSitterAdvancedParsing}.
 E' particolarmente efficiente quando si tratta di dover rianalizzare un file che ha subito delle modifiche.
-
-%TODO: quote
 E' in grado generare l'albero sintattico del nuovo file sorgente utilizzando come base l'albero sintattico obsoleto e una struttura dati che contiene le modifiche che ha subito il file nel suo complesso.
 
 \section{In Rust}
 
-Per utilizzare \textbf{tree sitter} in \textbf{rust} prima di tutto e' necessario importare delle dipendenze. Nel file Cargo.toml:
+Per utilizzare \textbf{tree sitter} in \textbf{rust} \cite{TreeSitterCrate} prima di tutto e' necessario importare delle dipendenze. Nel file Cargo.toml:
 
 \begin{verbatim}
   [dependencies]
@@ -25,9 +21,8 @@ Per utilizzare \textbf{tree sitter} in \textbf{rust} prima di tutto e' necessari
   tree-sitter-java = "*"
 \end{verbatim}
 
-%TODO: quote
 Se si vuole utilizzare il parser tree sitter per il java per esempio si deve inserire tra le dipendenze \textbf{tree-sitter-java}.
-In generale per un linguaggio \textbf{x} e' necessario importare ed utilizzare la libreria \textbf{tree-sitter-x}.
+In generale per un linguaggio \textbf{x} e' necessario importare ed utilizzare la libreria \textbf{tree-sitter-x} \cite{TreeSitterRustGrammars}.
 La lista dei linguaggi supportati e' disponibile sul sito del progetto Tree Sitter.
 
 Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente snippet:
@@ -78,13 +73,12 @@ si ottiene il seguente albero sintattico:
 
 \section{Query Language}
 
-%TODO: quote
 L'albero sintattico e' graficamente rappresentato attraverso delle \textbf{sexp} che usano identificatori e struttura definiti dalla grammatica del linguaggio.
-\textbf{Tree sitter} definisce un \textbf{Domain Specific Language} tramite il quale eseguire delle query ad un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
+\textbf{Tree sitter} definisce un \textbf{Domain Specific Language} \cite{TreeSitterQuerySyntax} tramite il quale eseguire delle query ad un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
 Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific},  la sintassi generale del \textbf{DSL} e' universale.
 
-%TODO: quote
-Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'albero in DSL per generare un grafo qualsiasi a partire dall'AST.
+Questo linguaggio di query puo' essere usato da un engine di query per implementare un linguaggio di scripting con cui permettere all'utente di operare in diversi modi su un file sorgente.
+Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'AST per generare un grafo qualsiasi in modo strutturato usando il suo linguaggio di scripting, descritto in dettaglio nel prossimo successivo.
 
 \paragraph{sintassi}
 

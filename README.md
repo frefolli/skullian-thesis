@@ -27,7 +27,7 @@
     - Introduzione &check;
     - Esempio &check;
     - In Rust &check;
-    - Il Query Language &cross;
+    - Il Query Language &check;
       - Sintassi &check;
       - Field &check;
       - Nodi anonimi &check;

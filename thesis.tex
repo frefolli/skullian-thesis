@@ -8,7 +8,12 @@
 \usepackage{imakeidx}
 \usepackage{tikz}
 \usetikzlibrary{positioning, quotes}
-
+\usepackage[
+  backend=biber,
+  style=numeric,
+  sorting=ynt
+  ]{biblatex}
+\addbibresource{quotes.bib}
 \makeindex
 
 \begin{document}
@@ -75,4 +80,5 @@
     \include{chapters/06-quality-assesment}
     \include{chapters/07-results}
     
+    \printbibliography[title={Bibliography}]
 \end{document}
