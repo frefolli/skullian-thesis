@@ -36,6 +36,7 @@ Ad ogni query tree sitter si accompagna un blocco di codice.
 Un insieme di unita' siffatte e di dichiarazioni globali costituisce quella che in gergo viene chiamata \textbf{TSG Grammar}. La grammatica TSG viene caricata da Tree Sitter Graph per costruire un oggetto manipolabile da Tree Sitter Stack Graph per costruire lo stack graph a partire dal codice.
 
 Ad ogni occorrenza di nodo trovata dalla query viene applicato il blocco di codice appaiato, che puo' contenere istruzioni per costruire nodi, aggiungere archi, impostare variabili o aggiungere attributi.
+
 I commenti in linea sono espressi tramite il prefisso ";;", e questo rappresenta l'unico modo di inserire dei commenti, visto non e' prevista una sintassi specifica per commenti multi linea.
 
 \paragraph{variabili}
@@ -71,11 +72,11 @@ global GLOBAL_VARIABLE
 }
 \end{verbatim}
 
-Tree Sitter Stack Graph definisce due variabili globali: FILEPATH e ROOT_NODE.
+Tree Sitter Stack Graph definisce due variabili globali: FILEPATH e ROOT\_NODE.
 
-FILEPATH equivale al path corrente del file che sta venendo analizzato dall'engine e puo' risultare utile se si deve, per esempio, costruire un nodo nello stack graph corrispondente al file corrente per supportare la ricerca simbolica del codice importato nei linguaggi di programmazione il cui meccanismo di import dipende fa path relativi (il caso di C++) piuttosto che' da package o moduli, oppure se pure nel secondo caso il nome del package corrente e' deciso dal nome del file (il caso di Python).
+FILEPATH equivale al path corrente del file che sta venendo analizzato dall'engine e puo' risultare utile se si deve, per esempio, costruire un nodo nello stack graph corrispondente al file corrente per supportare la ricerca simbolica del codice importato nei linguaggi di programmazione il cui meccanismo di import dipende da path relativi (il caso di C++) piuttosto che da package o moduli (il caso di Java), o seppure nel secondo caso il nome del package corrente e' deciso dal nome del file (il caso di Python).
 
-ROOT_NODE invece e' sempre uguale ad un nodo di scope istanziato dallo stack graph stesso che ne costituisce la radice, e che e' utile poter manipolare nella grammatica TSG per collegare i sotto grafi generati dal singolo file sorgente per costruire un grafo unico incrementalmente.
+ROOT\_NODE invece e' sempre uguale ad un nodo di scope istanziato dallo stack graph stesso che ne costituisce la radice, e che e' utile poter manipolare nella grammatica TSG per collegare i sotto grafi generati dal singolo file sorgente per costruire un grafo unico incrementalmente.
 
 \paragraph{nodi}
 %TODO: node, node types, references, definitions

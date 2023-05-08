@@ -1,5 +1,10 @@
-@all:
+@all: compile
+
+compile:
 	pdflatex thesis && bibtex thesis && pdflatex thesis && pdflatex thesis 
+
+host: compile
+	static-server -p 8080 -i thesis.pdf
 
 clean:
 	rm -rf $$(find . -name "*.aux" -not -path '*/.*')
