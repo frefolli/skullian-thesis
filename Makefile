@@ -1,9 +1,9 @@
-@all: compile
+@all: thesis.pdf
 
-compile:
+thesis.pdf: thesis.tex chapters/*.tex
 	pdflatex thesis && bibtex thesis && pdflatex thesis && pdflatex thesis 
 
-host: compile
+host: thesis.pdf
 	static-server -p 8080 -i thesis.pdf
 
 clean:
