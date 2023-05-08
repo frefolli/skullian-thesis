@@ -31,7 +31,6 @@ La libreria \textbf{Tree Sitter Stack Graph} funge da query engine per il Query 
 }
 \end{verbatim}
 
-%TODO: quote
 Ad ogni query tree sitter si accompagna un blocco di codice.
 Un insieme di unita' siffatte e di dichiarazioni globali costituisce quella che in gergo viene chiamata \textbf{TSG Grammar}. La grammatica TSG viene caricata da Tree Sitter Graph per costruire un oggetto manipolabile da Tree Sitter Stack Graph per costruire lo stack graph a partire dal codice.
 
@@ -40,8 +39,6 @@ Ad ogni occorrenza di nodo trovata dalla query viene applicato il blocco di codi
 I commenti in linea sono espressi tramite il prefisso ";;", e questo rappresenta l'unico modo di inserire dei commenti, visto non e' prevista una sintassi specifica per commenti multi linea.
 
 \paragraph{variabili}
-%TODO: let, var, set, FILEPATH, ROOT_NODE
-%TODO: quote
 Il linguaggio di scripting supporta l'uso di variabili, che possono essere locali, globali o di scope (associati ad un nodo sintattico).
 
 Le variabili locali vengono dichiarate con l'uso di "let", e sono inerentemente immutabili:
@@ -62,6 +59,18 @@ Per dichiarare variabili locali mutabili e' necessario usare "var":
 }
 \end{verbatim}
 
+Una variabile di scope e' dichiarata in maniera simile. Essendo associata ad un nodo di query, puo' essere manipolata in piu' punti del codice.
+
+\begin{verbatim}
+(tagB)@B {
+    let @B.scoped_variable = 17
+}
+
+(tagA (tagB)@B) {
+    ;; @B.scoped_variable == 17
+}
+\end{verbatim}
+
 Le variabili globali devono essere dichiarate fuori dai blocchi di codice e non possono essere nascoste ("variable shadowing") dalle variabili locali:
 
 \begin{verbatim}
@@ -72,20 +81,68 @@ global GLOBAL_VARIABLE
 }
 \end{verbatim}
 
-Tree Sitter Stack Graph definisce due variabili globali: FILEPATH e ROOT\_NODE.
+Tree Sitter Stack Graph definisce due variabili globali: FILE\_PATH e ROOT\_NODE.
 
-FILEPATH equivale al path corrente del file che sta venendo analizzato dall'engine e puo' risultare utile se si deve, per esempio, costruire un nodo nello stack graph corrispondente al file corrente per supportare la ricerca simbolica del codice importato nei linguaggi di programmazione il cui meccanismo di import dipende da path relativi (il caso di C++) piuttosto che da package o moduli (il caso di Java), o seppure nel secondo caso il nome del package corrente e' deciso dal nome del file (il caso di Python).
+FILE\_PATH equivale al path corrente del file che sta venendo analizzato dall'engine e puo' risultare utile se si deve, per esempio, costruire un nodo nello stack graph corrispondente al file corrente per supportare la ricerca simbolica del codice importato nei linguaggi di programmazione il cui meccanismo di import dipende da path relativi (il caso di C++) piuttosto che da package o moduli (il caso di Java), o seppure nel secondo caso il nome del package corrente e' deciso dal nome del file (il caso di Python).
 
 ROOT\_NODE invece e' sempre uguale ad un nodo di scope istanziato dallo stack graph stesso che ne costituisce la radice, e che e' utile poter manipolare nella grammatica TSG per collegare i sotto grafi generati dal singolo file sorgente per costruire un grafo unico incrementalmente.
 
 \paragraph{nodi}
-%TODO: node, node types, references, definitions
+
+Un nodo dello stack graph puo' essere dichiarato usando la funzione \textbf{node}.
+
+\begin{verbatim}
+(tagA)@this {
+    node @this.a
+    node b
+}
+\end{verbatim}
+
+Ad ogni nodo e' associato un tipo impostabile con l'attributo "type" e di default uguale a "scope".
+Un nodo di tipo "push" aggiunge il simbolo associato sul Symbol Stack durante la risoluzione delle reference, mentre un nodo di tipo "pop" ne rimuove uno dallo stack se e solo se il simbolo e' presente sulla cima dello stack, di fatto limitando i possibili percorsi della ricerca.
+
+Esistono due attributi speciali che marcano i nodi di push/pop per applicare la semantica di uno stack graph: "is\_reference" e "is\_definition".
+Un path completo ha come nodo di partenza un nodo "reference" e come nodo di arrivo un nodo "definition".
+Un nodo reference e' un nodo push e un nodo definition e' un nodo pop.
 
 \paragraph{archi}
-%TODO: edge
+
+Gli archi del grafo vengono dichiarati con una sintassi intuitiva.
+Lo stack graph e' un grafo diretto, quindi la sintassi si propone di rappresentare proprio la direzione degli archi in maniera facilmente leggibile.
+
+\begin{verbatim}
+(_) {
+    edge nodeA -> nodeB
+}
+\end{verbatim}
+
+L'unico attributo che e' associabile ad un arco e' "precedence", ovvero un parametro intero utilizzato dall'algoritmo di ricerca di stack graph per implementare lo "shadowing" del codice.
 
 \paragraph{attributi}
-%TODO: attr(node), attr(node -> node)
+
+Per applicare un attributo ad un nodo o ad un arco si usa la seguente sintassi:
+
+\begin{verbatim}
+(_) {
+    attr (nodeA)
+        key = value,
+        ...
+    attr (nodeA -> nodeB)
+        key = value,
+        ...
+}
+\end{verbatim}
+
+Come detto in precedenza, lo statement seguente dichiara che il nodo $nodeA$ e' una reference da risolvere con l'algoritmo di stack graph e che il simbolo da appendere e' quello corrispondente al pezzo di codice sorgente che il nodo rappresenta:
+
+\begin{verbatim}
+(_) {
+    attr (nodeA)
+        type = "push_symbol",
+        node_symbol = nodeA,
+        is_reference
+}
+\end{verbatim}
 
 \paragraph{alias}
 %TODO: shorthands
@@ -100,7 +157,37 @@ ROOT\_NODE invece e' sempre uguale ad un nodo di scope istanziato dallo stack gr
 %TODO: for each
 
 \paragraph{debugging}
-%TODO: print
+
+Per aiutare il programmatore nel debugging della grammatica TSG e' stata implementata una funzione \textbf{print} che stampa a schermo un valore.
+Si puo' usare per esempio per visualizzare informazioni costruite dalla grammatica che si vuole inserire nel grafo.
+In questo piccolo esempio si stampa a schermo la directory del file analizzato da Tree Sitter Stack Graph:
+
+\begin{verbatim}
+global FILE_PATH
+(_) {
+    print (path-dir FILE_PATH)
+}
+\end{verbatim}
 
 \paragraph{complementi}
-%TODO: debug attributes
+
+Oltre agli attributi supportati da Tree Sitter Stack Graph c'e' la possibilita' di assegnare attributi detti di "debug" che permettono di tenere traccia sia di informazioni puramente di testing sia informazioni utili al processamento dello Stack Graph per estrarre informazioni altrimenti impossibili da ottenere.
+
+Per assegnare ad un nodo l'attributo di debug "varx" si usa la sintassi
+
+\begin{verbatim}
+(_) {
+    attr (node)
+        debug_varx = "value"
+}
+\end{verbatim}
+
+Come detto precedentemente, e' utile poter definire ulteriori attributi che supportino l'analisi dello Stack Graph con algoritmi di esplorazione personalizzati.
+Ai fini dell'analisi delle dipendenze si definiscono due variabili di debug:
+
+\begin{itemize}
+    \item "defkind"
+    \item "refkind"
+\end{itemize}
+
+La prima definisce il tipo di definizione (classe, package, metodo ...), mentre la seconda il tipo di reference (estensione, uso di tipo in dichiarazioni di variabili, accesso a campo, chiamata di metodo ...).
