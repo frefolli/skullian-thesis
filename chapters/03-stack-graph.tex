@@ -146,15 +146,62 @@ Come detto in precedenza, lo statement seguente dichiara che il nodo $nodeA$ e' 
 
 \paragraph{alias}
 %TODO: shorthands
+Puo' essere utile ricorrere ad alias per evitare duplicazione nella grammatica TSG, specialmente se la formula e' sperimentale e/o si prevede che cambiera' per qualche motivo.
+
+Gli alias sono disponibili solo per gli attributi, i quali rappresentano se non altro la parte piu' ridondante della grammatica, e che in altre circostanze costituirebbero uno Shotgun Surgery.
+
+La sintassi e':
+
+\begin{verbatim}
+attribute name = input =>
+    key = value,
+    ...
+\end{verbatim}
+
+La dichiarazione di $name$ e' simile ad una funzione con un parametro $input$ manipolabili nelle coppie chiave valore.
+
+L'uso pratico di questa feature puo' essere di due tipi: abbreviare un attributo per renderlo piu' facilmente leggibile o compattare una serie di attributi che ci si aspetta vengano dichiarati insieme piu' volte allo stesso modo. Un esempio puo' essere:
+
+\begin{verbatim}
+attribute
+    defkind = kind =>
+        debug_defkind = kind
+attribute
+    node_definition = node =>
+        type = "pop_symbol",
+        node_symbol = node,
+        is_definition
+\end{verbatim}
 
 \paragraph{istruzioni condizionali}
-%TODO: if - else
+
+Nel blocco di codice possiamo trovare anche le istruzioni condizionali, particolarmente utili dal momento che si dispone dei quantificatori nelle query.
+Essi accettano una espressione come condizione, per esempio:
+
+\begin{verbatim}
+(tagA (tagB)?@id) {
+    if some @id {
+        ;; tagB presente
+    } else {
+        ;; tagB non presente
+    }
+}
+\end{verbatim}
+
+\paragraph{iterazioni}
+
+Similarmente si possono usare le iterazioni sui nodi trovati dalla query coperti da quantificatore:
+
+\begin{verbatim}
+(tagA (tagB)*@ids) {
+    for id in @ids {
+        print id
+    }
+}
+\end{verbatim}
 
 \paragraph{operazioni sulle stringhe}
 %TODO: join, replace, path normalize
-
-\paragraph{iterazioni}
-%TODO: for each
 
 \paragraph{debugging}
 
