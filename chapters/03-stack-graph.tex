@@ -37,6 +37,7 @@ Un insieme di unita' siffatte e di dichiarazioni globali costituisce quella che 
 Ad ogni occorrenza di nodo trovata dalla query viene applicato il blocco di codice appaiato, che puo' contenere istruzioni per costruire nodi, aggiungere archi, impostare variabili o aggiungere attributi.
 
 I commenti in linea sono espressi tramite il prefisso ";;", e questo rappresenta l'unico modo di inserire dei commenti, visto non e' prevista una sintassi specifica per commenti multi linea.
+I commenti possono essere inseriti sia nei blocchi di codice che nel file della grammatica TSG in generale.
 
 \paragraph{variabili}
 Il linguaggio di scripting supporta l'uso di variabili, che possono essere locali, globali o di scope (associati ad un nodo sintattico).
@@ -133,7 +134,7 @@ Per applicare un attributo ad un nodo o ad un arco si usa la seguente sintassi:
 }
 \end{verbatim}
 
-Come detto in precedenza, lo statement seguente dichiara che il nodo $nodeA$ e' una reference da risolvere con l'algoritmo di stack graph e che il simbolo da appendere e' quello corrispondente al pezzo di codice sorgente che il nodo rappresenta:
+Come detto in precedenza, lo statement seguente dichiara che il nodo \emph{nodeA} e' una reference da risolvere con l'algoritmo di stack graph e che il simbolo da appendere e' quello corrispondente al pezzo di codice sorgente che il nodo rappresenta:
 
 \begin{verbatim}
 (_) {
@@ -157,7 +158,7 @@ attribute name = input =>
     ...
 \end{verbatim}
 
-La dichiarazione di $name$ e' simile ad una funzione con un parametro $input$ manipolabili nelle coppie chiave valore.
+La dichiarazione di \emph{name} e' simile ad una funzione con un parametro \emph{input} manipolabile nelle coppie chiave valore.
 
 L'uso pratico di questa feature puo' essere di due tipi: abbreviare un attributo per renderlo piu' facilmente leggibile o compattare una serie di attributi che ci si aspetta vengano dichiarati insieme piu' volte allo stesso modo. Un esempio puo' essere:
 
@@ -203,22 +204,26 @@ Similarmente si possono usare le iterazioni sui nodi trovati dalla query coperti
 
 Essendo i simboli dell'albero sintattico stringhe, sono state implementate alcune funzioni nel linguaggio di scripting per manipolarle.
 
-Nell'esempio seguente si risolve la locazione relativa di un modulo importato tramite l'istruzione $include$ del preprocessore C e si stampa a schermo il percorso completo:
+Nell'esempio seguente si risolve la locazione relativa di un modulo importato tramite l'istruzione \emph{include} del preprocessore C e si stampa a schermo il percorso completo:
 
 \begin{verbatim}
 (preproc_include path: (string_literal)@path) {
-    let mod_name = (path-normalize (path-join (path-dir FILE_PATH) (replace (source-text @path) "\"" "")))
+    let mod_name = (path-normalize
+      (path-join
+        (path-dir FILE_PATH)
+        (replace (source-text @path) "\"" "")))
     print mod_name
 }
 \end{verbatim}
 
-La funzione $source\-text$ estrare la stringa contenuta nel nodo con identificatore $path$, si applica la funzione replace per eliminare i doppi apici contenuti in essa e si risolve il path relativo utilizzando come base la directory del file corrente.
-Quindi si chiama la funzione $path\-normalize$ per ben formattare il path cosi' ottenuto.
+La funzione \emph{source-text} estrare la stringa contenuta nel nodo con identificatore \emph{path}, si applica la funzione replace per eliminare i doppi apici contenuti in essa e si risolve il path relativo utilizzando come base la directory del file corrente.
+Quindi si chiama la funzione \emph{path-normalize} per ben formattare il path cosi' ottenuto.
 
 \paragraph{debugging}
 
 Per aiutare il programmatore nel debugging della grammatica TSG e' stata implementata una funzione \textbf{print} che stampa a schermo un valore.
 Si puo' usare per esempio per visualizzare informazioni costruite dalla grammatica che si vuole inserire nel grafo.
+
 In questo piccolo esempio si stampa a schermo la directory del file analizzato da Tree Sitter Stack Graph:
 
 \begin{verbatim}

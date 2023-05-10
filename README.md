@@ -49,10 +49,10 @@
       - Nodi &check;
       - Archi &check;
       - Attributi &check;
-      - Alias &check;
+      - Shorthands &check;
       - Condizionali &check;
       - Iterazioni &check;
-      - Operazioni sulle Stringhe &cross;
+      - Operazioni sulle Stringhe &check;
       - Debugging &check;
       - Complementazioni &check;
 - Grammatica TSG &cross;
