@@ -144,11 +144,10 @@ Come detto in precedenza, lo statement seguente dichiara che il nodo $nodeA$ e' 
 }
 \end{verbatim}
 
-\paragraph{alias}
-%TODO: shorthands
-Puo' essere utile ricorrere ad alias per evitare duplicazione nella grammatica TSG, specialmente se la formula e' sperimentale e/o si prevede che cambiera' per qualche motivo.
+\paragraph{shorthands}
+Puo' essere utile ricorrere a shorthands per evitare duplicazione nella grammatica TSG, specialmente se la formula e' sperimentale e/o si prevede che cambiera' per qualche motivo.
 
-Gli alias sono disponibili solo per gli attributi, i quali rappresentano se non altro la parte piu' ridondante della grammatica, e che in altre circostanze costituirebbero uno Shotgun Surgery.
+Gli shorthands sono disponibili solo per gli attributi, i quali rappresentano se non altro la parte piu' ridondante della grammatica, e che in altre circostanze costituirebbero uno Shotgun Surgery.
 
 La sintassi e':
 
@@ -201,7 +200,20 @@ Similarmente si possono usare le iterazioni sui nodi trovati dalla query coperti
 \end{verbatim}
 
 \paragraph{operazioni sulle stringhe}
-%TODO: join, replace, path normalize
+
+Essendo i simboli dell'albero sintattico stringhe, sono state implementate alcune funzioni nel linguaggio di scripting per manipolarle.
+
+Nell'esempio seguente si risolve la locazione relativa di un modulo importato tramite l'istruzione $include$ del preprocessore C e si stampa a schermo il percorso completo:
+
+\begin{verbatim}
+(preproc_include path: (string_literal)@path) {
+    let mod_name = (path-normalize (path-join (path-dir FILE_PATH) (replace (source-text @path) "\"" "")))
+    print mod_name
+}
+\end{verbatim}
+
+La funzione $source\-text$ estrare la stringa contenuta nel nodo con identificatore $path$, si applica la funzione replace per eliminare i doppi apici contenuti in essa e si risolve il path relativo utilizzando come base la directory del file corrente.
+Quindi si chiama la funzione $path\-normalize$ per ben formattare il path cosi' ottenuto.
 
 \paragraph{debugging}
 
