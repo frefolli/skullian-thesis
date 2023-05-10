@@ -41,8 +41,8 @@
       - Predicati &check;
 - Stack Graph &cross;
     - Introduzione &check;
+    - In Rust &check;
     - Esempio &cross;
-    - In Rust &cross;
     - Il Domain Specific Language &cross;
       - Sintassi &check;
       - Variabili &check;
