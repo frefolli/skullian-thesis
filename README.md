@@ -23,7 +23,7 @@
       - Scaffolding &cross;
       - Arcan &cross;
     - Sommario dei Capitoli &cross;
-- Tree Sitter &cross;
+- Tree Sitter &check;
     - Introduzione &check;
     - Esempio &check;
     - In Rust &check;
@@ -43,7 +43,7 @@
     - Introduzione &check;
     - In Rust &check;
     - Esempio &cross;
-    - Il Domain Specific Language &cross;
+    - Il Domain Specific Language &check;
       - Sintassi &check;
       - Variabili &check;
       - Nodi &check;
