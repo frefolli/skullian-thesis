@@ -1,7 +1,18 @@
 \chapter{Grammatica TSG}
 
 \section{Language Dependency}
-%TODO
+%TODO: quote
+
+Come visto nel capitolo precedente, per costruire lo Stack Graph per un certo file sorgente si utilizza un file con alcune regole che descrivono a Tree Sitter Stack Graph come costruirlo.
+
+Tuttavia bisogna ricordare che l'albero sintattico di due linguaggi diversi allo stato attuale in Tree Sitter ha non solo nomi diversi per i nodi, ma anche struttura interentemente diversa, sia perche' le rispettive sintassi possono essere molto diverse e quindi necessitano di essere trattate diversamente, sia perche', quando anche la loro sintassi fosse simile o uguale, i relativi sviluppatori le trattano in modo diverso o con passaggi intermedi (C preprocessor) o con semantica diversa.
+
+Se quindi da una parte le query delle regole saranno necessariamente molto diverse, bisogna considerare che i linguaggi di programmazione sono eterogenei anche nei costrutti.
+Rust, per esempio, non possiede ne' classi ne' interfacce. Un concetto simile a quest'ultime sono i \textbf{Traits}, ma vengono applicati secondo una filosofia \emph{Composition over Inheritance}.
+La mancanza o la rielaborazioni di costrutti e componenti nei linguaggi e' anche quindi strettamente legata ai loro paradigmi, ma possono sussistere differenze molto piu' sottili che pero' necessitano di dovute differenze nelle grammatiche TSG: si pensi per esempio ai nomi dei package, problema gia' citato nel capitolo precedente.
+
+Non potendo scrivere un'unica grammatica TSG per ogni linguaggi l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti, il piu' generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
+Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi piu' sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
 
 \section{Algoritmo di Name Resolution di Stack Graph}
 %TODO
