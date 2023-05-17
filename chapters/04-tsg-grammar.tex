@@ -1,6 +1,8 @@
 \chapter{Grammatica TSG}
 
-\section{Language Dependency}
+\section{Introduzione}
+
+\paragraph{Language Dependency}
 %TODO: quote
 
 Come visto nel capitolo precedente, per costruire lo Stack Graph per un certo file sorgente si utilizza un file con alcune regole che descrivono a Tree Sitter Stack Graph come costruirlo.
@@ -14,11 +16,55 @@ La mancanza o la rielaborazioni di costrutti e componenti nei linguaggi e' anche
 Non potendo scrivere un'unica grammatica TSG per ogni linguaggi l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti, il piu' generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
 Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi piu' sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
 
-\section{Algoritmo di Name Resolution di Stack Graph}
-%TODO
+\paragraph{Algoritmo di Name Resolution di Stack Graph}
 
-\section{Aciclicita'}
-%TODO
+E' importante comprendere come Stack Graphs effettivamente risolve le reference perche' non solo abilita il programmatore ad ottimizzazioni consapevoli, ma permette anche di implementare risoluzioni piu' complesse.
+
+Sia dato un grafo $G = (V, E)$ di tipo Stack Graph, e sia $r \in V$ il nodo che corrisponde alla reference da risolvere. Questo nodo sara' il nodo iniziale della ricerca: dopo aver inizializzato una coda $Q$ vuota, si costruisce il path $p_r = (r,)$ che ha come nodo di partenza il nodo iniziale $r$ e si inserisce il suddetto path $p$ nella coda $Q$.
+
+A questo punto inizia l'algoritmo vero e proprio, il quale altro non e' che un ciclo che termina quando la coda $Q$ e' vuota.
+Ad ogni iterazione del ciclo si estrae un path $p$ dalla coda $Q$: si applica una funzione euristica $S : E \rightarrow bool$.
+Questa funzione specifica se e' necessario, o piu' che altro conveniente, analizzare il path appena estratto, specialmente per evitare di rianalizzare due volte lo stesso path (o un path simile) e quindi liberarsi dai cicli infiniti.
+
+%TODO: spiega il cycle detector
+
+A questo punto, se il path deve essere analizzato, la prima cosa che occorre fare e' controllare se e' un path definito "completo", ovvero se il Symbol Stack e' vuoto e il nodo finale del path e' un nodo di tipo "definition": in questo caso la reference e' stata trovata e si puo' interrompere la ricerca.
+Ulteriori informazioni di circostanza ("defkind" e "refkind" per esempio) possono definire regole ulteriori per definire quali definizioni devono essere accettate: nella soluzione proposta si va a valutare solo i path completi i cui nodi finali siano "definition" con un "defkind" non nullo e i cui nodi iniziali siano "reference" con "refkind" non nulla. Chiaramente la seconda condizione puo' essere controllata nel momento stesso in cui si decide di risolvere un nodo di reference.
+
+Se il path corrente non e' "completo", lo si va ad "estendere": per ogni arco del nodo finale si verifica la possibilita' di attraversarlo (in base al Symbol Stack e alle operazioni di pop) e in quel caso si aggiunge il nuovo path alla coda.
+
+%TODO: - [x] il nodo con la reference e' il nodo iniziale
+%TODO: - [x] si inizializza una coda vuota di path
+%TODO: - [x] si crea il path che parte e termina nel nodo iniziale
+%TODO: - [x] si inserisce il path iniziale nella coda
+%TODO: - [x] ciclo
+%TODO: - - [x] si prende un path dalla coda
+%TODO: - - [x] si valuta se e' opportuno analizzarlo o se puo' essere un duplicato
+%TODO: - - [x] si valuta se e' un path completo
+%TODO: - - [x] si estende il path corrente
+%TODO: - - [x] si inseriscono le estensioni nella coda
+
+E' bene notare come non solo ogni arco, ma anche ogni ciclo all'interno del grafo possono aggiungere molti path concorrenti alla coda.
+Il ruolo della euristica in questo secondo caso e' evitare l'esplosione della coda: il tempo di computazione deve essere ragionevole (del resto l'obbiettivo e' appunto migliorare le prestazioni di costruzione del grafico delle dipendenze), e lo spazio usato dal programma deve essere limitato o non eccessivo.
+Tuttavia in entrambi i casi le ottimizzazioni della grammatica TSG possono avere un impatto notevole sia sul numero di path concorrenti sia sulle prestazioni della risoluzione delle reference. E' quindi bene studiare bene ogni possibilita' che le feature di Stack Graphs offrono al programmatore.
+
+%TODO: - [x] ogni diramazione crea path concorrenti
+%TODO: - [x] ogni ciclo crea path concorrenti
+
+\paragraph{Uso di push e pop}
+
+%TODO: - [ ] si una una operazione push per introdurre la ricerca di una reference
+%TODO: - [ ] si usa una pop per segnalare una scoperta
+%TODO: - [ ] si puo' costruire la ricerca della reference in modo incrementale
+%TODO: - [ ] il concetto di resolution bridge
+%TODO: - [ ] si puo' limitare il numero dei path usando pop/push successive
+
+\paragraph{Struttura degli archi}
+
+%TODO: - [ ] esplorazione dall'alto
+%TODO: - [ ] i path creati durante la risoluzione sono tanti
+%TODO: - [ ] si ottimizza il grafo riducendo i cicli
+%TODO: - [ ] non e' possibile eliminarli tutti
 
 \section{Componenti di Base}
 
