@@ -61,7 +61,7 @@ E' possibile farlo con ogni nodo "push" del ponte, tuttavia ci si limitera' al p
 Il grafo delle dipendenze verra' creato tramite una esplorazione del grafo a partire dalla radice, quindi ogni nodo che contiene definizioni o reference utili deve essere raggiungibile da tale algoritmo.
 
 Non e' tuttavia l'unico vincolo che e' necessario imporre alla struttura degli archi: nell'ottica di ridurre il numero di path creati durante l'esplorazione e' nessario ridurre al minimo i cicli.
-Questa ottimizzazione non e' complessa da adottare, ma il grafo non puo' essere completamente aciclico: deve essere possibile durante la ricerca ritornare quanto mento alla radice del grafo (\emph{ROOT_NODE}) per permettere ad essa di discendere nel prossimo sottoalbero da esplorare per trovare le definizioni in successione.
+Questa ottimizzazione non e' complessa da adottare, ma il grafo non puo' essere completamente aciclico: deve essere possibile durante la ricerca ritornare quanto mento alla radice del grafo (\emph{ROOT\_NODE}) per permettere ad essa di discendere nel prossimo sottoalbero da esplorare per trovare le definizioni in successione.
 
 Per evitare cicli interni ogni nodi che definisce scope fara' progredire due nodi distinti che corrisponderanno rispettivamente al percorso verso l'alto e verso il basso: questo permettera' sia alle reference di fluire verso la radice, appendendo eventuali simboli che definiscono lo scope (ex: nome della classe), sia alle definizioni e alle reference stesse di essere identificate durante la fase di risoluzione delle reference e durante la fase di esplorazione dall'alto.
 
