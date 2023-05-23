@@ -12,6 +12,7 @@
 \usepackage{fancyvrb}
 \usetikzlibrary{positioning, quotes}
 \usepackage[italian]{babel}
+\usepackage[skip=10pt plus1pt, indent=40pt]{parskip}
 \usepackage[
   backend=bibtex,
   style=numeric,
@@ -19,6 +20,14 @@
   ]{biblatex}
 \addbibresource{quotes.bib}
 \makeindex
+
+\newcommand{\putimage}[3] {
+	\begin{figure}[H]
+	    \centering
+	    \includegraphics[width=0.9\linewidth]{#1}
+	    \caption{#2}\label{#3}
+	\end{figure}
+}
 
 \begin{document}
     
