@@ -1,6 +1,9 @@
 @all: thesis.pdf
 
-thesis.pdf: thesis.tex chapters/*.tex
+extras:
+	make -C diagrams
+
+thesis.pdf: extras thesis.tex chapters/*.tex
 	pdflatex thesis && bibtex thesis && pdflatex thesis && pdflatex thesis 
 
 host: thesis.pdf
@@ -18,3 +21,4 @@ clean:
 	rm -rf $$(find . -name "*.blg" -not -path '*/.*')
 	rm -rf $$(find . -name "*.run.xml" -not -path '*/.*')
 	rm -rf $$(find . -name "*.toc" -not -path '*/.*')
+	make -C diagrams clean

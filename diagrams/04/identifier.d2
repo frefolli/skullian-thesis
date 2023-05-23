@@ -12,17 +12,12 @@ nodes: {
     pop.shape: circle
 }
 
-this.push_start -- nodes.push
-this.push_end -- nodes.push
-this.scope -- nodes.scope
+(this.push_start -- nodes.push).style.stroke: red
+(this.push_end -- nodes.push).style.stroke: red
+(this.scope -- nodes.scope).style.stroke: red
 
 nodes.push -> nodes.scope
 
 this.pop_start -> nodes.pop
 this.pop_end -> nodes.pop
 
-explain: |md
-prova prova prova
-| {
-    near: bottom-center
-}

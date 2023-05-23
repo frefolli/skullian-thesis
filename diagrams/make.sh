@@ -5,12 +5,19 @@ LAYOUT=elk
 
 FORCE="false"
 
+function play() {
+    COMM=$1
+    echo $1
+    $1
+}
+
 function compile() {
     for d2file in $(find . -name "*.d2"); do
-        svgfile=$(echo -e $d2file | sed "s/.d2/.svg/")
-        if [ $d2file -nt $svgfile ] || [ $FORCE = "true" ]; then
-            echo -e "d2 $d2file -l elk"
-            d2 $d2file -l $LAYOUT
+        # svgfile=$(echo -e $d2file | sed "s/.d2/.svg/")
+        pngfile=$(echo -e $d2file | sed "s/.d2/.png/")
+        if [ $d2file -nt $pngfile ] || [ $FORCE = "true" ]; then
+            # play "d2 $d2file -l $LAYOUT $svgfile"
+            play "d2 $d2file -l $LAYOUT $pngfile"
             echo -e "$d2file [DONE]"
         else
             echo -e "$d2file [KEEP]"
@@ -21,7 +28,8 @@ function compile() {
 function clean() {
     for d2file in $(find . -name "*.d2"); do
         svgfile=$(echo -e $d2file | sed "s/.d2/.svg/")
-        rm -r $svgfile
+        pngfile=$(echo -e $d2file | sed "s/.d2/.png/")
+        rm -f $svgfile $pngfile
     done
 }
 

@@ -65,13 +65,57 @@ Questa ottimizzazione non e' complessa da adottare, ma il grafo non puo' essere 
 
 Per evitare cicli interni ogni nodi che definisce scope fara' progredire due nodi distinti che corrisponderanno rispettivamente al percorso verso l'alto e verso il basso: questo permettera' sia alle reference di fluire verso la radice, appendendo eventuali simboli che definiscono lo scope (ex: nome della classe), sia alle definizioni e alle reference stesse di essere identificate durante la fase di risoluzione delle reference e durante la fase di esplorazione dall'alto.
 
+\newcommand{\putimage}[3] {
+	\begin{figure}[H]
+	    \centering
+	    \includegraphics[width=0.9\linewidth]{#1}
+	    \caption{#2}\label{#3}
+	\end{figure}
+}
+
 \section{Componenti di Base}
 
 \paragraph{Identificatori}
-%TODO: explain
 
-\includegraphics[width=12cm]{diagrams/04/identifier.svg}
-\includegraphics[width=12cm]{diagrams/04/scoped_identifier.svg}
+Per ogni nodo sintattico identificatore si creano sia i nodi push che i nodi pop per permettere alle altre unita' di incorporarlo in composizioni piu' complesse.
+
+\putimage{diagrams/04/identifier.png}{"Identifier Unit"}{fig:identifier}
+
+Un esempio di regola TSG per ottenere questo pattern e':
+
+\begin{Verbatim}[samepage=true]
+(identifier)@this {
+    node push
+    node pop
+    node scope
+    let @this.push_start = push
+    let @this.push_end = push
+    let @this.pop_start = pop
+    let @this.pop_end = pop
+    let @this.scope = scope
+    push -> scope
+}
+\end{Verbatim}
+
+Questa struttura permette di comporre l'unita' per esempio nelle catene di identificatori, che generalmente in Tree Sitter possono essere formate in questo modo:
+
+\begin{Verbatim}[samepage=true]
+    node scope
+    let @this.push_start = @name.push_start
+    let @this.push_end = @scope.push_end
+    let @this.pop_start = @scope.pop_start
+    let @this.pop_end = @name.pop_end
+    let @this.scope = scope
+    @scope.pop_end -> @name.pop_start
+    @name.push_end -> @scope.push_start
+    scope.push_end -> scope
+\end{Verbatim}
+
+Questo pattern e' ricorsivamente applicabile attraverso la cattura che usa Tree Sitter Graph, quindi scalabile in verticale: essa permettera' di compore unita' Scoped Identifier per un numero arbitrariamente grande di identificatori nella catena.
+
+\putimage{diagrams/04/scopedIdentifier.png}{Scoped Unit}{fig:scopedIdentifier}
+
+In questo modo si mantiene la medesima interfaccia per Scoped Identifier, con conseguente "polimorfismo" dell'argomento "scope" dello snippet TSG.
 
 \paragraph{Package}
 %TODO

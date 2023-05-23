@@ -29,11 +29,11 @@ name {
 scope.pop_end -> name.pop_start
 name.push_end -> scope.push_start
 
-this.pop_start -- scope.pop_start
-this.pop_end -- name.pop_end
+(this.pop_start -- scope.pop_start).style.stroke: red
+(this.pop_end -- name.pop_end).style.stroke: red
 
-this.push_start -- name.push_start
-this.push_end -- scope.push_end
+(this.push_start -- name.push_start).style.stroke: red
+(this.push_end -- scope.push_end).style.stroke: red
 
-this.scope -- nodes.scope
-scope.push_end -> this.scope
+(this.scope -- nodes.scope).style.stroke: red
+scope.push_end -> scope
