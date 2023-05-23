@@ -1,0 +1,39 @@
+scope {
+    scope.shape: rectangle
+    push_start.shape: rectangle
+    push_end.shape: rectangle
+    pop_start.shape: rectangle
+    pop_end.shape: rectangle
+}
+
+this {
+    scope.shape: rectangle
+    push_start.shape: rectangle
+    push_end.shape: rectangle
+    pop_start.shape: rectangle
+    pop_end.shape: rectangle
+}
+
+nodes {
+    scope.shape: circle
+}
+
+name {
+    scope.shape: rectangle
+    push_start.shape: rectangle
+    push_end.shape: rectangle
+    pop_start.shape: rectangle
+    pop_end.shape: rectangle
+}
+
+scope.pop_end -> name.pop_start
+name.push_end -> scope.push_start
+
+this.pop_start -- scope.pop_start
+this.pop_end -- name.pop_end
+
+this.push_start -- name.push_start
+this.push_end -- scope.push_end
+
+this.scope -- nodes.scope
+scope.push_end -> this.scope

@@ -1,0 +1,28 @@
+this {
+    scope.shape: rectangle
+    push_start.shape: rectangle
+    push_end.shape: rectangle
+    pop_start.shape: rectangle
+    pop_end.shape: rectangle
+}
+
+nodes: {
+    scope.shape: circle
+    push.shape: circle
+    pop.shape: circle
+}
+
+this.push_start -- nodes.push
+this.push_end -- nodes.push
+this.scope -- nodes.scope
+
+nodes.push -> nodes.scope
+
+this.pop_start -> nodes.pop
+this.pop_end -> nodes.pop
+
+explain: |md
+prova prova prova
+| {
+    near: bottom-center
+}
