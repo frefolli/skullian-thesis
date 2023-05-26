@@ -1,8 +1,8 @@
 \chapter{Grammatica TSG}
 
-\section{Introduzione}
+In questo capitolo viene descritto il modello da implementare per costruire una grammatica TSG che sia funzionale sia a costruire il grafo delle dipendenze che a risolvere le reference con Stack Graph.
 
-\paragraph{Language Dependency}
+\section{Language Dependency}
 %TODO: quote
 
 Come visto nel capitolo precedente, per costruire lo Stack Graph per un certo file sorgente si utilizza un file con alcune regole che descrivono a Tree Sitter Stack Graph come costruirlo.
@@ -19,7 +19,7 @@ La mancanza o la rielaborazioni di costrutti e componenti nei linguaggi e' anche
 Non potendo scrivere un'unica grammatica TSG per ogni linguaggi l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti, il piu' generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
 Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi piu' sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
 
-\paragraph{Algoritmo di Name Resolution di Stack Graph}
+\section{Algoritmo di Name Resolution di Stack Graph}
 
 E' importante comprendere come Stack Graphs effettivamente risolve le reference perche' non solo abilita il programmatore ad ottimizzazioni consapevoli, ma permette anche di implementare risoluzioni piu' complesse.
 
@@ -45,7 +45,7 @@ E' bene notare come non solo ogni arco, ma anche ogni ciclo all'interno del graf
 Il ruolo della euristica in questo secondo caso e' evitare l'esplosione della coda: il tempo di computazione deve essere ragionevole (del resto l'obbiettivo e' appunto migliorare le prestazioni di costruzione del grafico delle dipendenze), e lo spazio usato dal programma deve essere limitato o non eccessivo.
 Tuttavia in entrambi i casi le ottimizzazioni della grammatica TSG possono avere un impatto notevole sia sul numero di path concorrenti sia sulle prestazioni della risoluzione delle reference. E' quindi bene studiare bene ogni possibilita' che le feature di Stack Graphs offrono al programmatore.
 
-\paragraph{Uso di push e pop}
+\section{Uso di push e pop}
 
 %TODO: quote
 Generalmente i Query Language Tree Sitter dei linguaggi di programmazione introducono nodi atomici per gli identificatori: nel sono un esempio \emph{} e \emph{} per java.
@@ -69,7 +69,7 @@ Lo stesso vale in linea di principio per le definizioni: oltre alla risoluzione 
 Durante la stesura di una concatenazione di nodi "push" che vengono usati per il \emph{resolution bridge}, per limitare il numero di path che vengono creati durante la ricerca, si puo' applicare un nodo di "pop" con lo stesso simbolo di un nodo di "push" concatenandolo prima di esso per permettere di usare questo ponte solo ai path che abbiano effettivamente sul Symbol Stack i simboli necessari per risolvere quella reference con quel \emph{resolution bridge}.
 E' possibile farlo con ogni nodo "push" del ponte, tuttavia ci si limitera' al primo nodo di esso sia per semplicita' sia per tentare di limitare la dimensione del grafo, il quale gia' di per se avra' dimensioni notevoli.
 
-\paragraph{Struttura degli archi}
+\section{Struttura degli archi}
 
 Il grafo delle dipendenze verra' creato tramite una esplorazione del grafo a partire dalla radice, quindi ogni nodo che contiene definizioni o reference utili deve essere raggiungibile da tale algoritmo.
 
