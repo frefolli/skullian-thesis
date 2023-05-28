@@ -82,7 +82,7 @@ Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific},  la 
 Questo linguaggio di query puo' essere usato da un engine di query per implementare un linguaggio di scripting con cui permettere all'utente di operare in diversi modi su un file sorgente.
 Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'AST per generare un grafo qualsiasi in modo strutturato usando il suo linguaggio di scripting, descritto in dettaglio nel prossimo successivo.
 
-\paragraph{sintassi}
+\subsection{sintassi}
 
 \begin{Verbatim}[samepage=true]
 (tagA (tagB (tagC)) (tagD))
@@ -93,7 +93,7 @@ Ogni nodo e' rappresentato tramite una sexp dove gli identificatori sono i nomi 
 La stringa del testo a cui un nodo fa riferimento non e' esplicitamente contenuta ne' nella rappresentazione dell'AST, ne' nella query.
 Un engine che applica delle query puo' fornire un'API per ottenere le informazioni corrispondenti ai nodi.
 
-\paragraph{field}
+\subsection{field}
 
 \begin{Verbatim}[samepage=true]
 (tagA B: (tagB (tagC)) D: (tagD))
@@ -104,7 +104,7 @@ In questo modo e' possibile selezionare costrutti che per esempio fanno uso dei 
 Si noti che l'accesso al field e' unico, ad ogni field e' associato al piu' un nodo.
 Introdurre il field nella query esclude le occorrenze di tagA che non hanno per esempio associato un valore al field B.
 
-\paragraph{nodi anonimi}
+\subsection{nodi anonimi}
 
 \begin{Verbatim}[samepage=true]
 (tagA "string")
@@ -114,7 +114,7 @@ Puo' risultare utile specificare al query engine una query siffatta.
 Ad essa saranno associate tutte le occorrenze di tagA che contengano nodi la cui string nel testo sia uguale a "string".
 E' importante sottolineare che la struttura del nodo associato a "string" puo' essere complessa a piacere.
 
-\paragraph{wildcard}
+\subsection{wildcard}
 
 \begin{Verbatim}[samepage=true]
 (tagA (_))
@@ -122,7 +122,7 @@ E' importante sottolineare che la struttura del nodo associato a "string" puo' e
 
 Un altro modo per specificare un nodo che con valore indefinito ma senza introdurre vincoli sulle stringhe del testo sono le wildcard.
 
-\paragraph{negatori}
+\subsection{negatori}
 
 \begin{Verbatim}[samepage=true]
 (tagA !tagB)
@@ -131,7 +131,7 @@ Un altro modo per specificare un nodo che con valore indefinito ma senza introdu
 E' anche possibile specificare field da non trovare nella sexp per definire un match.
 Questa feature e' particolarmente rilevante quando si vuole dividere le query in casi per diminuire la complessita' del programma non dovendo fare affidamento su un unica query molto complessa e inutilmente generale.
 
-\paragraph{quantificatori}
+\subsection{quantificatori}
 
 \begin{Verbatim}[samepage=true]
 (tagA (tagB)+ (tagC)? (tagD)*)
@@ -141,7 +141,7 @@ La negazione di un nodo fa parte di una categoria piu' grande, i quantificatori.
 E' utile poter esprimere una query che raggruppi potenzialmente piu' nodi dello stesso tipo in un unico risultato, specialmente se l'engine permette di poter iterare sui nodi del risultato.
 La semantica e' quella tipica delle espressioni regolari.
 
-\paragraph{identificatori}
+\subsection{identificatori}
 
 \begin{Verbatim}[samepage=true]
 (tagA (_)@child)@top
@@ -150,7 +150,7 @@ La semantica e' quella tipica delle espressioni regolari.
 E' possibile associare ad ognun nodo del risultato della query un nodo utilizzando la notazione \emph{(node)@id}.
 Se l'engine supporta linguaggi di scripting o strumenti affini torna utile potersi riferire ai singoli nodi.
 
-\paragraph{raggruppamenti}
+\subsection{raggruppamenti}
 
 \begin{Verbatim}[samepage=true]
 (
@@ -162,7 +162,7 @@ Se l'engine supporta linguaggi di scripting o strumenti affini torna utile poter
 Con questa sintatti si va a cercare una qualsiasi occorrenza nell'AST in cui i due nodi sono in sequenza e figli dello stesso nodo.
 Questo significa pero' che vi possono essere nodi frapposti tra quelli elencati nella query.
 
-\paragraph{ancoramento}
+\subsection{ancoramento}
 
 \begin{Verbatim}[samepage=true]
 (parent (child)@c1 . (child)@c2)
@@ -186,7 +186,7 @@ Per cui interporre l'operatore di concatenazione tra il parent tag e il nodo chi
 
 Allo stesso modo e' possibile indicare l'ultimo nodo figlio.
 
-\paragraph{alternative}
+\subsection{alternative}
 
 \begin{Verbatim}[samepage=true]
 [
@@ -199,7 +199,7 @@ Se in una query due nodi o configurazioni di nodi possono essere trattati allo s
 Come in un'espressione regolare, la query trova un'occorrenza in cui uno dei nodi tra le parentesi quadre combacia con quello reale.
 
 
-\paragraph{predicati}
+\subsection{predicati}
 
 \begin{Verbatim}[samepage=true]
 (
