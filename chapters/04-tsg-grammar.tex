@@ -2,7 +2,9 @@
 
 In questo capitolo viene descritto il modello da implementare per costruire una grammatica TSG che sia funzionale sia a costruire il grafo delle dipendenze che a risolvere le reference con Stack Graph.
 
-\section{Language Dependency}
+\section{Il Modello}
+
+\subsection{Language Dependency}
 %TODO: quote
 
 Come visto nel capitolo precedente, per costruire lo Stack Graph per un certo file sorgente si utilizza un file con alcune regole che descrivono a Tree Sitter Stack Graph come costruirlo.
@@ -19,7 +21,7 @@ La mancanza o la rielaborazioni di costrutti e componenti nei linguaggi e' anche
 Non potendo scrivere un'unica grammatica TSG per ogni linguaggi l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti, il piu' generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
 Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi piu' sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
 
-\section{Algoritmo di Name Resolution di Stack Graph}
+\subsection{Algoritmo di Name Resolution di Stack Graph}
 
 E' importante comprendere come Stack Graphs effettivamente risolve le reference perche' non solo abilita il programmatore ad ottimizzazioni consapevoli, ma permette anche di implementare risoluzioni piu' complesse.
 
@@ -45,7 +47,7 @@ E' bene notare come non solo ogni arco, ma anche ogni ciclo all'interno del graf
 Il ruolo della euristica in questo secondo caso e' evitare l'esplosione della coda: il tempo di computazione deve essere ragionevole (del resto l'obbiettivo e' appunto migliorare le prestazioni di costruzione del grafico delle dipendenze), e lo spazio usato dal programma deve essere limitato o non eccessivo.
 Tuttavia in entrambi i casi le ottimizzazioni della grammatica TSG possono avere un impatto notevole sia sul numero di path concorrenti sia sulle prestazioni della risoluzione delle reference. E' quindi bene studiare bene ogni possibilita' che le feature di Stack Graphs offrono al programmatore.
 
-\section{Uso di push e pop}
+\subsection{Uso di push e pop}
 
 %TODO: quote
 Generalmente i Query Language Tree Sitter dei linguaggi di programmazione introducono nodi atomici per gli identificatori: nel sono un esempio \emph{} e \emph{} per java.
@@ -69,7 +71,7 @@ Lo stesso vale in linea di principio per le definizioni: oltre alla risoluzione 
 Durante la stesura di una concatenazione di nodi "push" che vengono usati per il \emph{resolution bridge}, per limitare il numero di path che vengono creati durante la ricerca, si puo' applicare un nodo di "pop" con lo stesso simbolo di un nodo di "push" concatenandolo prima di esso per permettere di usare questo ponte solo ai path che abbiano effettivamente sul Symbol Stack i simboli necessari per risolvere quella reference con quel \emph{resolution bridge}.
 E' possibile farlo con ogni nodo "push" del ponte, tuttavia ci si limitera' al primo nodo di esso sia per semplicita' sia per tentare di limitare la dimensione del grafo, il quale gia' di per se avra' dimensioni notevoli.
 
-\section{Struttura degli archi}
+\subsection{Struttura degli archi}
 
 Il grafo delle dipendenze verra' creato tramite una esplorazione del grafo a partire dalla radice, quindi ogni nodo che contiene definizioni o reference utili deve essere raggiungibile da tale algoritmo.
 
@@ -80,9 +82,11 @@ Questa ottimizzazione non e' complessa da adottare, ma il grafo non puo' essere 
 \par
 Per evitare cicli interni ogni nodi che definisce scope fara' progredire due nodi distinti che corrisponderanno rispettivamente al percorso verso l'alto e verso il basso: questo permettera' sia alle reference di fluire verso la radice, appendendo eventuali simboli che definiscono lo scope (ex: nome della classe), sia alle definizioni e alle reference stesse di essere identificate durante la fase di risoluzione delle reference e durante la fase di esplorazione dall'alto.
 
-\section{Componenti di Base}
+\section{Le Componenti di Base}
 
-\paragraph{Identificatori}
+%TODO: inserisci legenda
+
+\subsection{Identificatori}
 
 Per ogni nodo sintattico identificatore si creano sia i nodi push che i nodi pop per permettere alle altre unita' di incorporarlo in composizioni piu' complesse.
 
@@ -124,32 +128,103 @@ Questo pattern e' ricorsivamente applicabile attraverso la cattura che usa Tree 
 
 In questo modo si mantiene la medesima interfaccia per Scoped Identifier, con conseguente "polimorfismo" dell'argomento "scope" dello snippet TSG.
 
-\paragraph{Package}
+\subsection{Classi, Interfacce, Enum e Annotazioni}
 %TODO
 
-\paragraph{Classi, Interfacce, Enum e Annotazioni}
+Tutti questi costruitti hanno in comune il fatto di contenere propriamente tutte le sotto dichiarazioni al livello di codice sorgente, per cui si prendera' come esempio le classi o le interfacce in base alle relazioni introdotte.
+Quindi avremo una struttura del genere a livello di Query Language Tree Sitter per il caso delle classi:
+
+\begin{Verbatim}[samepage=true]
+  (class_declaration name: (_)@name body: (_)@body)@this
+\end{Verbatim}
+
+Esplorando l'unita' dall'alto si dovra' da una parte riconoscere la definizione di una classe e dall'altra poter definire che tutto il "contenuto" di una classe e' "contenuto".
+In generale questo viene fatto nella grammatica TSG tramite l'ordine di esplorazione dei nodi.
+La definizione e' introdotta tramite l'unita' identificatore \emph{name}, quindi si predispone un \emph{defkind} appropriato per quella definizione:
+
+\begin{Verbatim}[samepage=true]
+  (class_declaration name: (_)@name)@this {
+    attr (@name.pop_end) debug_defkind = "class"
+  }
+\end{Verbatim}
+
+Quindi si deve vincolare l'esplorazione dell'unita' in modo che si percorrano in serie l'unita' \emph{name} e l'unita' \emph{body} dall'alto, e quindi vice versa dalle foglie.
+Per fare questo si concatenano le due unita' fra loro e quindi con i rispettivi nodi di ingresso / uscita dell'unita' \emph{class}: 
+
+\begin{Verbatim}[samepage=true]
+  (class_declaration name: (_)@name body: (_)@body)@this {
+    edge @name.scope -> @this.scope
+    edge @this.pop_start -> @name.pop_start
+    let @this.pop_end = @name.pop_end
+    edge @body.scope -> @this.scope
+    edge @body.scope -> @name.push_start
+    edge @name.pop_end -> @body.pop_start
+  }
+\end{Verbatim}
+
+Si procede ora con l'ereditarieta'.
+Sia nelle interfacce che nelle classi la struttura da applicare all'unita' e' pressocche' identica. In linguaggi che non distinguono tra classi e interfacce (come per esempio Python) l'implementazione e' identica, mentre in Java per esempio e' necessario introdurre due regole distinte. Questo perche' nei linguaggi dove si distingue tra i due costruitti sono implementate "operazioni" distinte per applicare super interfacce o super classi. E' il caso di Java con "implements" e "extends". Di conseguenza e' necessario supportare due relazioni di dipendenza distinte: "isImplementationOf" e "isChildOf".
+
+L'Estensione e' un'operazione che riguarda sia le interfacce che le classi: entrambe possono essere figlie di un'altra interfaccia o classe, mentre l'Implementazione e' specifica delle classi.
+Per permettere agli algoritmi di rilevare le due relazioni e poterle usare per risolvere l'ereditarieta' e quindi l'appartenenza di un campo o un metodo della super classe o super interfaccia si marca la reference con il \emph{refkind} appropriato e quindi si concatena l'unita' della classe con l'unita' \emph{super}:
+
+\begin{Verbatim}[samepage=true]
+  [
+    (class_declaration superclass: (superclass (_)@super))@this
+    (interface_declaration (extends_interfaces (type_list (_)@super)))@this
+  ] {
+    attr (@super.push_start)
+      is_reference, refkind = "extends"
+    edge @this.pop_end -> @super.push_start
+    edge @super.push_end -> @this.scope
+  }
+\end{Verbatim}
+
+\begin{Verbatim}[samepage=true]
+  [
+    (class_declaration interfaces: (super_interfaces (type_list (_)@super)))@this
+  ] {
+    attr (@super.push_start)
+      is_reference, refkind = "implements"
+    edge @this.pop_end -> @super.push_start
+    edge @super.push_end -> @this.scope
+  }
+\end{Verbatim}
+
+Rimane solo l'applicazione dei modificatori, che nel caso di java sono le annotazioni: la procedura e' simile, ma la relazione in questo caso e' "usesType".
+
+\begin{Verbatim}[samepage=true]
+  [
+    (class_declaration (modifiers (marker_annotation name: (_)@type)) name: (_)@name)@this
+    (class_declaration (modifiers (annotation name: (_)@type)) name: (_)@name)@this
+  ] {
+    attr (@type.push_start)
+      is_reference, refkind = "usesType"
+    edge @name.pop_end -> @type.push_start
+    edge @type.push_end -> @this.scope
+  }
+\end{Verbatim}
+
+\subsection{Package}
 %TODO
 
-\paragraph{Metodi}
+\subsection{Metodi}
 %TODO
 
-\paragraph{Variabili}
+\subsection{Variabili}
 %TODO
 
-\paragraph{Dichiarazioni di Tipo}
+\subsection{Dichiarazioni di Tipo}
 %TODO
 
-\paragraph{Ereditarieta'}
+\subsection{Accesso ai Campi}
 %TODO
 
-\paragraph{Accesso ai Campi}
+\subsection{Chiamata di Metodi}
 %TODO
 
-\paragraph{Chiamata di Metodi}
+\subsection{Inclusione}
 %TODO
 
-\paragraph{Inclusione}
-%TODO
-
-\paragraph{Modificatori}
+\subsection{File}
 %TODO

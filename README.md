@@ -56,14 +56,14 @@
       - Debugging &check;
       - Complementazioni &check;
 - Grammatica TSG &cross;
-    - Language Dependency &cross;
-    - Algoritmo di Name Resolution di Stack Graph &cross;
-    - Aciclicita' &cross;
+    - Language Dependency &check;
+    - Algoritmo di Name Resolution di Stack Graph &check;
+    - Uso di Push e Pop &check;
+    - Struttura degli Archi &check;
     - Componenti Base &cross;
-      - File &cross;
-      - Identificatori &cross;
+      - Identificatori &check;
+      - Classi, Interfacce, Enum e Annotazioni &check;
       - Package &cross;
-      - Classi, Interfacce, Enum e Annotazioni &cross;
       - Metodi &cross;
       - Variabili &cross;
       - Dichiarazioni di Tipo &cross;
@@ -72,6 +72,7 @@
       - Chiamata di Metodi &cross;
       - Inclusione &cross;
       - Modificatori &cross;
+      - File &cross;
 - Dependency Graph &cross;
     - Introduzione &cross;
     - Esempio &cross;
