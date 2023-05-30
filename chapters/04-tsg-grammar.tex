@@ -206,7 +206,59 @@ Rimane solo l'applicazione dei modificatori, che nel caso di java sono le annota
 \end{Verbatim}
 
 \subsection{Package}
-%TODO
+
+Nei linguaggi dove il nodo sintattico della definizione di package contiene i node delle definizioni e' possibile implementare un modello simile a quello impiegato per classi e interfacce.
+In Java pero' la dichiarazione di package e' uno statement all'inizio del file, quindi bisognera' trovare un'altro modo per forzare l'ordine di esplorazione per far attraversare in serie lo statement e le definizioni nel file.
+
+Prima di tutto si distinguono due casi: il file corrente puo' avere o non avere una dichiarazione di package.
+Nel caso in cui non sia presente un package nel file si instaura un semplice collegamento tra il nodo \emph{program} (radice sintattica del file in Java) e il nodo dello Stack Graph ROOT\_NODE:
+
+\begin{Verbatim}[samepage=true]
+  (program
+    (package_declaration)? @package
+  )@this {
+    if some @package {
+    } else {
+      edge ROOT_NODE -> @this.pop_start
+      edge @this.scope -> ROOT_NODE
+    }
+  }
+\end{Verbatim}
+
+Nel secondo caso, prima si traslano le variabili dell'unita' \emph{name} del package all'interno del nodo sintattico della dichiarazione e si marca la dichiarazione attraverso il \emph{defkind} come "package":
+
+\begin{Verbatim}[samepage=true]
+  (package_declaration
+    (_)@name
+  )@this {
+    ;; node @this.scope
+    attr (@name.pop_end) defkind = "package"
+    let @this.pop_start = @name.pop_start
+    let @this.pop_end = @name.pop_end
+    let @this.push_start = @name.push_start
+    let @this.push_end = @name.push_end
+    ;; edge @this.push_end -> @this.scope
+  }
+\end{Verbatim}
+
+Quindi si infrappone l'esplorazione dell'unita' \emph{name} sia verso l'alto che verso il basso:
+
+\begin{Verbatim}[samepage=true]
+  (program
+    (package_declaration)? @package
+  )@this {
+    if some @package {
+      edge ROOT_NODE -> @package.pop_start
+      edge @package.pop_end -> @this.pop_start
+      edge @this.scope -> @package.push_start
+      edge @package.push_end -> ROOT_NODE
+      edge @this.scope -> ROOT_NODE
+    } else {
+      edge ROOT_NODE -> @this.pop_start
+      edge @this.scope -> ROOT_NODE
+    }
+  }
+\end{Verbatim}
 
 \subsection{Metodi}
 %TODO
