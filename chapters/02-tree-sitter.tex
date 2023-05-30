@@ -17,11 +17,11 @@ E' in grado generare l'albero sintattico del nuovo file sorgente utilizzando com
 
 Per utilizzare \textbf{tree sitter} in \textbf{rust} \cite{TreeSitterCrate} prima di tutto e' necessario importare delle dipendenze. Nel file Cargo.toml:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   [dependencies]
   tree-sitter = "*"
   tree-sitter-java = "*"
-\end{Verbatim}
+\end{lstlisting}
 
 Se si vuole utilizzare il parser tree sitter per il java per esempio si deve inserire tra le dipendenze \textbf{tree-sitter-java}.
 In generale per un linguaggio \textbf{x} e' necessario importare ed utilizzare la libreria \textbf{tree-sitter-x} \cite{TreeSitterRustGrammars}.
@@ -29,12 +29,12 @@ La lista dei linguaggi supportati e' disponibile sul sito del progetto Tree Sitt
 
 Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente snippet:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}[language=Rust]
   let mut the_parser = tree_sitter::Parser::new();
   let the_language = tree_sitter_java::language();
   the_parser.set_language(the_language);
   let tree = the_parser.parse(the_text);
-\end{Verbatim}
+\end{lstlisting}
 
 La variabile \textbf{tree : tree\_sitter::Tree} conterra' l'albero generato da tree sitter.
 
@@ -44,17 +44,17 @@ La variabile \textbf{tree : tree\_sitter::Tree} conterra' l'albero generato da t
 
 Con il seguente file java:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}[language=Java]
 class Main {
 	public static void main(String[] args) {
     	// comment
     }
 }
-\end{Verbatim}
+\end{lstlisting}
 
 si ottiene il seguente albero sintattico:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (program
   (class_declaration
     name: (identifier)
@@ -71,7 +71,7 @@ si ottiene il seguente albero sintattico:
                               name: (identifier)))
               body: (block
                       (line_comment))))))
-\end{Verbatim}
+\end{lstlisting}
 
 \section{Query Language}
 
@@ -84,9 +84,9 @@ Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare dell
 
 \subsection{sintassi}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA (tagB (tagC)) (tagD))
-\end{Verbatim}
+\end{lstlisting}
 
 Il query language non si discosta dalla rappresentazione in sexp.
 Ogni nodo e' rappresentato tramite una sexp dove gli identificatori sono i nomi dei node dell'AST.
@@ -95,9 +95,9 @@ Un engine che applica delle query puo' fornire un'API per ottenere le informazio
 
 \subsection{field}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA B: (tagB (tagC)) D: (tagD))
-\end{Verbatim}
+\end{lstlisting}
 
 In una query e' possibile specificare i field del nodo che si vogliono riconoscere.
 In questo modo e' possibile selezionare costrutti che per esempio fanno uso dei field per ordinare i valori in una sexp.
@@ -106,9 +106,9 @@ Introdurre il field nella query esclude le occorrenze di tagA che non hanno per 
 
 \subsection{nodi anonimi}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA "string")
-\end{Verbatim}
+\end{lstlisting}
 
 Puo' risultare utile specificare al query engine una query siffatta.
 Ad essa saranno associate tutte le occorrenze di tagA che contengano nodi la cui string nel testo sia uguale a "string".
@@ -116,26 +116,26 @@ E' importante sottolineare che la struttura del nodo associato a "string" puo' e
 
 \subsection{wildcard}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA (_))
-\end{Verbatim}
+\end{lstlisting}
 
 Un altro modo per specificare un nodo che con valore indefinito ma senza introdurre vincoli sulle stringhe del testo sono le wildcard.
 
 \subsection{negatori}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA !tagB)
-\end{Verbatim}
+\end{lstlisting}
 
 E' anche possibile specificare field da non trovare nella sexp per definire un match.
 Questa feature e' particolarmente rilevante quando si vuole dividere le query in casi per diminuire la complessita' del programma non dovendo fare affidamento su un unica query molto complessa e inutilmente generale.
 
 \subsection{quantificatori}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA (tagB)+ (tagC)? (tagD)*)
-\end{Verbatim}
+\end{lstlisting}
 
 La negazione di un nodo fa parte di una categoria piu' grande, i quantificatori.
 E' utile poter esprimere una query che raggruppi potenzialmente piu' nodi dello stesso tipo in un unico risultato, specialmente se l'engine permette di poter iterare sui nodi del risultato.
@@ -143,57 +143,57 @@ La semantica e' quella tipica delle espressioni regolari.
 
 \subsection{identificatori}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA (_)@child)@top
-\end{Verbatim}
+\end{lstlisting}
 
 E' possibile associare ad ognun nodo del risultato della query un nodo utilizzando la notazione \emph{(node)@id}.
 Se l'engine supporta linguaggi di scripting o strumenti affini torna utile potersi riferire ai singoli nodi.
 
 \subsection{raggruppamenti}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (
   (tagA)
   (tagB)
 )
-\end{Verbatim}
+\end{lstlisting}
 
 Con questa sintatti si va a cercare una qualsiasi occorrenza nell'AST in cui i due nodi sono in sequenza e figli dello stesso nodo.
 Questo significa pero' che vi possono essere nodi frapposti tra quelli elencati nella query.
 
 \subsection{ancoramento}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (parent (child)@c1 . (child)@c2)
-\end{Verbatim}
+\end{lstlisting}
 
 Un metodo di raggruppamento piu' forte e' il seguente.
 Il carattere "." coincide con un operatore di concatenazione, e viene usato per esplicitare la posizione dei nodi all'interno di un nodo padre.
 A differenza dei raggruppamenti semplici, qui il gruppo di nodi e' considerato in serie.
 Non vi potranno essere nodi compresi tra quelli che corrispondono al match.
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (parent . (child)@c1)
-\end{Verbatim}
+\end{lstlisting}
 
 E' anche possibile esplicitare l'ancoramento rispetto ad un lato.
 Per cui interporre l'operatore di concatenazione tra il parent tag e il nodo child permette di esplicitare che quel nodo child e' il primo nodo figlio del nodo parent.
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (parent (child)@c1 .)
-\end{Verbatim}
+\end{lstlisting}
 
 Allo stesso modo e' possibile indicare l'ultimo nodo figlio.
 
 \subsection{alternative}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 [
   (tagA)
   (tagB)
 ]@tag
-\end{Verbatim}
+\end{lstlisting}
 
 Se in una query due nodi o configurazioni di nodi possono essere trattati allo stesso modo, puo' risultare utile comprimere la query con questo costrutto.
 Come in un'espressione regolare, la query trova un'occorrenza in cui uno dei nodi tra le parentesi quadre combacia con quello reale.
@@ -201,7 +201,7 @@ Come in un'espressione regolare, la query trova un'occorrenza in cui uno dei nod
 
 \subsection{predicati}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (
   (parent
     (child)@A
@@ -209,7 +209,7 @@ Come in un'espressione regolare, la query trova un'occorrenza in cui uno dei nod
   )
   (#pred? @A @B)
 )
-\end{Verbatim}
+\end{lstlisting}
 
 Tree sitter descrive l'uso di alcuni predicati che permettono di asserire condizioni ulteriori di match.
 I predicati implementati in pratica non fanno parte di uno standard, Tree Sitter si limita ad esporli ad un engine che a sua volta deve implementare e supportare il loro uso.

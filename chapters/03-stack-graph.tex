@@ -24,62 +24,62 @@ Per mantenere la convenzione di analizzare codice java, si propone il seguente e
 
 Si includono le librerie necessarie nel file \textbf{Cargo.toml}:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 [dependencies]
 tree-sitter-java="*"
 stack-graphs="*"
 tree-sitter-stack-graphs="*"
-\end{Verbatim}
+\end{lstlisting}
 
 Quindi si importano i seguenti componenti per evitare codice inutilmente verboso e poco espressivo:
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 use stack_graphs::StackGraph;
 use tree_sitter_stack_graphs::Variables; 
 use tree_sitter_stack_graphs::StackGraphLanguage; 
-\end{Verbatim}
+\end{lstlisting}
 
 Per prima cosa occorre creare la struttura dati del grafo usando il costruttore definito da essa e dichiarando la variabile come \emph{mutable}, visto che l'istanza verra' modificata inserendo nodi e archi.
 Si crea anche una struttura che permetta di utilizzare le variabili globali definite sia dall'utente che dalla libreria.
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 let mut stack_graph = StackGraph::new();
 let mut globals = Variables::new();
-\end{Verbatim}
+\end{lstlisting}
 
 Quindi si procede con il caricare la grammatica del linguaggio di programmazione che verra' usata da tree sitter per fare il parsing dei sorgenti:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 let ts_grammar = tree_sitter_java::language();
-\end{Verbatim}
+\end{lstlisting}
 
 Non resta che leggere il file con la grammatica tsg:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 let tsg_filepath = "path/to/file.tsg";
 let tsg_grammar = std::fs::read_string(tsg_filepath).unwrap().as_str();
-\end{Verbatim}
+\end{lstlisting}
 
 Queste due grammatiche devono essere combinate per costruire l'oggetto che permettera' a Tree Sitter Stack Graph di costruire lo Stack Graph basandosi su regole ed albero sintattico:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 let stack_graph_language = StackGraphLanguage::from_str(ts_grammar, tsg_grammar).unwrap();
-\end{Verbatim}
+\end{lstlisting}
 
 Quindi si utilizza la funzione \emph{StackGraph.extend} per leggere un file sorgente e costruire incrementalmente il grafo, tenendo traccia delle veriabili globali utilizzate:
+
+\begin{lstlisting}
+for filepath in sources {
+    stack_graph.extend(globals, filepath, stack_graph_language)
+}
+\end{lstlisting}
+
+Alla fine delle iterazioni la variabile \textbf{stack\_graph} conterra' lo stack graph totale costruito sui file sorgente.
 
 \subsection{risolvere le reference}
 %TODO: full extend, manual extend
 
 \section{Esempio}
 %TODO: esempio stupido del programma Java del capitolo precedente
-
-\begin{Verbatim}[samepage=true]
-for filepath in sources {
-    stack_graph.extend(globals, filepath, stack_graph_language)
-}
-\end{Verbatim}
-
-Alla fine delle iterazioni la variabile \textbf{stack\_graph} conterra' lo stack graph totale costruito sui file sorgente.
 
 \section{Domain Specific Language}
 
@@ -89,11 +89,11 @@ Per farlo si avvale dell'uso di un'altra libreria, \textbf{Tree Sitter Graph} \c
 
 \subsection{sintassi}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA) {
     ;; code
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Ad ogni query tree sitter si accompagna un blocco di codice \cite{TreeSitterGraphReferenceHighLevelStructure}.
 Un insieme di unita' siffatte e di dichiarazioni globali costituisce quella che in gergo viene chiamata \textbf{TSG Grammar}.
@@ -109,25 +109,25 @@ Il linguaggio di scripting supporta l'uso di variabili \cite{TreeSitterGraphRefe
 
 Le variabili locali vengono dichiarate con l'uso di "let", e sono inerentemente immutabili:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (_) {
     let local_variable = "some value"
     set local_variable = "other" ;; ERROR
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Per dichiarare variabili locali mutabili e' necessario usare "var":
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (_) {
     var local_variable = "some value"
     set local_variable = "other" ;; OK
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Una variabile di scope e' dichiarata in maniera simile. Essendo associata ad un nodo di query, puo' essere manipolata in piu' punti del codice.
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagB)@B {
     let @B.scoped_variable = 17
 }
@@ -135,17 +135,17 @@ Una variabile di scope e' dichiarata in maniera simile. Essendo associata ad un 
 (tagA (tagB)@B) {
     ;; @B.scoped_variable == 17
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Le variabili globali devono essere dichiarate fuori dai blocchi di codice e non possono essere nascoste ("variable shadowing") dalle variabili locali:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 global GLOBAL_VARIABLE
 
 (_) {
     let GLOBAL_VARIABLE = "some" ;; ERROR
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Tree Sitter Stack Graph definisce due variabili globali: FILE\_PATH e ROOT\_NODE.
 
@@ -157,12 +157,12 @@ ROOT\_NODE invece e' sempre uguale ad un nodo di scope istanziato dallo stack gr
 
 Un nodo dello stack graph puo' essere dichiarato usando la funzione \textbf{node} \cite{TreeSitterGraphReferenceGraphNodes}.
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA)@this {
     node @this.a
     node b
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Ad ogni nodo e' associato un tipo impostabile con l'attributo "type" e di default uguale a "scope" \cite{TreeSitterStackGraphNodes}.
 Un nodo di tipo "push" aggiunge il simbolo associato sul Symbol Stack durante la risoluzione delle reference, mentre un nodo di tipo "pop" ne rimuove uno dallo stack se e solo se il simbolo e' presente sulla cima dello stack, di fatto limitando i possibili percorsi della ricerca.
@@ -176,11 +176,11 @@ Un nodo reference e' un nodo push e un nodo definition e' un nodo pop.
 Gli archi del grafo vengono dichiarati con una sintassi intuitiva \cite{TreeSitterGraphReferenceEdges}.
 Lo stack graph e' un grafo diretto, quindi la sintassi si propone di rappresentare proprio la direzione degli archi in maniera facilmente leggibile.
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (_) {
     edge nodeA -> nodeB
 }
-\end{Verbatim}
+\end{lstlisting}
 
 L'unico attributo che e' associabile ad un arco e' "precedence", ovvero un parametro intero utilizzato dall'algoritmo di ricerca di stack graph per implementare lo "shadowing" del codice \cite{TreeSitterStackGraphEdges}.
 
@@ -188,7 +188,7 @@ L'unico attributo che e' associabile ad un arco e' "precedence", ovvero un param
 
 Per applicare un attributo ad un nodo o ad un arco si usa la seguente sintassi \cite{TreeSitterGraphReferenceAttributes}:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (_) {
     attr (nodeA)
         key = value,
@@ -197,18 +197,18 @@ Per applicare un attributo ad un nodo o ad un arco si usa la seguente sintassi \
         key = value,
         ...
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Come detto in precedenza, lo statement seguente dichiara che il nodo \emph{nodeA} e' una reference da risolvere con l'algoritmo di stack graph e che il simbolo da appendere e' quello corrispondente al pezzo di codice sorgente che il nodo rappresenta:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (_) {
     attr (nodeA)
         type = "push_symbol",
         node_symbol = nodeA,
         is_reference
 }
-\end{Verbatim}
+\end{lstlisting}
 
 \subsection{shorthands}
 Puo' essere utile ricorrere a shorthands per evitare duplicazione nella grammatica TSG, specialmente se la formula e' sperimentale e/o si prevede che cambiera' per qualche motivo.
@@ -217,17 +217,17 @@ Gli shorthands sono disponibili solo per gli attributi \cite{TreeSitterGraphRefe
 
 La sintassi e':
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 attribute name = input =>
     key = value,
     ...
-\end{Verbatim}
+\end{lstlisting}
 
 La dichiarazione di \emph{name} e' simile ad una funzione con un parametro \emph{input} manipolabile nelle coppie chiave valore.
 
 L'uso pratico di questa feature puo' essere di due tipi: abbreviare un attributo per renderlo piu' facilmente leggibile o compattare una serie di attributi che ci si aspetta vengano dichiarati insieme piu' volte allo stesso modo. Un esempio puo' essere:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 attribute
     defkind = kind =>
         debug_defkind = kind
@@ -236,14 +236,14 @@ attribute
         type = "pop_symbol",
         node_symbol = node,
         is_definition
-\end{Verbatim}
+\end{lstlisting}
 
 \subsection{istruzioni condizionali}
 
 Nel blocco di codice possiamo trovare anche le istruzioni condizionali \cite{TreeSitterGraphReferenceConditionals}, particolarmente utili dal momento che si dispone dei quantificatori nelle query.
 Essi accettano una espressione come condizione, per esempio:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA (tagB)?@id) {
     if some @id {
         ;; tagB presente
@@ -251,19 +251,19 @@ Essi accettano una espressione come condizione, per esempio:
         ;; tagB non presente
     }
 }
-\end{Verbatim}
+\end{lstlisting}
 
 \subsection{iterazioni}
 
 Similarmente si possono usare le iterazioni \cite{TreeSitterGraphReferenceListIterations} sui nodi trovati dalla query coperti da quantificatore:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (tagA (tagB)*@ids) {
     for id in @ids {
         print id
     }
 }
-\end{Verbatim}
+\end{lstlisting}
 
 \subsection{operazioni sulle stringhe}
 
@@ -271,7 +271,7 @@ Essendo i simboli dell'albero sintattico stringhe, sono state implementate alcun
 
 Nell'esempio seguente si risolve la locazione relativa di un modulo importato tramite l'istruzione \emph{include} del preprocessore C e si stampa a schermo il percorso completo:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (preproc_include path: (string_literal)@path) {
     let mod_name = (path-normalize
       (path-join
@@ -279,7 +279,7 @@ Nell'esempio seguente si risolve la locazione relativa di un modulo importato tr
         (replace (source-text @path) "\"" "")))
     print mod_name
 }
-\end{Verbatim}
+\end{lstlisting}
 
 La funzione \emph{source-text} estrare la stringa contenuta nel nodo con identificatore \emph{path}, si applica la funzione replace per eliminare i doppi apici contenuti in essa e si risolve il path relativo utilizzando come base la directory del file corrente.
 Quindi si chiama la funzione \emph{path-normalize} per ben formattare il path cosi' ottenuto.
@@ -291,12 +291,12 @@ Si puo' usare per esempio per visualizzare informazioni costruite dalla grammati
 
 In questo piccolo esempio si stampa a schermo la directory del file analizzato da Tree Sitter Stack Graph:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 global FILE_PATH
 (_) {
     print (path-dir FILE_PATH)
 }
-\end{Verbatim}
+\end{lstlisting}
 
 \subsection{complementi}
 
@@ -304,12 +304,12 @@ Oltre agli attributi supportati da Tree Sitter Stack Graph c'e' la possibilita' 
 
 Per assegnare ad un nodo l'attributo di debug "varx" si usa la sintassi
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (_) {
     attr (node)
         debug_varx = "value"
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Come detto precedentemente, e' utile poter definire ulteriori attributi che supportino l'analisi dello Stack Graph con algoritmi di esplorazione personalizzati.
 Ai fini dell'analisi delle dipendenze si definiscono due variabili di debug:

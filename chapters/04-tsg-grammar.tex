@@ -94,7 +94,7 @@ Per ogni nodo sintattico identificatore si creano sia i nodi push che i nodi pop
 
 Un esempio di regola TSG per ottenere questo pattern e':
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
 (identifier)@this {
     node push
     node pop
@@ -106,11 +106,11 @@ Un esempio di regola TSG per ottenere questo pattern e':
     let @this.scope = scope
     push -> scope
 }
-\end{Verbatim}
+\end{lstlisting}
 
 Questa struttura permette di comporre l'unita' per esempio nelle catene di identificatori, che generalmente in Tree Sitter possono essere formate in questo modo:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
     node scope
     let @this.push_start = @name.push_start
     let @this.push_end = @scope.push_end
@@ -120,7 +120,7 @@ Questa struttura permette di comporre l'unita' per esempio nelle catene di ident
     @scope.pop_end -> @name.pop_start
     @name.push_end -> @scope.push_start
     scope.push_end -> scope
-\end{Verbatim}
+\end{lstlisting}
 
 Questo pattern e' ricorsivamente applicabile attraverso la cattura che usa Tree Sitter Graph, quindi scalabile in verticale: essa permettera' di compore unita' Scoped Identifier per un numero arbitrariamente grande di identificatori nella catena.
 
@@ -134,24 +134,24 @@ In questo modo si mantiene la medesima interfaccia per Scoped Identifier, con co
 Tutti questi costruitti hanno in comune il fatto di contenere propriamente tutte le sotto dichiarazioni al livello di codice sorgente, per cui si prendera' come esempio le classi o le interfacce in base alle relazioni introdotte.
 Quindi avremo una struttura del genere a livello di Query Language Tree Sitter per il caso delle classi:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   (class_declaration name: (_)@name body: (_)@body)@this
-\end{Verbatim}
+\end{lstlisting}
 
 Esplorando l'unita' dall'alto si dovra' da una parte riconoscere la definizione di una classe e dall'altra poter definire che tutto il "contenuto" di una classe e' "contenuto".
 In generale questo viene fatto nella grammatica TSG tramite l'ordine di esplorazione dei nodi.
 La definizione e' introdotta tramite l'unita' identificatore \emph{name}, quindi si predispone un \emph{defkind} appropriato per quella definizione:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   (class_declaration name: (_)@name)@this {
     attr (@name.pop_end) debug_defkind = "class"
   }
-\end{Verbatim}
+\end{lstlisting}
 
 Quindi si deve vincolare l'esplorazione dell'unita' in modo che si percorrano in serie l'unita' \emph{name} e l'unita' \emph{body} dall'alto, e quindi vice versa dalle foglie.
 Per fare questo si concatenano le due unita' fra loro e quindi con i rispettivi nodi di ingresso / uscita dell'unita' \emph{class}: 
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   (class_declaration name: (_)@name body: (_)@body)@this {
     edge @name.scope -> @this.scope
     edge @this.pop_start -> @name.pop_start
@@ -160,7 +160,7 @@ Per fare questo si concatenano le due unita' fra loro e quindi con i rispettivi 
     edge @body.scope -> @name.push_start
     edge @name.pop_end -> @body.pop_start
   }
-\end{Verbatim}
+\end{lstlisting}
 
 Si procede ora con l'ereditarieta'.
 Sia nelle interfacce che nelle classi la struttura da applicare all'unita' e' pressocche' identica. In linguaggi che non distinguono tra classi e interfacce (come per esempio Python) l'implementazione e' identica, mentre in Java per esempio e' necessario introdurre due regole distinte. Questo perche' nei linguaggi dove si distingue tra i due costruitti sono implementate "operazioni" distinte per applicare super interfacce o super classi. E' il caso di Java con "implements" e "extends". Di conseguenza e' necessario supportare due relazioni di dipendenza distinte: "isImplementationOf" e "isChildOf".
@@ -168,7 +168,7 @@ Sia nelle interfacce che nelle classi la struttura da applicare all'unita' e' pr
 L'Estensione e' un'operazione che riguarda sia le interfacce che le classi: entrambe possono essere figlie di un'altra interfaccia o classe, mentre l'Implementazione e' specifica delle classi.
 Per permettere agli algoritmi di rilevare le due relazioni e poterle usare per risolvere l'ereditarieta' e quindi l'appartenenza di un campo o un metodo della super classe o super interfaccia si marca la reference con il \emph{refkind} appropriato e quindi si concatena l'unita' della classe con l'unita' \emph{super}:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   [
     (class_declaration superclass: (superclass (_)@super))@this
     (interface_declaration (extends_interfaces (type_list (_)@super)))@this
@@ -178,9 +178,9 @@ Per permettere agli algoritmi di rilevare le due relazioni e poterle usare per r
     edge @this.pop_end -> @super.push_start
     edge @super.push_end -> @this.scope
   }
-\end{Verbatim}
+\end{lstlisting}
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   [
     (class_declaration interfaces: (super_interfaces (type_list (_)@super)))@this
   ] {
@@ -189,11 +189,11 @@ Per permettere agli algoritmi di rilevare le due relazioni e poterle usare per r
     edge @this.pop_end -> @super.push_start
     edge @super.push_end -> @this.scope
   }
-\end{Verbatim}
+\end{lstlisting}
 
 Rimane solo l'applicazione dei modificatori, che nel caso di java sono le annotazioni: la procedura e' simile, ma la relazione in questo caso e' "usesType".
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   [
     (class_declaration (modifiers (marker_annotation name: (_)@type)) name: (_)@name)@this
     (class_declaration (modifiers (annotation name: (_)@type)) name: (_)@name)@this
@@ -203,7 +203,7 @@ Rimane solo l'applicazione dei modificatori, che nel caso di java sono le annota
     edge @name.pop_end -> @type.push_start
     edge @type.push_end -> @this.scope
   }
-\end{Verbatim}
+\end{lstlisting}
 
 \subsection{Package}
 
@@ -213,7 +213,7 @@ In Java pero' la dichiarazione di package e' uno statement all'inizio del file, 
 Prima di tutto si distinguono due casi: il file corrente puo' avere o non avere una dichiarazione di package.
 Nel caso in cui non sia presente un package nel file si instaura un semplice collegamento tra il nodo \emph{program} (radice sintattica del file in Java) e il nodo dello Stack Graph ROOT\_NODE:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   (program
     (package_declaration)? @package
   )@this {
@@ -223,11 +223,11 @@ Nel caso in cui non sia presente un package nel file si instaura un semplice col
       edge @this.scope -> ROOT_NODE
     }
   }
-\end{Verbatim}
+\end{lstlisting}
 
 Nel secondo caso, prima si traslano le variabili dell'unita' \emph{name} del package all'interno del nodo sintattico della dichiarazione e si marca la dichiarazione attraverso il \emph{defkind} come "package":
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   (package_declaration
     (_)@name
   )@this {
@@ -239,11 +239,11 @@ Nel secondo caso, prima si traslano le variabili dell'unita' \emph{name} del pac
     let @this.push_end = @name.push_end
     ;; edge @this.push_end -> @this.scope
   }
-\end{Verbatim}
+\end{lstlisting}
 
 Quindi si infrappone l'esplorazione dell'unita' \emph{name} sia verso l'alto che verso il basso:
 
-\begin{Verbatim}[samepage=true]
+\begin{lstlisting}
   (program
     (package_declaration)? @package
   )@this {
@@ -258,7 +258,7 @@ Quindi si infrappone l'esplorazione dell'unita' \emph{name} sia verso l'alto che
       edge @this.scope -> ROOT_NODE
     }
   }
-\end{Verbatim}
+\end{lstlisting}
 
 \subsection{Metodi}
 %TODO
