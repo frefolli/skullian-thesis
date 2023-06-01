@@ -32,7 +32,7 @@ tree-sitter-stack-graphs="*"
 \end{lstlisting}
 
 Quindi si importano i seguenti componenti per evitare codice inutilmente verboso e poco espressivo:
-\begin{lstlisting}
+\begin{lstlisting}[language=Rust]
 use stack_graphs::StackGraph;
 use tree_sitter_stack_graphs::Variables; 
 use tree_sitter_stack_graphs::StackGraphLanguage; 
@@ -41,33 +41,33 @@ use tree_sitter_stack_graphs::StackGraphLanguage;
 Per prima cosa occorre creare la struttura dati del grafo usando il costruttore definito da essa e dichiarando la variabile come \emph{mutable}, visto che l'istanza verra' modificata inserendo nodi e archi.
 Si crea anche una struttura che permetta di utilizzare le variabili globali definite sia dall'utente che dalla libreria.
 
-\begin{lstlisting}
+\begin{lstlisting}[language=Rust]
 let mut stack_graph = StackGraph::new();
 let mut globals = Variables::new();
 \end{lstlisting}
 
 Quindi si procede con il caricare la grammatica del linguaggio di programmazione che verra' usata da tree sitter per fare il parsing dei sorgenti:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=Rust]
 let ts_grammar = tree_sitter_java::language();
 \end{lstlisting}
 
 Non resta che leggere il file con la grammatica tsg:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=Rust]
 let tsg_filepath = "path/to/file.tsg";
 let tsg_grammar = std::fs::read_string(tsg_filepath).unwrap().as_str();
 \end{lstlisting}
 
 Queste due grammatiche devono essere combinate per costruire l'oggetto che permettera' a Tree Sitter Stack Graph di costruire lo Stack Graph basandosi su regole ed albero sintattico:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=Rust]
 let stack_graph_language = StackGraphLanguage::from_str(ts_grammar, tsg_grammar).unwrap();
 \end{lstlisting}
 
 Quindi si utilizza la funzione \emph{StackGraph.extend} per leggere un file sorgente e costruire incrementalmente il grafo, tenendo traccia delle veriabili globali utilizzate:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=Rust]
 for filepath in sources {
     stack_graph.extend(globals, filepath, stack_graph_language)
 }
@@ -79,7 +79,7 @@ Alla fine delle iterazioni la variabile \textbf{stack\_graph} conterra' lo stack
 %TODO: full extend, manual extend
 
 \section{Esempio}
-%TODO: esempio stupido del programma Java del capitolo precedente
+%TODO: esempio stupido del programma Java del capitolo precedente: valuta se ne vale la pena
 
 \section{Domain Specific Language}
 
