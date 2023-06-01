@@ -63,15 +63,12 @@
     - Componenti Base &cross;
       - Identificatori &check;
       - Classi, Interfacce, Enum e Annotazioni &check;
-      - Package &cross;
-      - Metodi &cross;
-      - Variabili &cross;
-      - Dichiarazioni di Tipo &cross;
-      - Ereditarieta' &cross;
+      - Package &check;
+      - Variabili &check;
+      - Metodi &check;
       - Accesso ai Campi &cross;
       - Chiamata di Metodi &cross;
       - Inclusione &cross;
-      - Modificatori &cross;
       - File &cross;
 - Dependency Graph &cross;
     - Introduzione &cross;

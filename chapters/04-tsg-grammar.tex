@@ -84,7 +84,7 @@ Per evitare cicli interni ogni nodi che definisce scope fara' progredire due nod
 
 \section{Le Componenti di Base}
 
-%TODO: inserisci legenda
+TODO: spiega l'interfaccia delle unita'
 
 \subsection{Identificatori}
 
@@ -126,7 +126,7 @@ Questo pattern e' ricorsivamente applicabile attraverso la cattura che usa Tree 
 
 \putimage{diagrams/04/scopedIdentifier.png}{Scoped Unit}{fig:scopedIdentifier}
 
-In questo modo si mantiene la medesima interfaccia per Scoped Identifier, con conseguente "polimorfismo" dell'argomento "scope" dello snippet TSG.
+In questo modo si mantiene la medesima interfaccia per Scoped Identifier, con conseguente "polimorfismo" dell'argomento "scope" dello snippet TSG. Il risultato delle regole sara' quindi una catena di nodi che implementano la catena di identificatori.
 
 \subsection{Classi, Interfacce, Enum e Annotazioni}
 %TODO
@@ -181,9 +181,7 @@ Per permettere agli algoritmi di rilevare le due relazioni e poterle usare per r
 \end{lstlisting}
 
 \begin{lstlisting}
-  [
-    (class_declaration interfaces: (super_interfaces (type_list (_)@super)))@this
-  ] {
+  (class_declaration interfaces: (super_interfaces (type_list (_)@super)))@this {
     attr (@super.push_start)
       is_reference, refkind = "implements"
     edge @this.pop_end -> @super.push_start
@@ -217,8 +215,7 @@ Nel caso in cui non sia presente un package nel file si instaura un semplice col
   (program
     (package_declaration)? @package
   )@this {
-    if some @package {
-    } else {
+    if none @package {
       edge ROOT_NODE -> @this.pop_start
       edge @this.scope -> ROOT_NODE
     }
@@ -231,13 +228,11 @@ Nel secondo caso, prima si traslano le variabili dell'unita' \emph{name} del pac
   (package_declaration
     (_)@name
   )@this {
-    ;; node @this.scope
     attr (@name.pop_end) defkind = "package"
     let @this.pop_start = @name.pop_start
     let @this.pop_end = @name.pop_end
     let @this.push_start = @name.push_start
     let @this.push_end = @name.push_end
-    ;; edge @this.push_end -> @this.scope
   }
 \end{lstlisting}
 
@@ -247,27 +242,56 @@ Quindi si infrappone l'esplorazione dell'unita' \emph{name} sia verso l'alto che
   (program
     (package_declaration)? @package
   )@this {
-    if some @package {
+    if none @package {
+      edge ROOT_NODE -> @this.pop_start
+      edge @this.scope -> ROOT_NODE
+    } else {
       edge ROOT_NODE -> @package.pop_start
       edge @package.pop_end -> @this.pop_start
       edge @this.scope -> @package.push_start
       edge @package.push_end -> ROOT_NODE
       edge @this.scope -> ROOT_NODE
-    } else {
-      edge ROOT_NODE -> @this.pop_start
-      edge @this.scope -> ROOT_NODE
     }
   }
 \end{lstlisting}
 
-\subsection{Metodi}
-%TODO
-
 \subsection{Variabili}
-%TODO
 
-\subsection{Dichiarazioni di Tipo}
-%TODO
+Variabili (di metodo e di classe) e parametri dei metodi possono essere trattati allo stesso modo, ma nel modello puo' essere utile distinguere tra essi tramite il \emph{defkind}: rispettivamente "attribute" e "paramter".
+Per via di questa similitudine di seguito si trattera' delle variabili di metodo.
+
+Per ottenere la dichiarazione di una variabile si usa la solita regola TSG che assegna un defkind:
+
+\begin{lstlisting}
+  (local_variable_declaration
+    declarator: (variable_declarator name: (_)@name)
+  )@this {
+    attr (@name.pop_end) defkind = "attribute"
+  }
+\end{lstlisting}
+
+Quindi si collega e assegna la reference al tipo della variabile dichiarata:
+
+\begin{lstlisting}
+  (local_variable_declaration type: (_)@type declarator: (variable_declarator name: (_)@name))@this {
+    attr (@type.push_start)
+      is_reference, refkind = "usesType"
+    edge @type.push_end -> @this.scope
+    edge @name.pop_end -> @type.push_start
+  }
+\end{lstlisting}
+
+\subsection{Metodi}
+
+Metodi e funzioni possono essere trattati in maniera simile a classe e interfaccie, l'unica reale differenza e' la presenza del tipo di ritorno e dei parametri.
+Se il tipo puo' essere utilizzato come nelle variabili, i parametri di per se costituiscono delle unita' autonome, esattamente come cio' che e' contenuto nei body, per cui l'unica azione particolare necessaria per questa unita' sara' collegare la lista dei parametri esattamente come viene collegato il body:
+
+\begin{lstlisting}
+  (method_declaration name: (_)@name parameters: (_)@parameters)@this {
+    edge @parameters.scope -> @this.scope
+    edge @name.pop_end -> @parameters.pop_start
+  }
+\end{lstlisting}
 
 \subsection{Accesso ai Campi}
 %TODO
