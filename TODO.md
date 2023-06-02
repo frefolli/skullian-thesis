@@ -1,25 +1,21 @@
 # Thesis TODO
 
+## Tree Sitter
+
+- [ ] In Rust
+    - [ ] spiega come generare il tree con il diff
+
 ## Stack Graph
 
-- Stack Graph
-    - [x] Introduzione
-    - [x] In Rust
-    - [ ] Esempio
-    - [x] DSL
+ - [ ] In Rust
+    - [ ] risolvere le reference (full / manual extend)
+    - [ ] esempio da Java, se ne vale la pena
 
-## Modello TSG
+## Grammatica TSG
 
-- Componenti di base
-    - [ ] decidere come fare
+- [ ] Modello
+    - [ ] spiega algoritmo cycle detector
+- [ ] Componenti di base
+    - [ ] spiega interfaccia delle unita'
     - [ ] decidere se si deve mettere il modello in D2 per tutte le componenti
-    - [x] Identificatori
-    - [x] Classi, Enum, ...
-    - [ ] Package
-    - [ ] Metodi
-    - [ ] Variabili
-    - [ ] Dichiarazioni di Tipo
-    - [ ] Accesso ai Campi
-    - [ ] Chiamata di Metodi
-    - [ ] Inclusione
-    - [ ] File
+

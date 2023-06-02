@@ -294,13 +294,109 @@ Se il tipo puo' essere utilizzato come nelle variabili, i parametri di per se co
 \end{lstlisting}
 
 \subsection{Accesso ai Campi}
-%TODO
+L'accesso ai campi puo' essere trattato in maniera molto simile alla concatenazione di identificatori: ricorsivamente si definisce una reference attraverso il \emph{refkind} e quindi si collega essa all'unita' \emph{object}:
+
+\begin{lstlisting}
+  (field_access object: (_)@object field: (_)@field)@this {
+    edge @field.push_end -> @object.push_start
+    let @this.push_start = @field.push_start
+    let @this.push_end = @object.push_end
+    edge @this.push_end -> @this.scope
+    edge @this.pop_start -> @this.push_start
+    attr (@field.push_start)
+      is_reference, refkind = "accessField"
+  }
+\end{lstlisting}
+
+Ci sono pero' altri tipi di accesso: per esempio l'accesso ad un elemento di un array o l'accesso al contenuto di una variabile nello scope. A seconda del linguaggio analizzato il Query Language potrebbe possedere costruitti appositi, come in java, o trattarli in maniera simile all'esempio precedente.
+Nel secondo caso ogni reference particolare deve essere segnalata con un'apposita regola.
+L'esempio seguente marca come reference da risolvere gli identificatori passati come argomento di una chiamata di funzione, utilizzati in espressioni binarie o che siano nomi di array:
+
+\begin{lstlisting}
+  [
+    (binary_expression left: (identifier)@child)@this
+    (assignment_expression left: (identifier)@child)@this
+    (binary_expression right: (identifier)@child)@this
+    (assignment_expression right: (identifier)@child)@this
+    (array_access array: (identifier)@child)@this
+    (argument_list (identifier)@child)@this
+  ] {
+    attr (@child.push_start)
+      is_reference, refkind = "accessField"
+    edge @this.pop_start -> @child.push_start
+  }
+\end{lstlisting}
 
 \subsection{Chiamata di Metodi}
-%TODO
+
+L'invocazione di metodi e' un altro esempio di relazione dove si deve distinguere il caso tra un identificatore ed una catena di identificatori. Nel caso di Java il Query Language mette a disposizione un costrutto unico per entrambi i casi:
+
+\begin{lstlisting}
+  (method_invocation object: (_)? @object name: (_)@name)@this
+\end{lstlisting}
+
+Nel caso piu' semplice si ha solo l'unita' \emph{name}, quindi si segnala la reference con il \emph{refkind} e si instaura un collegamento tra \emph{this} e \emph{name}:
+
+\begin{lstlisting}
+  (method_invocation object: (_)? @object name: (_)@name)@this {
+    if none @object {
+      attr (@name.push_start)
+        is_reference, refkind = "calls"
+      edge @this.push_start -> @name.push_start
+      edge @name.push_end -> @this.scope
+      edge @this.pop_start -> @name.push_start
+      let @this.push_end = @name.push_end
+    }
+  }
+\end{lstlisting}
+
+Nel caso in cui il nome del metodo sia composto, l'unica differenza rispetto alla regola precedente e' l'inserimento in mezzo al collegamento dell'unita' \emph{object}, esattamente come e' stato fatto per il caso del package.
 
 \subsection{Inclusione}
 %TODO
 
+Le unita' costruite dagli statement di inclusione dovranno sia segnalare la presenza di una relazione "includes", sia supportare la ricerca del modulo incluso di oggetti che non sono stati definiti nel modulo corrente.
+Grazie all'unita' della catena di identificatori questo e' reso semplice e scalabile: si assegna il \emph{refkind} e si collega l'unita' \emph{name} al \emph{ROOT\_NODE} in modo che un path possa caricare i simboli dell'import e poi tornare alla radice per discendere nel modulo incluso.
+
+\begin{lstlisting}
+  (import_declaration (_)@name)@this {
+    attr (@name.push_start) is_reference, refkind = "includes"
+    let @this.pop_start = @name.pop_end
+    edge @this.pop_start -> @name.push_start
+    edge @name.push_end -> ROOT_NODE
+  }
+\end{lstlisting}
+
 \subsection{File}
-%TODO
+
+Esistono dei linguaggi dove il nome dei moduli e' uguale o strettamente legato al nome del file (come in Python), o dove l'inclusione e' effettuata specificando il nome del file da includere.
+In questi casi e' necessario manipolare i nomi dei file per poter costruire un'unita' simile al package Java, che pero' presenta definizione con defkind distinta.
+Questo permette di costruire relazioni di inclusione che utilizzano il percorso del file per identificare un certo modulo e poter raccogliere anche informazioni su quale file definisce i vari costrutti del linguaggio.
+Di seguito un esempio con il linguaggio C++.
+
+Prima di costruire l'unita' \emph{file} utilizzano il path relativo del file rispetto alla cartella di esplorazione del sorgete: questo e' fatto manualmente dal software che utilizza la grammatica TSG e Tree Sitter Stack Graph andando a leggere i file dopo essersi spostati nella cartella del progetto bersaglio. Questo permette di avere percorsi piu' concisi e meno dispersivi.
+
+\begin{lstlisting}
+(translation_unit)@this {
+    let filepath = (path-normalize FILE_PATH)
+    node @this.filepath
+    attr (@this.filepath)
+        symbol_definition = filepath, defkind = "file"
+    edge ROOT_NODE -> @this.filepath
+    edge @this.filepath -> @this.scope
+    edge @this.scope -> ROOT_NODE
+}
+\end{lstlisting}
+
+Quindi si risolve grazie al DSL di Tree Sitter Stack Graph il path del file incluso nel caso di percorso relativo e si assegna la relazione "includes":
+
+\begin{lstlisting}
+(preproc_include path: (string_literal)@path)@this {
+    let mod_name = (path-normalize (path-join (path-dir FILE_PATH) (replace (source-text @path) "\"" "")))
+    attr (@this.push_start)
+        symbol_reference = mod_name, refkind = "includes"
+    edge @this.push_start -> ROOT_NODE
+    edge @this.pop_start -> @this.push_start
+}
+\end{lstlisting}
+

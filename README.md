@@ -41,7 +41,7 @@
       - Predicati &check;
 - Stack Graph &cross;
     - Introduzione &check;
-    - In Rust &check;
+    - In Rust &cross;
     - Esempio &cross;
     - Il Domain Specific Language &check;
       - Sintassi &check;
@@ -57,7 +57,7 @@
       - Complementazioni &check;
 - Grammatica TSG &cross;
     - Language Dependency &check;
-    - Algoritmo di Name Resolution di Stack Graph &check;
+    - Algoritmo di Name Resolution di Stack Graph &cross;
     - Uso di Push e Pop &check;
     - Struttura degli Archi &check;
     - Componenti Base &cross;
@@ -66,12 +66,12 @@
       - Package &check;
       - Variabili &check;
       - Metodi &check;
-      - Accesso ai Campi &cross;
-      - Chiamata di Metodi &cross;
-      - Inclusione &cross;
-      - File &cross;
+      - Accesso ai Campi &check;
+      - Chiamata di Metodi &check;
+      - Inclusione &check;
+      - File &check;
 - Dependency Graph &cross;
-    - Introduzione &cross;
+    - Il Grafo &cross;
     - Esempio &cross;
     - Costruzione &cross;
       - Identificazione dei target &cross;
