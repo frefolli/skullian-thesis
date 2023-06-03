@@ -15,6 +15,8 @@ E' in grado generare l'albero sintattico del nuovo file sorgente utilizzando com
 
 \section{In Rust}
 
+\subsection{Costruzione dell'Albero}
+
 Per utilizzare \textbf{tree sitter} in \textbf{rust} \cite{TreeSitterCrate} prima di tutto e' necessario importare delle dipendenze. Nel file Cargo.toml:
 
 \begin{lstlisting}
@@ -38,7 +40,24 @@ Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente 
 
 La variabile \textbf{tree : tree\_sitter::Tree} conterra' l'albero generato da tree sitter.
 
-%TODO: spiega come generare il tree con il diff
+\subsection{Aggiornamento dell'Albero}
+
+Per generare l'albero sintattico di un codice sorgente che e' mutato e' sufficiente costruire un oggetto \emph{InputEdit} che segnala dove e' stato modificato, quindi richiamare la funzione \emph{parser.parse} passando l'albero obsoleto.
+
+\begin{lstlisting}[language=Rust]
+tree.edit(InputEdit {
+  start_byte: 8,
+  old_end_byte: 8,
+  new_end_byte: 14,
+  start_position: Point::new(0, 8),
+  old_end_position: Point::new(0, 8),
+  new_end_position: Point::new(0, 14),
+});
+
+let new_tree = parser.parse(new_source_text, Some(&tree));
+\end{lstlisting}
+
+La variabile \textbf{new\_tree} conterra' l'albero aggiornato.
 
 \section{Esempio}
 
