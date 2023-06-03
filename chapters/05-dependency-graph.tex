@@ -3,10 +3,47 @@
 In questo capitolo si descrive l'algoritmo di costruizione del Dependency Graph nelle sue varie fasi.
 
 \section{Il Grafo}
-%TODO
+
+Il Grafo delle Dipendenze deve essere modellato in modo da essere sovrapponibile a quello prodotto da Arcan.
+In questo senso si attua una semplificazione del modello appiattendo la distinzione tra Unit, Container e Module: i nodi saranno distinti dall'attributo defkind che e' stato trattato nei capitoli precedenti.
+Per quanto riguarda invece le relazioni, esse saranno all'incirca identiche, seppur con qualche distinzione nel merito delle entita' coinvolte.
+
+Sia $G = (V, E)$ un grafo delle dipendenze, il generico nodo $v \in V$ sara' etichettato con il suo \emph{fully qualified name} e avra' associato il \emph{defkind}.
+Quindi il generico arco $e \in E$ sara' etichettato con il nome della relazione che esso rappresenta.
 
 \section{Esempio}
-TODO
+
+Sia dato il seguente codice d'esempio Java:
+
+\begin{lstlisting}[language=Java]
+package unimib.ingsof;
+
+class Animal {
+  String name;
+  public void eat() {
+    System.out.println("I can eat");
+  }
+}
+
+class Dog extends Animal {
+  public void display() {
+    System.out.println("My name is " + name);
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+    Dog labrador = new Dog();
+    labrador.name = "Rohu";
+    labrador.display();
+    labrador.eat();
+  }
+}
+\end{lstlisting}
+
+Il procedimento di costruzione presentato in questo capitolo deve essere in grado di costruire il seguente Grafo delle Dipendenze:
+
+\putimage{diagrams/05/depGraphExample.png}{"Esempio di Grafo delle Dipendenze"}{fig:depGraphExample}
 
 \section{Costruzione}
 
