@@ -39,10 +39,9 @@
       - Ancoramento &check;
       - Alternative &check;
       - Predicati &check;
-- Stack Graph &cross;
+- Stack Graph &check;
     - Introduzione &check;
-    - In Rust &cross;
-    - Esempio &cross;
+    - In Rust &check;
     - Il Domain Specific Language &check;
       - Sintassi &check;
       - Variabili &check;
@@ -55,12 +54,12 @@
       - Operazioni sulle Stringhe &check;
       - Debugging &check;
       - Complementazioni &check;
-- Grammatica TSG &cross;
+- Grammatica TSG &check;
     - Language Dependency &check;
     - Algoritmo di Name Resolution di Stack Graph &cross;
     - Uso di Push e Pop &check;
     - Struttura degli Archi &check;
-    - Componenti Base &cross;
+    - Componenti Base &check;
       - Identificatori &check;
       - Classi, Interfacce, Enum e Annotazioni &check;
       - Package &check;

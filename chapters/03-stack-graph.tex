@@ -3,7 +3,7 @@
 In questo capitolo si parla di Stack Graph, come usarlo con Rust, sia per costruire il grafo che per risolvere le reference e il Domain Specific Language, quindi la grammatica TSG, che viene usato per costruire lo Stack Graph.
 
 \section{Introduzione}
-%TODO: quote
+
 Stack Graph \cite{StackGraph} e' un modello di grafo nato per risolvere il problema della navigazione simbolica del codice, superando i limiti dello Scope Graph \cite{ScopeGraph}.
 La tecnologia e' stata presentata per la prima volta in una conferenza Strange Loop \cite{StackGraphConference}, di cui e' stato successivamente scritto un resoconto sotto forma di articolo \cite{StackGraphIntro}.
 Attraverso la costruzione di un grafo con nodi detti di "scope", "push" e "pop" permette di effettuare una ricerca di una reference fino alla sua definizione.
@@ -65,7 +65,7 @@ Queste due grammatiche devono essere combinate per costruire l'oggetto che perme
 let stack_graph_language = StackGraphLanguage::from_str(ts_grammar, tsg_grammar).unwrap();
 \end{lstlisting}
 
-Quindi si utilizza la funzione \emph{StackGraph.extend} per leggere un file sorgente e costruire incrementalmente il grafo, tenendo traccia delle veriabili globali utilizzate:
+Quindi si utilizza la funzione \emph{StackGraph.extend} per leggere un file sorgente e costruire incrementalmente il grafo, tenendo traccia delle variabili globali utilizzate:
 
 \begin{lstlisting}[language=Rust]
 for filepath in sources {
@@ -76,14 +76,52 @@ for filepath in sources {
 Alla fine delle iterazioni la variabile \textbf{stack\_graph} conterra' lo stack graph totale costruito sui file sorgente.
 
 \subsection{risolvere le reference}
-%TODO: full extend, manual extend
 
-\section{Esempio}
-%TODO: esempio stupido del programma Java del capitolo precedente: valuta se ne vale la pena
+Per risolvere le reference un metodo semplice e' utilizzare la funzione \emph{find\_all\_paths}: essa usa come input un insieme di nodi iniziali e il grafo Stack Graph generato nei passi precedenti e risolve tutte le reference appartenenti a quei nodi iniziali esplorando tutti i percorsi possibili che il cycle detector consente di processare.
+
+Nell'esempio seguente si processano tutti i nodi del grafo, tuttavia e' possibile passare il sottoinsieme dei nodi di reference iterando su essi ed aggiungendo gli elementi opportuni ad un vettore.
+
+\begin{lstlisting}[language=Rust]
+let mut paths = stack_graphs::paths::Paths::new();
+paths.find_all_paths(
+    stack_graph,
+    stack_graph.iter_nodes(),
+    &NoCancellation,
+    |sg,_ps,p| {
+        if p.is_complete(sg) {
+            explorer.set_name_binding(p.start_node, p.end_node);
+        }
+    }
+).unwrap();
+\end{lstlisting}
+
+Stack Graph fornisce anche un altro metodo per risolvere le reference, un metodo piu' manuale e consigliato dalla libreria stessa in quanto si presta di piu' a personalizzazioni, ottimizzazioni e ad input piu' grandi.
+Questo metodo coincide con quanto fatto dalla funzione precedente, ma implementandolo direttamente e' possibile processare una reference alla volta e bloccare il processo una volta trovata la corrispondenza della reference.
+
+Ci si serve dell'oggetto CycleDetector e di una coda per tenere traccia dei percorsi processati e quelli da processare, quindi si itera su tutti gli oggetti estendendo manualmente l'oggetto \emph{path} in tutte le direzioni possibili e aggiungendo questi nuovi percorsi alla coda.
+
+Quindi si puo' applicare del codice che controlla se la reference soddisfa la ricerca e in quel caso interrompere il ciclo. Per controllare se un percorso e' completo si usa la funzione \emph{path.is\_complete(stack\_graph)}, di solito requisito necessario e sufficiente a definire la ricerca un successo.
+
+\begin{lstlisting}[language=Rust]
+let mut cycle_detector = CycleDetector::new();
+let mut queue = starting_nodes
+    .into_iter()
+    .filter_map(|node| Path::from_node(graph, self, node))
+    .collect::<VecDeque<_>>();
+while let Some(path) = queue.pop_front() {
+    cancellation_flag.check("finding paths")?;
+    if !cycle_detector.should_process_path(&path, |probe| probe.cmp(graph, self, &path)) {
+        continue;
+    }
+    if path.is_complete(stack_graph) {
+      // BREAK
+    }
+    path.extend(graph, self, &mut queue);
+}
+\end{lstlisting}
 
 \section{Domain Specific Language}
 
-%TODO: quote
 La libreria \textbf{Tree Sitter Stack Graph} \cite{TreeSitterStackGraph} funge da query engine per il Query Language definito da Tree Sitter e permette attraverso un linguaggio di scripting di costruire a runtime un grafo di tipo Stack Graph a partire da un file analizzato con Tree Sitter.
 Per farlo si avvale dell'uso di un'altra libreria, \textbf{Tree Sitter Graph} \cite{TreeSitterGraph}, la quale e' specializzata nella costruzione di grafi generici usando da una parte Tree Sitter e dall'altra una serie di regole con le quali specificare le operazioni da effettuare, i nodi da costruire e da collegare.
 

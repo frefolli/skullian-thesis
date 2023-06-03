@@ -6,7 +6,7 @@ Nel presente capitolo viene descritto Tree Sitter, il suo uso con Rust e il Quer
 
 \textbf{Tree Sitter} \cite{TreeSitter} e' un software in grado di generare un parser (con lexer incorporato) per costruire l'Abstract Syntax Tree di un testo basandosi su un file di configurazione che descriva la grammatica del linguaggio considerato.
 
-Il tool \cite{TreeSitterCreatingParsers} genera un parser in linguaggio \textbf{C} e del codice extra che funge da language binding in modo tale da poter chiamare il nuovo parser con un linguaggio di programmazione a piacere.
+Il tool \cite{TreeSitterCreatingParsers} genera un parser in linguaggio \textbf{C} e insieme al codice extra che funge da language binding, in modo tale da poter chiamare il nuovo parser usando un linguaggio di programmazione a tra quelli supportati.
 Il software generato e' privo di dipendenze, questo ne assicura la portabilita'.
 
 L'aspetto che piu' lo differenzia rispetto ai suoi competitori e' la possibilita' di fare analisi incrementali \cite{TreeSitterAdvancedParsing}.
@@ -77,7 +77,7 @@ si ottiene il seguente albero sintattico:
 
 L'albero sintattico e' graficamente rappresentato attraverso delle \textbf{sexp} che usano identificatori e struttura definiti dalla grammatica del linguaggio.
 \textbf{Tree sitter} definisce un \textbf{Domain Specific Language} \cite{TreeSitterQuerySyntax} tramite il quale eseguire delle query ad un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
-Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific},  la sintassi generale del \textbf{DSL} e' universale.
+Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific}, la sintassi generale del \textbf{DSL} e' universale.
 
 Questo linguaggio di query puo' essere usato da un engine di query per implementare un linguaggio di scripting con cui permettere all'utente di operare in diversi modi su un file sorgente.
 Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'AST per generare un grafo qualsiasi in modo strutturato usando il suo linguaggio di scripting, descritto in dettaglio nel prossimo successivo.

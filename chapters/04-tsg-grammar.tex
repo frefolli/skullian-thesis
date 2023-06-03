@@ -5,20 +5,19 @@ In questo capitolo viene descritto il modello da implementare per costruire una 
 \section{Il Modello}
 
 \subsection{Language Dependency}
-%TODO: quote
 
 Come visto nel capitolo precedente, per costruire lo Stack Graph per un certo file sorgente si utilizza un file con alcune regole che descrivono a Tree Sitter Stack Graph come costruirlo.
 
 \par
-Tuttavia bisogna ricordare che l'albero sintattico di due linguaggi diversi allo stato attuale in Tree Sitter ha non solo nomi diversi per i nodi, ma anche struttura interentemente diversa, sia perche' le rispettive sintassi possono essere molto diverse e quindi necessitano di essere trattate diversamente, sia perche', quando anche la loro sintassi fosse simile o uguale, i relativi sviluppatori le trattano in modo diverso o con passaggi intermedi (C preprocessor) o con semantica diversa.
+Tuttavia bisogna ricordare che l'albero sintattico di due linguaggi diversi allo stato attuale in Tree Sitter ha nomi e struttura potenzialmente differenti, sia perche' le rispettive sintassi possono essere molto dissimili, sia perche' talvolta necessitano di essere trattate in vario modo: i compilatori potrebbero processare in modo distinto le medesime sintassi o con passaggi intermedi (C preprocessor) o assegnando una semantica differente.
 
 \par
-Se quindi da una parte le query delle regole saranno necessariamente molto diverse, bisogna considerare che i linguaggi di programmazione sono eterogenei anche nei costrutti.
+Se quindi da una parte le query delle regole saranno necessariamente distinte a causa di questi canoni, bisogna considerare che i linguaggi di programmazione sono eterogenei anche nei costrutti.
 Rust, per esempio, non possiede ne' classi ne' interfacce. Un concetto simile a quest'ultime sono i \textbf{Traits}, ma vengono applicati secondo una filosofia \emph{Composition over Inheritance}.
-La mancanza o la rielaborazioni di costrutti e componenti nei linguaggi e' anche quindi strettamente legata ai loro paradigmi, ma possono sussistere differenze molto piu' sottili che pero' necessitano di dovute differenze nelle grammatiche TSG: si pensi per esempio ai nomi dei package, problema gia' citato nel capitolo precedente.
+La mancanza o la rielaborazione di costrutti e componenti nei linguaggi e' anche quindi strettamente legata ai loro paradigmi. Tuttavia possono sussistere differenze molto piu' sottili che necessitano di strutture ad hoc nelle grammatiche TSG: si pensi per esempio ai nomi dei package, problema gia' citato nel capitolo precedente.
 
 \par
-Non potendo scrivere un'unica grammatica TSG per ogni linguaggi l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti, il piu' generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
+Non potendo scrivere un'unica grammatica TSG per ogni linguaggio, l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti e requisiti, il piu' generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
 Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi piu' sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
 
 \subsection{Algoritmo di Name Resolution di Stack Graph}
@@ -33,7 +32,11 @@ A questo punto inizia l'algoritmo vero e proprio, il quale altro non e' che un c
 Ad ogni iterazione del ciclo si estrae un path $p$ dalla coda $Q$: si applica una funzione euristica $S : E \rightarrow bool$.
 Questa funzione specifica se e' necessario, o piu' che altro conveniente, analizzare il path appena estratto, specialmente per evitare di rianalizzare due volte lo stesso path (o un path simile) e quindi liberarsi dai cicli infiniti.
 
-TODO: spiega il cycle detector
+\par
+Prima essa controlla se quell'esatto percorso e' gia' stato visitato, quindi lo compara cercando la quantita' di percorsi con nodi iniziale e finale uguali e con lunghezza inferiore gia' visitati: definito questo numero come \emph{N} e data una costante $MAX\_SIMILAR\_PATH\_COUNT = 7$, se si verifica la condizione $N > MAX\_SIMILAR\_PATH\_COUNT$ allora il percorso corrente puo' essere considerato come duplicato.
+
+\par
+La costante \emph{MAX\_SIMILAR\_PATH\_COUNT} puo' essere modificata riscrivendo un'implementazione personalizzata del componente Cycle Detector e sperimentalmente si e' ottenuto come valore ottimale $MAX\_SIMILAR\_PATH\_COUNT = 30$: ne' troppo basso da perdere troppi percorsi ne' troppo alto da pregiudicare la fattibilita' in termini di risorse della risoluzione delle reference.
 
 \par
 A questo punto, se il path deve essere analizzato, la prima cosa che occorre fare e' controllare se e' un path definito "completo", ovvero se il Symbol Stack e' vuoto e il nodo finale del path e' un nodo di tipo "definition": in questo caso la reference e' stata trovata e si puo' interrompere la ricerca.
@@ -49,8 +52,7 @@ Tuttavia in entrambi i casi le ottimizzazioni della grammatica TSG possono avere
 
 \subsection{Uso di push e pop}
 
-%TODO: quote
-Generalmente i Query Language Tree Sitter dei linguaggi di programmazione introducono nodi atomici per gli identificatori: nel sono un esempio \emph{} e \emph{} per java.
+Generalmente i Query Language Tree Sitter dei linguaggi di programmazione introducono nodi atomici per gli identificatori: nel sono un esempio \emph{(identifier)} e \emph{(type\_identifier)} per java.
 Inoltre i costrutti che concatenano piu' identificatori, come per esempio \emph{qualified name} e dichiarazioni di tipo, sono rappresentati come nodi contenenti i nodi che compongono la stringa, che possono essere etichettati o meno.
 Questo apre la possibilita' di risolvere in maniera ricorsiva Bottom Up ed incrementale la costruzione di definizioni e riferimenti: una volta costruiti i sottografi per i nodi sintattici figli si puo' riorganizzare la struttura finale del sottografo del nodo padre combinando i sottografi stessi e riassegnando variabili che identificano i punti di accesso o combinazione degli stessi.
 
@@ -84,7 +86,13 @@ Per evitare cicli interni ogni nodi che definisce scope fara' progredire due nod
 
 \section{Le Componenti di Base}
 
-TODO: spiega l'interfaccia delle unita'
+Ciascuna unita' costruita dal modello disporra' di 5 campi.
+Il nodo radice dell'unita' che permette ad essa di comunicare verso l'alto e' \emph{scope}.
+Rispettivamente \emph{push\_start} e \emph{push\_end} sono i nodi di inizio e di fine del percorso che attraversa l'unita' verso l'alto e che serve a costruire incrementalmente il percorso che la risoluzione delle reference seguira' fino ad un apice dove si iniziera' a scendere alla ricerca di definizioni combacianti.
+Vice versa \emph{pop\_start} e \emph{pop\_end} sono i nodi nella direzione opposta che indicano la direzione di definizione dell'unita'.
+Questi campi possono sia contenere nodi concreti che riferimenti a nodi definiti altrove, per supportare la combinazione tra unita'.
+
+\putimage{diagrams/04/interface.png}{"Interfaccia di un'unita'"}{fig:interface}
 
 \subsection{Identificatori}
 
@@ -129,7 +137,6 @@ Questo pattern e' ricorsivamente applicabile attraverso la cattura che usa Tree 
 In questo modo si mantiene la medesima interfaccia per Scoped Identifier, con conseguente "polimorfismo" dell'argomento "scope" dello snippet TSG. Il risultato delle regole sara' quindi una catena di nodi che implementano la catena di identificatori.
 
 \subsection{Classi, Interfacce, Enum e Annotazioni}
-%TODO
 
 Tutti questi costruitti hanno in comune il fatto di contenere propriamente tutte le sotto dichiarazioni al livello di codice sorgente, per cui si prendera' come esempio le classi o le interfacce in base alle relazioni introdotte.
 Quindi avremo una struttura del genere a livello di Query Language Tree Sitter per il caso delle classi:
@@ -353,7 +360,6 @@ Nel caso piu' semplice si ha solo l'unita' \emph{name}, quindi si segnala la ref
 Nel caso in cui il nome del metodo sia composto, l'unica differenza rispetto alla regola precedente e' l'inserimento in mezzo al collegamento dell'unita' \emph{object}, esattamente come e' stato fatto per il caso del package.
 
 \subsection{Inclusione}
-%TODO
 
 Le unita' costruite dagli statement di inclusione dovranno sia segnalare la presenza di una relazione "includes", sia supportare la ricerca del modulo incluso di oggetti che non sono stati definiti nel modulo corrente.
 Grazie all'unita' della catena di identificatori questo e' reso semplice e scalabile: si assegna il \emph{refkind} e si collega l'unita' \emph{name} al \emph{ROOT\_NODE} in modo che un path possa caricare i simboli dell'import e poi tornare alla radice per discendere nel modulo incluso.
