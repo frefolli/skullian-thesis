@@ -98,7 +98,7 @@ def resolve_references(stack_graph):
     map: Map<Node, Node>.new()
 
     # iterazione sui nodi
-    for node in stack_graph:
+    for node in stack_graph.get_nodes():
 
         # controllo dei requisiti
         if is_reference(node):
@@ -115,7 +115,29 @@ def resolve_references(stack_graph):
 
 \subsection{Esplorazione Ricorsiva}
 
+L'esplorazione sara\`a una visita BFS a partire dalla radice dello Stack Graph, e per ogni nodo non ancora visitato si distinguer\`a in base al suo tipo.
+
+Per stabilire relazioni di parentela nel codice e' sufficiente badare all'ordine di esplorazione dei nodi: i nodi esplorati dopo un certo nodo possono essere considerati in questo modello "figli", quindi e' necessario tenere traccia dell'ultimo nodo visitato prima del corrente.
+
+Da un nodo di definizione con un \emph{defkind} valido si estrae il simbolo che rappresenta e si usa esso per calcolare il \emph{fully qualified name} concatenando il nome del nodo "padre" con il nome del nodo "figlio". Visto che i File non sono costrutti specifici di un linguaggio di programmazione si user\`a come delimitatore la stringa "::" invece del carattere ".".
+
 %TODO
+\begin{lstlisting}[language=Python, caption=pseudocodice]
+def walk_step(reference_map, dependency_graph,
+              parent_node, current_node):
+    if not_visited(current_node):
+        visit(current_node)
+
+        if is_definition(current_node) and has_defkind(current_node):
+            defkind = get_defkind(current_node)
+        elif is_reference(current_node) and has_refkind(current_node):
+            refkind = get_refkind(current_node)
+
+def build_dependency_graph(stack_graph, reference_map):
+    dependency_graph = DependencyGraph.new()
+    return walk_step(reference_map, dependency_graph,
+                     None, stack_graph.get_root())
+\end{lstlisting}
 
 \section{Esportazione}
 
