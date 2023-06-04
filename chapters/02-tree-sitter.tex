@@ -4,20 +4,20 @@ Nel presente capitolo viene descritto Tree Sitter, il suo uso con Rust e il Quer
 
 \section{Introduzione}
 
-\textbf{Tree Sitter} \cite{TreeSitter} e' un software in grado di generare un parser (con lexer incorporato) per costruire l'Abstract Syntax Tree di un testo basandosi su un file di configurazione che descriva la grammatica del linguaggio considerato.
+\textbf{Tree Sitter} \cite{TreeSitter} \`e un software in grado di generare un parser (con lexer incorporato) per costruire l'Abstract Syntax Tree di un testo basandosi su un file di configurazione che descriva la grammatica del linguaggio considerato.
 
 Il tool \cite{TreeSitterCreatingParsers} genera un parser in linguaggio \textbf{C} e insieme al codice extra che funge da language binding, in modo tale da poter chiamare il nuovo parser usando un linguaggio di programmazione a tra quelli supportati.
-Il software generato e' privo di dipendenze, questo ne assicura la portabilita'.
+Il software generato \`e privo di dipendenze, questo ne assicura la portabilit\`a.
 
-L'aspetto che piu' lo differenzia rispetto ai suoi competitori e' la possibilita' di fare analisi incrementali \cite{TreeSitterAdvancedParsing}.
-E' particolarmente efficiente quando si tratta di dover rianalizzare un file che ha subito delle modifiche.
-E' in grado generare l'albero sintattico del nuovo file sorgente utilizzando come base l'albero sintattico obsoleto e una struttura dati che contiene le modifiche che ha subito il file nel suo complesso.
+L'aspetto che pi\`u lo differenzia rispetto ai suoi competitori \`e la possibilit\`a di fare analisi incrementali \cite{TreeSitterAdvancedParsing}.
+\`E particolarmente efficiente quando si tratta di dover rianalizzare un file che ha subito delle modifiche.
+\`E in grado generare l'albero sintattico del nuovo file sorgente utilizzando come base l'albero sintattico obsoleto e una struttura dati che contiene le modifiche che ha subito il file nel suo complesso.
 
 \section{In Rust}
 
 \subsection{Costruzione dell'Albero}
 
-Per utilizzare \textbf{tree sitter} in \textbf{rust} \cite{TreeSitterCrate} prima di tutto e' necessario importare delle dipendenze. Nel file Cargo.toml:
+Per utilizzare \textbf{tree sitter} in \textbf{rust} \cite{TreeSitterCrate} prima di tutto \`e necessario importare delle dipendenze. Nel file Cargo.toml:
 
 \begin{lstlisting}
   [dependencies]
@@ -26,8 +26,8 @@ Per utilizzare \textbf{tree sitter} in \textbf{rust} \cite{TreeSitterCrate} prim
 \end{lstlisting}
 
 Se si vuole utilizzare il parser tree sitter per il java per esempio si deve inserire tra le dipendenze \textbf{tree-sitter-java}.
-In generale per un linguaggio \textbf{x} e' necessario importare ed utilizzare la libreria \textbf{tree-sitter-x} \cite{TreeSitterRustGrammars}.
-La lista dei linguaggi supportati e' disponibile sul sito del progetto Tree Sitter.
+In generale per un linguaggio \textbf{x} \`e necessario importare ed utilizzare la libreria \textbf{tree-sitter-x} \cite{TreeSitterRustGrammars}.
+La lista dei linguaggi supportati \`e disponibile sul sito del progetto Tree Sitter.
 
 Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente snippet:
 
@@ -38,11 +38,11 @@ Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente 
   let tree = the_parser.parse(the_text);
 \end{lstlisting}
 
-La variabile \textbf{tree : tree\_sitter::Tree} conterra' l'albero generato da tree sitter.
+La variabile \textbf{tree : tree\_sitter::Tree} conterr\`a l'albero generato da tree sitter.
 
 \subsection{Aggiornamento dell'Albero}
 
-Per generare l'albero sintattico di un codice sorgente che e' mutato e' sufficiente costruire un oggetto \emph{InputEdit} che segnala dove e' stato modificato, quindi richiamare la funzione \emph{parser.parse} passando l'albero obsoleto.
+Per generare l'albero sintattico di un codice sorgente che \`e mutato \`e sufficiente costruire un oggetto \emph{InputEdit} che segnala dove \`e stato modificato, quindi richiamare la funzione \emph{parser.parse} passando l'albero obsoleto.
 
 \begin{lstlisting}[language=Rust]
 tree.edit(InputEdit {
@@ -57,7 +57,7 @@ tree.edit(InputEdit {
 let new_tree = parser.parse(new_source_text, Some(&tree));
 \end{lstlisting}
 
-La variabile \textbf{new\_tree} conterra' l'albero aggiornato.
+La variabile \textbf{new\_tree} conterr\`a l'albero aggiornato.
 
 \section{Esempio}
 
@@ -94,12 +94,12 @@ si ottiene il seguente albero sintattico:
 
 \section{Query Language}
 
-L'albero sintattico e' graficamente rappresentato attraverso delle \textbf{sexp} che usano identificatori e struttura definiti dalla grammatica del linguaggio.
+L'albero sintattico \`e graficamente rappresentato attraverso delle \textbf{sexp} che usano identificatori e struttura definiti dalla grammatica del linguaggio.
 \textbf{Tree sitter} definisce un \textbf{Domain Specific Language} \cite{TreeSitterQuerySyntax} tramite il quale eseguire delle query ad un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
-Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific}, la sintassi generale del \textbf{DSL} e' universale.
+Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific}, la sintassi generale del \textbf{DSL} \`e universale.
 
-Questo linguaggio di query puo' essere usato da un engine di query per implementare un linguaggio di scripting con cui permettere all'utente di operare in diversi modi su un file sorgente.
-Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare delle query all'AST per generare un grafo qualsiasi in modo strutturato usando il suo linguaggio di scripting, descritto in dettaglio nel prossimo successivo.
+Questo linguaggio di query pu\`o essere usato da un engine di query per implementare un linguaggio di scripting con cui permettere all'utente di operare in diversi modi su un file sorgente.
+Con l'apposita libreria \textbf{tree-sitter-stack-graphs} \`e possibile fare delle query all'AST per generare un grafo qualsiasi in modo strutturato usando il suo linguaggio di scripting, descritto in dettaglio nel prossimo successivo.
 
 \subsection{sintassi}
 
@@ -108,9 +108,9 @@ Con l'apposita libreria \textbf{tree-sitter-stack-graphs} e' possibile fare dell
 \end{lstlisting}
 
 Il query language non si discosta dalla rappresentazione in sexp.
-Ogni nodo e' rappresentato tramite una sexp dove gli identificatori sono i nomi dei node dell'AST.
-La stringa del testo a cui un nodo fa riferimento non e' esplicitamente contenuta ne' nella rappresentazione dell'AST, ne' nella query.
-Un engine che applica delle query puo' fornire un'API per ottenere le informazioni corrispondenti ai nodi.
+Ogni nodo \`e rappresentato tramite una sexp dove gli identificatori sono i nomi dei node dell'AST.
+La stringa del testo a cui un nodo fa riferimento non \`e esplicitamente contenuta n\'e nella rappresentazione dell'AST, n\'e nella query.
+Un engine che applica delle query pu\`o fornire un'API per ottenere le informazioni corrispondenti ai nodi.
 
 \subsection{field}
 
@@ -118,9 +118,9 @@ Un engine che applica delle query puo' fornire un'API per ottenere le informazio
 (tagA B: (tagB (tagC)) D: (tagD))
 \end{lstlisting}
 
-In una query e' possibile specificare i field del nodo che si vogliono riconoscere.
-In questo modo e' possibile selezionare costrutti che per esempio fanno uso dei field per ordinare i valori in una sexp.
-Si noti che l'accesso al field e' unico, ad ogni field e' associato al piu' un nodo.
+In una query \`e possibile specificare i field del nodo che si vogliono riconoscere.
+In questo modo \`e possibile selezionare costrutti che per esempio fanno uso dei field per ordinare i valori in una sexp.
+Si noti che l'accesso al field \`e unico, ad ogni field \`e associato al pi\`u un nodo.
 Introdurre il field nella query esclude le occorrenze di tagA che non hanno per esempio associato un valore al field B.
 
 \subsection{nodi anonimi}
@@ -129,9 +129,9 @@ Introdurre il field nella query esclude le occorrenze di tagA che non hanno per 
 (tagA "string")
 \end{lstlisting}
 
-Puo' risultare utile specificare al query engine una query siffatta.
+Pu\`o risultare utile specificare al query engine una query siffatta.
 Ad essa saranno associate tutte le occorrenze di tagA che contengano nodi la cui string nel testo sia uguale a "string".
-E' importante sottolineare che la struttura del nodo associato a "string" puo' essere complessa a piacere.
+\`E importante sottolineare che la struttura del nodo associato a "string" pu\`o essere complessa a piacere.
 
 \subsection{wildcard}
 
@@ -147,8 +147,8 @@ Un altro modo per specificare un nodo che con valore indefinito ma senza introdu
 (tagA !tagB)
 \end{lstlisting}
 
-E' anche possibile specificare field da non trovare nella sexp per definire un match.
-Questa feature e' particolarmente rilevante quando si vuole dividere le query in casi per diminuire la complessita' del programma non dovendo fare affidamento su un unica query molto complessa e inutilmente generale.
+\`E anche possibile specificare field da non trovare nella sexp per definire un match.
+Questa feature \`e particolarmente rilevante quando si vuole dividere le query in casi per diminuire la complessit\`a del programma non dovendo fare affidamento su un unica query molto complessa e inutilmente generale.
 
 \subsection{quantificatori}
 
@@ -156,9 +156,9 @@ Questa feature e' particolarmente rilevante quando si vuole dividere le query in
 (tagA (tagB)+ (tagC)? (tagD)*)
 \end{lstlisting}
 
-La negazione di un nodo fa parte di una categoria piu' grande, i quantificatori.
-E' utile poter esprimere una query che raggruppi potenzialmente piu' nodi dello stesso tipo in un unico risultato, specialmente se l'engine permette di poter iterare sui nodi del risultato.
-La semantica e' quella tipica delle espressioni regolari.
+La negazione di un nodo fa parte di una categoria pi\`u grande, i quantificatori.
+\`E utile poter esprimere una query che raggruppi potenzialmente pi\`u nodi dello stesso tipo in un unico risultato, specialmente se l'engine permette di poter iterare sui nodi del risultato.
+La semantica \`e quella tipica delle espressioni regolari.
 
 \subsection{identificatori}
 
@@ -166,7 +166,7 @@ La semantica e' quella tipica delle espressioni regolari.
 (tagA (_)@child)@top
 \end{lstlisting}
 
-E' possibile associare ad ognun nodo del risultato della query un nodo utilizzando la notazione \emph{(node)@id}.
+\`E possibile associare ad ognun nodo del risultato della query un nodo utilizzando la notazione \emph{(node)@id}.
 Se l'engine supporta linguaggi di scripting o strumenti affini torna utile potersi riferire ai singoli nodi.
 
 \subsection{raggruppamenti}
@@ -179,7 +179,7 @@ Se l'engine supporta linguaggi di scripting o strumenti affini torna utile poter
 \end{lstlisting}
 
 Con questa sintatti si va a cercare una qualsiasi occorrenza nell'AST in cui i due nodi sono in sequenza e figli dello stesso nodo.
-Questo significa pero' che vi possono essere nodi frapposti tra quelli elencati nella query.
+Questo significa per\`o che vi possono essere nodi frapposti tra quelli elencati nella query.
 
 \subsection{ancoramento}
 
@@ -187,23 +187,23 @@ Questo significa pero' che vi possono essere nodi frapposti tra quelli elencati 
 (parent (child)@c1 . (child)@c2)
 \end{lstlisting}
 
-Un metodo di raggruppamento piu' forte e' il seguente.
+Un metodo di raggruppamento pi\`u forte \`e il seguente.
 Il carattere "." coincide con un operatore di concatenazione, e viene usato per esplicitare la posizione dei nodi all'interno di un nodo padre.
-A differenza dei raggruppamenti semplici, qui il gruppo di nodi e' considerato in serie.
+A differenza dei raggruppamenti semplici, qui il gruppo di nodi \`e considerato in serie.
 Non vi potranno essere nodi compresi tra quelli che corrispondono al match.
 
 \begin{lstlisting}
 (parent . (child)@c1)
 \end{lstlisting}
 
-E' anche possibile esplicitare l'ancoramento rispetto ad un lato.
-Per cui interporre l'operatore di concatenazione tra il parent tag e il nodo child permette di esplicitare che quel nodo child e' il primo nodo figlio del nodo parent.
+\`E anche possibile esplicitare l'ancoramento rispetto ad un lato.
+Per cui interporre l'operatore di concatenazione tra il parent tag e il nodo child permette di esplicitare che quel nodo child \`e il primo nodo figlio del nodo parent.
 
 \begin{lstlisting}
 (parent (child)@c1 .)
 \end{lstlisting}
 
-Allo stesso modo e' possibile indicare l'ultimo nodo figlio.
+Allo stesso modo \`e possibile indicare l'ultimo nodo figlio.
 
 \subsection{alternative}
 
@@ -214,7 +214,7 @@ Allo stesso modo e' possibile indicare l'ultimo nodo figlio.
 ]@tag
 \end{lstlisting}
 
-Se in una query due nodi o configurazioni di nodi possono essere trattati allo stesso modo, puo' risultare utile comprimere la query con questo costrutto.
+Se in una query due nodi o configurazioni di nodi possono essere trattati allo stesso modo, pu\`o risultare utile comprimere la query con questo costrutto.
 Come in un'espressione regolare, la query trova un'occorrenza in cui uno dei nodi tra le parentesi quadre combacia con quello reale.
 
 
@@ -234,4 +234,4 @@ Tree sitter descrive l'uso di alcuni predicati che permettono di asserire condiz
 I predicati implementati in pratica non fanno parte di uno standard, Tree Sitter si limita ad esporli ad un engine che a sua volta deve implementare e supportare il loro uso.
 
 Nel caso proposto si applica un predicato \emph{pred} ai nodi argomenti \emph{A} e \emph{B}.
-E' possibile anche usare come argomenti delle stringhe.
+\`E possibile anche usare come argomenti delle stringhe.

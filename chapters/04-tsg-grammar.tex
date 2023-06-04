@@ -9,98 +9,98 @@ In questo capitolo viene descritto il modello da implementare per costruire una 
 Come visto nel capitolo precedente, per costruire lo Stack Graph per un certo file sorgente si utilizza un file con alcune regole che descrivono a Tree Sitter Stack Graph come costruirlo.
 
 \par
-Tuttavia bisogna ricordare che l'albero sintattico di due linguaggi diversi allo stato attuale in Tree Sitter ha nomi e struttura potenzialmente differenti, sia perche' le rispettive sintassi possono essere molto dissimili, sia perche' talvolta necessitano di essere trattate in vario modo: i compilatori potrebbero processare in modo distinto le medesime sintassi o con passaggi intermedi (C preprocessor) o assegnando una semantica differente.
+Tuttavia bisogna ricordare che l'albero sintattico di due linguaggi diversi allo stato attuale in Tree Sitter ha nomi e struttura potenzialmente differenti, sia perch\'e le rispettive sintassi possono essere molto dissimili, sia perch\'e talvolta necessitano di essere trattate in vario modo: i compilatori potrebbero processare in modo distinto le medesime sintassi o con passaggi intermedi (C preprocessor) o assegnando una semantica differente.
 
 \par
 Se quindi da una parte le query delle regole saranno necessariamente distinte a causa di questi canoni, bisogna considerare che i linguaggi di programmazione sono eterogenei anche nei costrutti.
-Rust, per esempio, non possiede ne' classi ne' interfacce. Un concetto simile a quest'ultime sono i \textbf{Traits}, ma vengono applicati secondo una filosofia \emph{Composition over Inheritance}.
-La mancanza o la rielaborazione di costrutti e componenti nei linguaggi e' anche quindi strettamente legata ai loro paradigmi. Tuttavia possono sussistere differenze molto piu' sottili che necessitano di strutture ad hoc nelle grammatiche TSG: si pensi per esempio ai nomi dei package, problema gia' citato nel capitolo precedente.
+Rust, per esempio, non possiede n\'e classi n\'e interfacce. Un concetto simile a quest'ultime sono i \textbf{Traits}, ma vengono applicati secondo una filosofia \emph{Composition over Inheritance}.
+La mancanza o la rielaborazione di costrutti e componenti nei linguaggi \`e anche quindi strettamente legata ai loro paradigmi. Tuttavia possono sussistere differenze molto pi\`u sottili che necessitano di strutture ad hoc nelle grammatiche TSG: si pensi per esempio ai nomi dei package, problema gi\`a citato nel capitolo precedente.
 
 \par
-Non potendo scrivere un'unica grammatica TSG per ogni linguaggio, l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti e requisiti, il piu' generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
-Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi piu' sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
+Non potendo scrivere un'unica grammatica TSG per ogni linguaggio, l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti e requisiti, il pi\`u generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
+Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi pi\`u sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
 
 \subsection{Algoritmo di Name Resolution di Stack Graph}
 
-E' importante comprendere come Stack Graphs effettivamente risolve le reference perche' non solo abilita il programmatore ad ottimizzazioni consapevoli, ma permette anche di implementare risoluzioni piu' complesse.
+\`E importante comprendere come Stack Graphs effettivamente risolve le reference perch\'e non solo abilita il programmatore ad ottimizzazioni consapevoli, ma permette anche di implementare risoluzioni pi\`u complesse.
 
 \par
-Sia dato un grafo $G = (V, E)$ di tipo Stack Graph, e sia $r \in V$ il nodo che corrisponde alla reference da risolvere. Questo nodo sara' il nodo iniziale della ricerca: dopo aver inizializzato una coda $Q$ vuota, si costruisce il path $p_r = (r,)$ che ha come nodo di partenza il nodo iniziale $r$ e si inserisce il suddetto path $p$ nella coda $Q$.
+Sia dato un grafo $G = (V, E)$ di tipo Stack Graph, e sia $r \in V$ il nodo che corrisponde alla reference da risolvere. Questo nodo sar\`a il nodo iniziale della ricerca: dopo aver inizializzato una coda $Q$ vuota, si costruisce il path $p_r = (r,)$ che ha come nodo di partenza il nodo iniziale $r$ e si inserisce il suddetto path $p$ nella coda $Q$.
 
 \par
-A questo punto inizia l'algoritmo vero e proprio, il quale altro non e' che un ciclo che termina quando la coda $Q$ e' vuota.
+A questo punto inizia l'algoritmo vero e proprio, il quale altro non \`e che un ciclo che termina quando la coda $Q$ \`e vuota.
 Ad ogni iterazione del ciclo si estrae un path $p$ dalla coda $Q$: si applica una funzione euristica $S : E \rightarrow bool$.
-Questa funzione specifica se e' necessario, o piu' che altro conveniente, analizzare il path appena estratto, specialmente per evitare di rianalizzare due volte lo stesso path (o un path simile) e quindi liberarsi dai cicli infiniti.
+Questa funzione specifica se \`e necessario, o pi\`u che altro conveniente, analizzare il path appena estratto, specialmente per evitare di rianalizzare due volte lo stesso path (o un path simile) e quindi liberarsi dai cicli infiniti.
 
 \par
-Prima essa controlla se quell'esatto percorso e' gia' stato visitato, quindi lo compara cercando la quantita' di percorsi con nodi iniziale e finale uguali e con lunghezza inferiore gia' visitati: definito questo numero come \emph{N} e data una costante $MAX\_SIMILAR\_PATH\_COUNT = 7$, se si verifica la condizione $N > MAX\_SIMILAR\_PATH\_COUNT$ allora il percorso corrente puo' essere considerato come duplicato.
+Prima essa controlla se quell'esatto percorso \`e gi\`a stato visitato, quindi lo compara cercando la quantit\`a di percorsi con nodi iniziale e finale uguali e con lunghezza inferiore gi\`a visitati: definito questo numero come \emph{N} e data una costante $MAX\_SIMILAR\_PATH\_COUNT = 7$, se si verifica la condizione $N > MAX\_SIMILAR\_PATH\_COUNT$ allora il percorso corrente pu\`o essere considerato come duplicato.
 
 \par
-La costante \emph{MAX\_SIMILAR\_PATH\_COUNT} puo' essere modificata riscrivendo un'implementazione personalizzata del componente Cycle Detector e sperimentalmente si e' ottenuto come valore ottimale $MAX\_SIMILAR\_PATH\_COUNT = 30$: ne' troppo basso da perdere troppi percorsi ne' troppo alto da pregiudicare la fattibilita' in termini di risorse della risoluzione delle reference.
+La costante \emph{MAX\_SIMILAR\_PATH\_COUNT} pu\`o essere modificata riscrivendo un'implementazione personalizzata del componente Cycle Detector e sperimentalmente si \`e ottenuto come valore ottimale $MAX\_SIMILAR\_PATH\_COUNT = 30$: n\'e troppo basso da perdere troppi percorsi n\'e troppo alto da pregiudicare la fattibilit\`a in termini di risorse della risoluzione delle reference.
 
 \par
-A questo punto, se il path deve essere analizzato, la prima cosa che occorre fare e' controllare se e' un path definito "completo", ovvero se il Symbol Stack e' vuoto e il nodo finale del path e' un nodo di tipo "definition": in questo caso la reference e' stata trovata e si puo' interrompere la ricerca.
-Ulteriori informazioni di circostanza ("defkind" e "refkind" per esempio) possono definire regole ulteriori per definire quali definizioni devono essere accettate: nella soluzione proposta si va a valutare solo i path completi i cui nodi finali siano "definition" con un "defkind" non nullo e i cui nodi iniziali siano "reference" con "refkind" non nulla. Chiaramente la seconda condizione puo' essere controllata nel momento stesso in cui si decide di risolvere un nodo di reference.
+A questo punto, se il path deve essere analizzato, la prima cosa che occorre fare \`e controllare se \`e un path definito "completo", ovvero se il Symbol Stack \`e vuoto e il nodo finale del path \`e un nodo di tipo "definition": in questo caso la reference \`e stata trovata e si pu\`o interrompere la ricerca.
+Ulteriori informazioni di circostanza ("defkind" e "refkind" per esempio) possono definire regole ulteriori per definire quali definizioni devono essere accettate: nella soluzione proposta si va a valutare solo i path completi i cui nodi finali siano "definition" con un "defkind" non nullo e i cui nodi iniziali siano "reference" con "refkind" non nulla. Chiaramente la seconda condizione pu\`o essere controllata nel momento stesso in cui si decide di risolvere un nodo di reference.
 
 \par
-Se il path corrente non e' "completo", lo si va ad "estendere": per ogni arco del nodo finale si verifica la possibilita' di attraversarlo (in base al Symbol Stack e alle operazioni di pop) e in quel caso si aggiunge il nuovo path alla coda.
+Se il path corrente non \`e "completo", lo si va ad "estendere": per ogni arco del nodo finale si verifica la possibilit\`a di attraversarlo (in base al Symbol Stack e alle operazioni di pop) e in quel caso si aggiunge il nuovo path alla coda.
 
 \par
-E' bene notare come non solo ogni arco, ma anche ogni ciclo all'interno del grafo possono aggiungere molti path concorrenti alla coda.
-Il ruolo della euristica in questo secondo caso e' evitare l'esplosione della coda: il tempo di computazione deve essere ragionevole (del resto l'obbiettivo e' appunto migliorare le prestazioni di costruzione del grafico delle dipendenze), e lo spazio usato dal programma deve essere limitato o non eccessivo.
-Tuttavia in entrambi i casi le ottimizzazioni della grammatica TSG possono avere un impatto notevole sia sul numero di path concorrenti sia sulle prestazioni della risoluzione delle reference. E' quindi bene studiare bene ogni possibilita' che le feature di Stack Graphs offrono al programmatore.
+\`E bene notare come non solo ogni arco, ma anche ogni ciclo all'interno del grafo possono aggiungere molti path concorrenti alla coda.
+Il ruolo della euristica in questo secondo caso \`e evitare l'esplosione della coda: il tempo di computazione deve essere ragionevole (del resto l'obbiettivo \`e appunto migliorare le prestazioni di costruzione del grafico delle dipendenze), e lo spazio usato dal programma deve essere limitato o non eccessivo.
+Tuttavia in entrambi i casi le ottimizzazioni della grammatica TSG possono avere un impatto notevole sia sul numero di path concorrenti sia sulle prestazioni della risoluzione delle reference. \`E quindi bene studiare bene ogni possibilit\`a che le feature di Stack Graphs offrono al programmatore.
 
 \subsection{Uso di push e pop}
 
 Generalmente i Query Language Tree Sitter dei linguaggi di programmazione introducono nodi atomici per gli identificatori: nel sono un esempio \emph{(identifier)} e \emph{(type\_identifier)} per java.
-Inoltre i costrutti che concatenano piu' identificatori, come per esempio \emph{qualified name} e dichiarazioni di tipo, sono rappresentati come nodi contenenti i nodi che compongono la stringa, che possono essere etichettati o meno.
-Questo apre la possibilita' di risolvere in maniera ricorsiva Bottom Up ed incrementale la costruzione di definizioni e riferimenti: una volta costruiti i sottografi per i nodi sintattici figli si puo' riorganizzare la struttura finale del sottografo del nodo padre combinando i sottografi stessi e riassegnando variabili che identificano i punti di accesso o combinazione degli stessi.
+Inoltre i costrutti che concatenano pi\`u identificatori, come per esempio \emph{qualified name} e dichiarazioni di tipo, sono rappresentati come nodi contenenti i nodi che compongono la stringa, che possono essere etichettati o meno.
+Questo apre la possibilit\`a di risolvere in maniera ricorsiva Bottom Up ed incrementale la costruzione di definizioni e riferimenti: una volta costruiti i sottografi per i nodi sintattici figli si pu\`o riorganizzare la struttura finale del sottografo del nodo padre combinando i sottografi stessi e riassegnando variabili che identificano i punti di accesso o combinazione degli stessi.
 
 \par
 Si assegna sistematicamente ai nodi sintattici atomici alcuni nodi rispettivamente di "pop" e "push" per definizioni e riferimenti, quindi utilizzando archi e varabili si combinano questi nodi.
-Infatti da una parte concatenando con un arco due nodi di "push" $X$ e $Y$ otterremo una ricerca che andra' a valutare prima l'esistenza di una definizione del simbolo associato a $Y$ e successivamente la definizione per il simbolo di $X$, e dall'altra l'esplorazione dall'alto potra considerare consecutivamente i due nodi $X$ e $Y$, per esempio per catturare relazioni di parentela o di contenimento.
+Infatti da una parte concatenando con un arco due nodi di "push" $X$ e $Y$ otterremo una ricerca che andr\`a a valutare prima l'esistenza di una definizione del simbolo associato a $Y$ e successivamente la definizione per il simbolo di $X$, e dall'altra l'esplorazione dall'alto potra considerare consecutivamente i due nodi $X$ e $Y$, per esempio per catturare relazioni di parentela o di contenimento.
 
 \par
-Questo meccanismo, a cui si fara' riferimento sotto il nome di \emph{resolution bridge}, e' molto utile per risolvere le reference nel codice che fanno uso di import o di inferenza di tipo o di classe: per esempio attraverso la concatenazione dei nodi di pop della dichiarazione di una variabile con i nodi di push del tipo dichiarato si costruisce incrementalmente la ricerca che dopo aver risolto il nome della variabile, se rimangono simboli sul Symbol Stack (per esempio se si cerca di catturare una relazione di \emph{field access}), potra' caricare sul Symbol Stack i simboli del tipo di dato e andare immediatamente alla ricerca del tipo da cui estrarre le informazioni rimanenti.
+Questo meccanismo, a cui si far\`a riferimento sotto il nome di \emph{resolution bridge}, \`e molto utile per risolvere le reference nel codice che fanno uso di import o di inferenza di tipo o di classe: per esempio attraverso la concatenazione dei nodi di pop della dichiarazione di una variabile con i nodi di push del tipo dichiarato si costruisce incrementalmente la ricerca che dopo aver risolto il nome della variabile, se rimangono simboli sul Symbol Stack (per esempio se si cerca di catturare una relazione di \emph{field access}), potr\`a caricare sul Symbol Stack i simboli del tipo di dato e andare immediatamente alla ricerca del tipo da cui estrarre le informazioni rimanenti.
 
 \par
-Non tutti i nodi di reference costituiranno reference "concrete", ovvero che ha senso andare a risolvere: infatti se si ha una concatenazione di simboli si preferisce andare a ricercare solo la concatenazione invece di ogni singola sottocatena, visto che lo scopo dell'analisi e' ricercare le dipendenze tra componenti e unita' del codice. Si applica un filtro ancorando ai soli nodi finali di una catena di reference la variabile di debug "refkind", sia per distinguere il tipo di reference che per marcare quelle interessanti.
+Non tutti i nodi di reference costituiranno reference "concrete", ovvero che ha senso andare a risolvere: infatti se si ha una concatenazione di simboli si preferisce andare a ricercare solo la concatenazione invece di ogni singola sottocatena, visto che lo scopo dell'analisi \`e ricercare le dipendenze tra componenti e unit\`a del codice. Si applica un filtro ancorando ai soli nodi finali di una catena di reference la variabile di debug "refkind", sia per distinguere il tipo di reference che per marcare quelle interessanti.
 
 \par
 Lo stesso vale in linea di principio per le definizioni: oltre alla risoluzione delle reference si applica anche un'esplorazione dall'alto per catturare i nodi del grafo delle dipendenze: package, classi, funzioni, campi ... etc. Sia per contrassegnare tra una definizione concreta, sia per distinguere tra definizioni di tipo diverso si usa la variabile "defkind".
 
 \par
-Durante la stesura di una concatenazione di nodi "push" che vengono usati per il \emph{resolution bridge}, per limitare il numero di path che vengono creati durante la ricerca, si puo' applicare un nodo di "pop" con lo stesso simbolo di un nodo di "push" concatenandolo prima di esso per permettere di usare questo ponte solo ai path che abbiano effettivamente sul Symbol Stack i simboli necessari per risolvere quella reference con quel \emph{resolution bridge}.
-E' possibile farlo con ogni nodo "push" del ponte, tuttavia ci si limitera' al primo nodo di esso sia per semplicita' sia per tentare di limitare la dimensione del grafo, il quale gia' di per se avra' dimensioni notevoli.
+Durante la stesura di una concatenazione di nodi "push" che vengono usati per il \emph{resolution bridge}, per limitare il numero di path che vengono creati durante la ricerca, si pu\`o applicare un nodo di "pop" con lo stesso simbolo di un nodo di "push" concatenandolo prima di esso per permettere di usare questo ponte solo ai path che abbiano effettivamente sul Symbol Stack i simboli necessari per risolvere quella reference con quel \emph{resolution bridge}.
+\`E possibile farlo con ogni nodo "push" del ponte, tuttavia ci si limiter\`a al primo nodo di esso sia per semplicit\`a sia per tentare di limitare la dimensione del grafo, il quale gi\`a di per se avr\`a dimensioni notevoli.
 
 \subsection{Struttura degli archi}
 
-Il grafo delle dipendenze verra' creato tramite una esplorazione del grafo a partire dalla radice, quindi ogni nodo che contiene definizioni o reference utili deve essere raggiungibile da tale algoritmo.
+Il grafo delle dipendenze verr\`a creato tramite una esplorazione del grafo a partire dalla radice, quindi ogni nodo che contiene definizioni o reference utili deve essere raggiungibile da tale algoritmo.
 
 \par
-Non e' tuttavia l'unico vincolo che e' necessario imporre alla struttura degli archi: nell'ottica di ridurre il numero di path creati durante l'esplorazione e' nessario ridurre al minimo i cicli.
-Questa ottimizzazione non e' complessa da adottare, ma il grafo non puo' essere completamente aciclico: deve essere possibile durante la ricerca ritornare quanto mento alla radice del grafo (\emph{ROOT\_NODE}) per permettere ad essa di discendere nel prossimo sottoalbero da esplorare per trovare le definizioni in successione.
+Non \`e tuttavia l'unico vincolo che \`e necessario imporre alla struttura degli archi: nell'ottica di ridurre il numero di path creati durante l'esplorazione \`e nessario ridurre al minimo i cicli.
+Questa ottimizzazione non \`e complessa da adottare, ma il grafo non pu\`o essere completamente aciclico: deve essere possibile durante la ricerca ritornare quanto mento alla radice del grafo (\emph{ROOT\_NODE}) per permettere ad essa di discendere nel prossimo sottoalbero da esplorare per trovare le definizioni in successione.
 
 \par
-Per evitare cicli interni ogni nodi che definisce scope fara' progredire due nodi distinti che corrisponderanno rispettivamente al percorso verso l'alto e verso il basso: questo permettera' sia alle reference di fluire verso la radice, appendendo eventuali simboli che definiscono lo scope (ex: nome della classe), sia alle definizioni e alle reference stesse di essere identificate durante la fase di risoluzione delle reference e durante la fase di esplorazione dall'alto.
+Per evitare cicli interni ogni nodi che definisce scope far\`a progredire due nodi distinti che corrisponderanno rispettivamente al percorso verso l'alto e verso il basso: questo permetter\`a sia alle reference di fluire verso la radice, appendendo eventuali simboli che definiscono lo scope (ex: nome della classe), sia alle definizioni e alle reference stesse di essere identificate durante la fase di risoluzione delle reference e durante la fase di esplorazione dall'alto.
 
 \section{Le Componenti di Base}
 
-Ciascuna unita' costruita dal modello disporra' di 5 campi.
-Il nodo radice dell'unita' che permette ad essa di comunicare verso l'alto e' \emph{scope}.
-Rispettivamente \emph{push\_start} e \emph{push\_end} sono i nodi di inizio e di fine del percorso che attraversa l'unita' verso l'alto e che serve a costruire incrementalmente il percorso che la risoluzione delle reference seguira' fino ad un apice dove si iniziera' a scendere alla ricerca di definizioni combacianti.
-Vice versa \emph{pop\_start} e \emph{pop\_end} sono i nodi nella direzione opposta che indicano la direzione di definizione dell'unita'.
-Questi campi possono sia contenere nodi concreti che riferimenti a nodi definiti altrove, per supportare la combinazione tra unita'.
+Ciascuna unit\`a costruita dal modello disporr\`a di 5 campi.
+Il nodo radice dell'unit\`a che permette ad essa di comunicare verso l'alto \`e \emph{scope}.
+Rispettivamente \emph{push\_start} e \emph{push\_end} sono i nodi di inizio e di fine del percorso che attraversa l'unit\`a verso l'alto e che serve a costruire incrementalmente il percorso che la risoluzione delle reference seguir\`a fino ad un apice dove si inizier\`a a scendere alla ricerca di definizioni combacianti.
+Vice versa \emph{pop\_start} e \emph{pop\_end} sono i nodi nella direzione opposta che indicano la direzione di definizione dell'unit\`a.
+Questi campi possono sia contenere nodi concreti che riferimenti a nodi definiti altrove, per supportare la combinazione tra unit\`a.
 
-\putimage{diagrams/04/interface.png}{"Interfaccia di un'unita'"}{fig:interface}
+\putimage{diagrams/04/interface.png}{"Interfaccia di un'unit\`a"}{fig:interface}
 
 \subsection{Identificatori}
 
-Per ogni nodo sintattico identificatore si creano sia i nodi push che i nodi pop per permettere alle altre unita' di incorporarlo in composizioni piu' complesse.
+Per ogni nodo sintattico identificatore si creano sia i nodi push che i nodi pop per permettere alle altre unit\`a di incorporarlo in composizioni pi\`u complesse.
 
 \putimage{diagrams/04/identifier.png}{"Identifier Unit"}{fig:identifier}
 
-Un esempio di regola TSG per ottenere questo pattern e':
+Un esempio di regola TSG per ottenere questo pattern \`e:
 
 \begin{lstlisting}
 (identifier)@this {
@@ -116,7 +116,7 @@ Un esempio di regola TSG per ottenere questo pattern e':
 }
 \end{lstlisting}
 
-Questa struttura permette di comporre l'unita' per esempio nelle catene di identificatori, che generalmente in Tree Sitter possono essere formate in questo modo:
+Questa struttura permette di comporre l'unit\`a per esempio nelle catene di identificatori, che generalmente in Tree Sitter possono essere formate in questo modo:
 
 \begin{lstlisting}
     node scope
@@ -130,24 +130,24 @@ Questa struttura permette di comporre l'unita' per esempio nelle catene di ident
     scope.push_end -> scope
 \end{lstlisting}
 
-Questo pattern e' ricorsivamente applicabile attraverso la cattura che usa Tree Sitter Graph, quindi scalabile in verticale: essa permettera' di compore unita' Scoped Identifier per un numero arbitrariamente grande di identificatori nella catena.
+Questo pattern \`e ricorsivamente applicabile attraverso la cattura che usa Tree Sitter Graph, quindi scalabile in verticale: essa permetter\`a di compore unit\`a Scoped Identifier per un numero arbitrariamente grande di identificatori nella catena.
 
 \putimage{diagrams/04/scopedIdentifier.png}{Scoped Unit}{fig:scopedIdentifier}
 
-In questo modo si mantiene la medesima interfaccia per Scoped Identifier, con conseguente "polimorfismo" dell'argomento "scope" dello snippet TSG. Il risultato delle regole sara' quindi una catena di nodi che implementano la catena di identificatori.
+In questo modo si mantiene la medesima interfaccia per Scoped Identifier, con conseguente "polimorfismo" dell'argomento "scope" dello snippet TSG. Il risultato delle regole sar\`a quindi una catena di nodi che implementano la catena di identificatori.
 
 \subsection{Classi, Interfacce, Enum e Annotazioni}
 
-Tutti questi costruitti hanno in comune il fatto di contenere propriamente tutte le sotto dichiarazioni al livello di codice sorgente, per cui si prendera' come esempio le classi o le interfacce in base alle relazioni introdotte.
+Tutti questi costruitti hanno in comune il fatto di contenere propriamente tutte le sotto dichiarazioni al livello di codice sorgente, per cui si prender\`a come esempio le classi o le interfacce in base alle relazioni introdotte.
 Quindi avremo una struttura del genere a livello di Query Language Tree Sitter per il caso delle classi:
 
 \begin{lstlisting}
   (class_declaration name: (_)@name body: (_)@body)@this
 \end{lstlisting}
 
-Esplorando l'unita' dall'alto si dovra' da una parte riconoscere la definizione di una classe e dall'altra poter definire che tutto il "contenuto" di una classe e' "contenuto".
+Esplorando l'unit\`a dall'alto si dovr\`a da una parte riconoscere la definizione di una classe e dall'altra poter definire che tutto il "contenuto" di una classe \`e "contenuto".
 In generale questo viene fatto nella grammatica TSG tramite l'ordine di esplorazione dei nodi.
-La definizione e' introdotta tramite l'unita' identificatore \emph{name}, quindi si predispone un \emph{defkind} appropriato per quella definizione:
+La definizione \`e introdotta tramite l'unit\`a identificatore \emph{name}, quindi si predispone un \emph{defkind} appropriato per quella definizione:
 
 \begin{lstlisting}
   (class_declaration name: (_)@name)@this {
@@ -155,8 +155,8 @@ La definizione e' introdotta tramite l'unita' identificatore \emph{name}, quindi
   }
 \end{lstlisting}
 
-Quindi si deve vincolare l'esplorazione dell'unita' in modo che si percorrano in serie l'unita' \emph{name} e l'unita' \emph{body} dall'alto, e quindi vice versa dalle foglie.
-Per fare questo si concatenano le due unita' fra loro e quindi con i rispettivi nodi di ingresso / uscita dell'unita' \emph{class}: 
+Quindi si deve vincolare l'esplorazione dell'unit\`a in modo che si percorrano in serie l'unit\`a \emph{name} e l'unit\`a \emph{body} dall'alto, e quindi vice versa dalle foglie.
+Per fare questo si concatenano le due unit\`a fra loro e quindi con i rispettivi nodi di ingresso / uscita dell'unit\`a \emph{class}: 
 
 \begin{lstlisting}
   (class_declaration name: (_)@name body: (_)@body)@this {
@@ -169,11 +169,11 @@ Per fare questo si concatenano le due unita' fra loro e quindi con i rispettivi 
   }
 \end{lstlisting}
 
-Si procede ora con l'ereditarieta'.
-Sia nelle interfacce che nelle classi la struttura da applicare all'unita' e' pressocche' identica. In linguaggi che non distinguono tra classi e interfacce (come per esempio Python) l'implementazione e' identica, mentre in Java per esempio e' necessario introdurre due regole distinte. Questo perche' nei linguaggi dove si distingue tra i due costruitti sono implementate "operazioni" distinte per applicare super interfacce o super classi. E' il caso di Java con "implements" e "extends". Di conseguenza e' necessario supportare due relazioni di dipendenza distinte: "isImplementationOf" e "isChildOf".
+Si procede ora con l'ereditariet\`a.
+Sia nelle interfacce che nelle classi la struttura da applicare all'unit\`a \`e pressocch\'e identica. In linguaggi che non distinguono tra classi e interfacce (come per esempio Python) l'implementazione \`e identica, mentre in Java per esempio \`e necessario introdurre due regole distinte. Questo perch\'e nei linguaggi dove si distingue tra i due costruitti sono implementate "operazioni" distinte per applicare super interfacce o super classi. \`E il caso di Java con "implements" e "extends". Di conseguenza \`e necessario supportare due relazioni di dipendenza distinte: "isImplementationOf" e "isChildOf".
 
-L'Estensione e' un'operazione che riguarda sia le interfacce che le classi: entrambe possono essere figlie di un'altra interfaccia o classe, mentre l'Implementazione e' specifica delle classi.
-Per permettere agli algoritmi di rilevare le due relazioni e poterle usare per risolvere l'ereditarieta' e quindi l'appartenenza di un campo o un metodo della super classe o super interfaccia si marca la reference con il \emph{refkind} appropriato e quindi si concatena l'unita' della classe con l'unita' \emph{super}:
+L'Estensione \`e un'operazione che riguarda sia le interfacce che le classi: entrambe possono essere figlie di un'altra interfaccia o classe, mentre l'Implementazione \`e specifica delle classi.
+Per permettere agli algoritmi di rilevare le due relazioni e poterle usare per risolvere l'ereditariet\`a e quindi l'appartenenza di un campo o un metodo della super classe o super interfaccia si marca la reference con il \emph{refkind} appropriato e quindi si concatena l'unit\`a della classe con l'unit\`a \emph{super}:
 
 \begin{lstlisting}
   [
@@ -196,7 +196,7 @@ Per permettere agli algoritmi di rilevare le due relazioni e poterle usare per r
   }
 \end{lstlisting}
 
-Rimane solo l'applicazione dei modificatori, che nel caso di java sono le annotazioni: la procedura e' simile, ma la relazione in questo caso e' "usesType".
+Rimane solo l'applicazione dei modificatori, che nel caso di java sono le annotazioni: la procedura \`e simile, ma la relazione in questo caso \`e "usesType".
 
 \begin{lstlisting}
   [
@@ -212,10 +212,10 @@ Rimane solo l'applicazione dei modificatori, che nel caso di java sono le annota
 
 \subsection{Package}
 
-Nei linguaggi dove il nodo sintattico della definizione di package contiene i node delle definizioni e' possibile implementare un modello simile a quello impiegato per classi e interfacce.
-In Java pero' la dichiarazione di package e' uno statement all'inizio del file, quindi bisognera' trovare un'altro modo per forzare l'ordine di esplorazione per far attraversare in serie lo statement e le definizioni nel file.
+Nei linguaggi dove il nodo sintattico della definizione di package contiene i node delle definizioni \`e possibile implementare un modello simile a quello impiegato per classi e interfacce.
+In Java per\`o la dichiarazione di package \`e uno statement all'inizio del file, quindi bisogner\`a trovare un'altro modo per forzare l'ordine di esplorazione per far attraversare in serie lo statement e le definizioni nel file.
 
-Prima di tutto si distinguono due casi: il file corrente puo' avere o non avere una dichiarazione di package.
+Prima di tutto si distinguono due casi: il file corrente pu\`o avere o non avere una dichiarazione di package.
 Nel caso in cui non sia presente un package nel file si instaura un semplice collegamento tra il nodo \emph{program} (radice sintattica del file in Java) e il nodo dello Stack Graph ROOT\_NODE:
 
 \begin{lstlisting}
@@ -229,7 +229,7 @@ Nel caso in cui non sia presente un package nel file si instaura un semplice col
   }
 \end{lstlisting}
 
-Nel secondo caso, prima si traslano le variabili dell'unita' \emph{name} del package all'interno del nodo sintattico della dichiarazione e si marca la dichiarazione attraverso il \emph{defkind} come "package":
+Nel secondo caso, prima si traslano le variabili dell'unit\`a \emph{name} del package all'interno del nodo sintattico della dichiarazione e si marca la dichiarazione attraverso il \emph{defkind} come "package":
 
 \begin{lstlisting}
   (package_declaration
@@ -243,7 +243,7 @@ Nel secondo caso, prima si traslano le variabili dell'unita' \emph{name} del pac
   }
 \end{lstlisting}
 
-Quindi si infrappone l'esplorazione dell'unita' \emph{name} sia verso l'alto che verso il basso:
+Quindi si infrappone l'esplorazione dell'unit\`a \emph{name} sia verso l'alto che verso il basso:
 
 \begin{lstlisting}
   (program
@@ -264,8 +264,8 @@ Quindi si infrappone l'esplorazione dell'unita' \emph{name} sia verso l'alto che
 
 \subsection{Variabili}
 
-Variabili (di metodo e di classe) e parametri dei metodi possono essere trattati allo stesso modo, ma nel modello puo' essere utile distinguere tra essi tramite il \emph{defkind}: rispettivamente "attribute" e "paramter".
-Per via di questa similitudine di seguito si trattera' delle variabili di metodo.
+Variabili (di metodo e di classe) e parametri dei metodi possono essere trattati allo stesso modo, ma nel modello pu\`o essere utile distinguere tra essi tramite il \emph{defkind}: rispettivamente "attribute" e "paramter".
+Per via di questa similitudine di seguito si tratter\`a delle variabili di metodo.
 
 Per ottenere la dichiarazione di una variabile si usa la solita regola TSG che assegna un defkind:
 
@@ -290,8 +290,8 @@ Quindi si collega e assegna la reference al tipo della variabile dichiarata:
 
 \subsection{Metodi}
 
-Metodi e funzioni possono essere trattati in maniera simile a classe e interfaccie, l'unica reale differenza e' la presenza del tipo di ritorno e dei parametri.
-Se il tipo puo' essere utilizzato come nelle variabili, i parametri di per se costituiscono delle unita' autonome, esattamente come cio' che e' contenuto nei body, per cui l'unica azione particolare necessaria per questa unita' sara' collegare la lista dei parametri esattamente come viene collegato il body:
+Metodi e funzioni possono essere trattati in maniera simile a classe e interfaccie, l'unica reale differenza \`e la presenza del tipo di ritorno e dei parametri.
+Se il tipo pu\`o essere utilizzato come nelle variabili, i parametri di per se costituiscono delle unit\`a autonome, esattamente come ci\`o che \`e contenuto nei body, per cui l'unica azione particolare necessaria per questa unit\`a sar\`a collegare la lista dei parametri esattamente come viene collegato il body:
 
 \begin{lstlisting}
   (method_declaration name: (_)@name parameters: (_)@parameters)@this {
@@ -301,7 +301,7 @@ Se il tipo puo' essere utilizzato come nelle variabili, i parametri di per se co
 \end{lstlisting}
 
 \subsection{Accesso ai Campi}
-L'accesso ai campi puo' essere trattato in maniera molto simile alla concatenazione di identificatori: ricorsivamente si definisce una reference attraverso il \emph{refkind} e quindi si collega essa all'unita' \emph{object}:
+L'accesso ai campi pu\`o essere trattato in maniera molto simile alla concatenazione di identificatori: ricorsivamente si definisce una reference attraverso il \emph{refkind} e quindi si collega essa all'unit\`a \emph{object}:
 
 \begin{lstlisting}
   (field_access object: (_)@object field: (_)@field)@this {
@@ -315,7 +315,7 @@ L'accesso ai campi puo' essere trattato in maniera molto simile alla concatenazi
   }
 \end{lstlisting}
 
-Ci sono pero' altri tipi di accesso: per esempio l'accesso ad un elemento di un array o l'accesso al contenuto di una variabile nello scope. A seconda del linguaggio analizzato il Query Language potrebbe possedere costruitti appositi, come in java, o trattarli in maniera simile all'esempio precedente.
+Ci sono per\`o altri tipi di accesso: per esempio l'accesso ad un elemento di un array o l'accesso al contenuto di una variabile nello scope. A seconda del linguaggio analizzato il Query Language potrebbe possedere costruitti appositi, come in java, o trattarli in maniera simile all'esempio precedente.
 Nel secondo caso ogni reference particolare deve essere segnalata con un'apposita regola.
 L'esempio seguente marca come reference da risolvere gli identificatori passati come argomento di una chiamata di funzione, utilizzati in espressioni binarie o che siano nomi di array:
 
@@ -336,13 +336,13 @@ L'esempio seguente marca come reference da risolvere gli identificatori passati 
 
 \subsection{Chiamata di Metodi}
 
-L'invocazione di metodi e' un altro esempio di relazione dove si deve distinguere il caso tra un identificatore ed una catena di identificatori. Nel caso di Java il Query Language mette a disposizione un costrutto unico per entrambi i casi:
+L'invocazione di metodi \`e un altro esempio di relazione dove si deve distinguere il caso tra un identificatore ed una catena di identificatori. Nel caso di Java il Query Language mette a disposizione un costrutto unico per entrambi i casi:
 
 \begin{lstlisting}
   (method_invocation object: (_)? @object name: (_)@name)@this
 \end{lstlisting}
 
-Nel caso piu' semplice si ha solo l'unita' \emph{name}, quindi si segnala la reference con il \emph{refkind} e si instaura un collegamento tra \emph{this} e \emph{name}:
+Nel caso pi\`u semplice si ha solo l'unit\`a \emph{name}, quindi si segnala la reference con il \emph{refkind} e si instaura un collegamento tra \emph{this} e \emph{name}:
 
 \begin{lstlisting}
   (method_invocation object: (_)? @object name: (_)@name)@this {
@@ -357,12 +357,12 @@ Nel caso piu' semplice si ha solo l'unita' \emph{name}, quindi si segnala la ref
   }
 \end{lstlisting}
 
-Nel caso in cui il nome del metodo sia composto, l'unica differenza rispetto alla regola precedente e' l'inserimento in mezzo al collegamento dell'unita' \emph{object}, esattamente come e' stato fatto per il caso del package.
+Nel caso in cui il nome del metodo sia composto, l'unica differenza rispetto alla regola precedente \`e l'inserimento in mezzo al collegamento dell'unit\`a \emph{object}, esattamente come \`e stato fatto per il caso del package.
 
 \subsection{Inclusione}
 
-Le unita' costruite dagli statement di inclusione dovranno sia segnalare la presenza di una relazione "includes", sia supportare la ricerca del modulo incluso di oggetti che non sono stati definiti nel modulo corrente.
-Grazie all'unita' della catena di identificatori questo e' reso semplice e scalabile: si assegna il \emph{refkind} e si collega l'unita' \emph{name} al \emph{ROOT\_NODE} in modo che un path possa caricare i simboli dell'import e poi tornare alla radice per discendere nel modulo incluso.
+Le unit\`a costruite dagli statement di inclusione dovranno sia segnalare la presenza di una relazione "includes", sia supportare la ricerca del modulo incluso di oggetti che non sono stati definiti nel modulo corrente.
+Grazie all'unit\`a della catena di identificatori questo \`e reso semplice e scalabile: si assegna il \emph{refkind} e si collega l'unit\`a \emph{name} al \emph{ROOT\_NODE} in modo che un path possa caricare i simboli dell'import e poi tornare alla radice per discendere nel modulo incluso.
 
 \begin{lstlisting}
   (import_declaration (_)@name)@this {
@@ -375,12 +375,12 @@ Grazie all'unita' della catena di identificatori questo e' reso semplice e scala
 
 \subsection{File}
 
-Esistono dei linguaggi dove il nome dei moduli e' uguale o strettamente legato al nome del file (come in Python), o dove l'inclusione e' effettuata specificando il nome del file da includere.
-In questi casi e' necessario manipolare i nomi dei file per poter costruire un'unita' simile al package Java, che pero' presenta definizione con defkind distinta.
+Esistono dei linguaggi dove il nome dei moduli \`e uguale o strettamente legato al nome del file (come in Python), o dove l'inclusione \`e effettuata specificando il nome del file da includere.
+In questi casi \`e necessario manipolare i nomi dei file per poter costruire un'unit\`a simile al package Java, che per\`o presenta definizione con defkind distinta.
 Questo permette di costruire relazioni di inclusione che utilizzano il percorso del file per identificare un certo modulo e poter raccogliere anche informazioni su quale file definisce i vari costrutti del linguaggio.
 Di seguito un esempio con il linguaggio C++.
 
-Prima di costruire l'unita' \emph{file} utilizzano il path relativo del file rispetto alla cartella di esplorazione del sorgete: questo e' fatto manualmente dal software che utilizza la grammatica TSG e Tree Sitter Stack Graph andando a leggere i file dopo essersi spostati nella cartella del progetto bersaglio. Questo permette di avere percorsi piu' concisi e meno dispersivi.
+Prima di costruire l'unit\`a \emph{file} utilizzano il path relativo del file rispetto alla cartella di esplorazione del sorgete: questo \`e fatto manualmente dal software che utilizza la grammatica TSG e Tree Sitter Stack Graph andando a leggere i file dopo essersi spostati nella cartella del progetto bersaglio. Questo permette di avere percorsi pi\`u concisi e meno dispersivi.
 
 \begin{lstlisting}
 (translation_unit)@this {

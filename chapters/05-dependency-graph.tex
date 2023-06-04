@@ -5,11 +5,11 @@ In questo capitolo si descrive l'algoritmo di costruizione del Dependency Graph 
 \section{Il Grafo}
 
 Il Grafo delle Dipendenze deve essere modellato in modo da essere sovrapponibile a quello prodotto da Arcan.
-In questo senso si attua una semplificazione del modello appiattendo la distinzione tra Unit, Container e Module: i nodi saranno distinti dall'attributo defkind che e' stato trattato nei capitoli precedenti.
-Per quanto riguarda invece le relazioni, esse saranno all'incirca identiche, seppur con qualche distinzione nel merito delle entita' coinvolte.
+In questo senso si attua una semplificazione del modello appiattendo la distinzione tra Unit, Container e Module: i nodi saranno distinti dall'attributo defkind che \`e stato trattato nei capitoli precedenti.
+Per quanto riguarda invece le relazioni, esse saranno all'incirca identiche, seppur con qualche distinzione nel merito delle entit\`a coinvolte.
 
-Sia $G = (V, E)$ un grafo delle dipendenze, il generico nodo $v \in V$ sara' etichettato con il suo \emph{fully qualified name} e avra' associato il \emph{defkind}.
-Quindi il generico arco $e \in E$ sara' etichettato con il nome della relazione che esso rappresenta.
+Sia $G = (V, E)$ un grafo delle dipendenze, il generico nodo $v \in V$ sar\`a etichettato con il suo \emph{fully qualified name} e avr\`a associato il \emph{defkind}.
+Quindi il generico arco $e \in E$ sar\`a etichettato con il nome della relazione che esso rappresenta.
 
 \section{Esempio}
 
@@ -46,23 +46,23 @@ Il procedimento di costruzione presentato in questo capitolo deve essere in grad
 \putimage{diagrams/05/depGraphExample.png}{"Esempio di Grafo delle Dipendenze"}{fig:depGraphExample}
 
 In questa immagine le componenti sono renderizzate con Cytoscape.js, una libreria Javascript adatta alla visualizzazione di grafi, in modo da distinguere i nodi in base al \emph{defkind} con forma e colore: quindi per esempio i quadrati rossi sono di tipo Method e gli esagono blu sono di tipo Class.
-Si puo' notare come oltre alle reference gia' citate si tiene traccia anche della relazione di parentela \emph{definedBy}, che mette in relazione il codice sorgente contenuto con il contenitore.
+Si pu\`o notare come oltre alle reference gi\`a citate si tiene traccia anche della relazione di parentela \emph{definedBy}, che mette in relazione il codice sorgente contenuto con il contenitore.
 
 \section{Costruzione}
 
-La costruzione avvera' in tre fasi.
+La costruzione avver\`a in tre fasi.
 Prima di tutto si usa Tree Sitter Stack Graph per costruire lo Stack Graph del codice usando una grammatica costruita con il modello del Capitolo 4.
-Quindi si procedera' a risolvere le reference dello Stack Graph: questa operazione e' molto importante in quanto permettera' ad una esplorazione successiva di sostituire immediatamente i nodi di reference delle relazioni con i nodi concreti di definizione e quindi costruire relazioni con i nodi del grafo delle dipendenze giusti.
-L'ultimo passo sara' una esplorazione ricorsiva che permettera' di evidenziare tutti i nodi di definizione e costruire le relazioni di parentela e quelle dettate dalle reference.
-Al termine dell'operazione sara' necessario poter esportare il grafo per permettere ad ulteriore software di fare elaborazioni successive, come per esempio Arcan.
+Quindi si proceder\`a a risolvere le reference dello Stack Graph: questa operazione \`e molto importante in quanto permetter\`a ad una esplorazione successiva di sostituire immediatamente i nodi di reference delle relazioni con i nodi concreti di definizione e quindi costruire relazioni con i nodi del grafo delle dipendenze giusti.
+L'ultimo passo sar\`a una esplorazione ricorsiva che permetter\`a di evidenziare tutti i nodi di definizione e costruire le relazioni di parentela e quelle dettate dalle reference.
+Al termine dell'operazione sar\`a necessario poter esportare il grafo per permettere ad ulteriore software di fare elaborazioni successive, come per esempio Arcan.
 
-\paragraph{Analisi del Codice Sorgente}
+\subsection{Analisi del Codice Sorgente}
 
 Il software legge dalla linea di comando una lista di \emph{target}, ovvero la lista dei progetti da analizzare.
-Ogni target puo' essere un file singolo o una cartella, nel secondo caso si considereranno tutti i file di essa ricorsivamente. Se il target e' una cartella ci si sposta all'interno di essa, per ridurre la complessita' dei \emph{fully qualified name} per le grammatiche che necessitano dell'unita' \emph{File}.
+Ogni target pu\`o essere un file singolo o una cartella, nel secondo caso si considereranno tutti i file di essa ricorsivamente. Se il target \`e una cartella ci si sposta all'interno di essa, per ridurre la complessit\`a dei \emph{fully qualified name} per le grammatiche che necessitano dell'unit\`a \emph{File}.
 Si itera quindi su tutti i target, ed in particolare su tutti i file contenuti ricorsivamente nei target che sono cartelle, costruendo incrementalmente lo Stack Graph.
 
-Per semplicita' si puo' considerare l'analisi di progetti costituiti di un solo linguaggio di programmazione, ma il processo si adatta anche alla possibilita' di avere progetti misti. Prima di costruire lo Stack Graph e' necessario caricare la grammatica TSG che Tree Sitter Graph usera' per costruirlo: in Rust questa e' una operazione onerosa, quindi si rende necessario l'uso di una \emph{cache} che non solo permetta di caricare dinamicamente e riutilizzare le grammatiche ma si presti bene a scalare il numero di linguaggi utilizzati nel progetto.
+Per semplicit\`a si pu\`o considerare l'analisi di progetti costituiti di un solo linguaggio di programmazione, ma il processo si adatta anche alla possibilit\`a di avere progetti misti. Prima di costruire lo Stack Graph \`e necessario caricare la grammatica TSG che Tree Sitter Graph user\`a per costruirlo: in Rust questa \`e una operazione onerosa, quindi si rende necessario l'uso di una \emph{cache} che non solo permetta di caricare dinamicamente e riutilizzare le grammatiche ma si presti bene a scalare il numero di linguaggi utilizzati nel progetto.
 
 \begin{lstlisting}[language=Python, caption=pseudocodice]
 def build_stack_graph(config):
@@ -83,11 +83,37 @@ def build_stack_graph(config):
     return stack_graph
 \end{lstlisting}
 
-\paragraph{Risoluzione delle Reference}
+\subsection{Risoluzione delle Reference}
 
-%TODO
+Quindi si passa alla fase di risoluzione delle reference, ma verranno processate solo i nodi di reference con un \emph{refkind} valido, visto che nel modello inevitabilmente si introducono dei nodi che hanno solo lo scopo di aiutare la costruzione delle unit\`a e poi la risoluzione delle reference.
+Per fare questo si pu\`o iterare su tutti i nodi dello Stack Graph e controllare questi requisiti.
+Ogni nodo identificato in questo modo sar\`a passato alla procedura di risoluzione manuale introdotta nel Capitolo 2 nella sezione "In Rust".
 
-\paragraph{Esplorazione Ricorsiva}
+Per mantenere la lista delle risoluzioni avvenute con successo si utilizza una mappa che associa il nodo di reference al nodo di definizione corrispondente: sar\`a usata pi\`u avanti per sostituire velocemente i nodi esplorati.
+Visto che lo scopo \`e instaurare relazioni tra due nodi del Grafo delle Dipendenze e che i nodi di definizione con \emph{defkind} saranno nodi concreti di tale grafo, si aggiunge come requisito che il nodo trovato con la risoluzione abbia un defkind valido.
+
+\begin{lstlisting}[language=Python, caption=pseudocodice]
+def resolve_references(stack_graph):
+    # inizializzazione
+    map: Map<Node, Node>.new()
+
+    # iterazione sui nodi
+    for node in stack_graph:
+
+        # controllo dei requisiti
+        if is_reference(node):
+            if has_refkind(node):
+                definition = resolve_reference(stack_graph, node)
+                
+                # controllo di avvenuta risoluzione
+                # e dei requisiti del nodo trovato
+                if is_some(definition):
+                    if has_defkind(definition):
+                        map.set(node, definition)
+    return map
+\end{lstlisting}
+
+\subsection{Esplorazione Ricorsiva}
 
 %TODO
 

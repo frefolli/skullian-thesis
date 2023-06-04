@@ -4,16 +4,16 @@ In questo capitolo si parla di Stack Graph, come usarlo con Rust, sia per costru
 
 \section{Introduzione}
 
-Stack Graph \cite{StackGraph} e' un modello di grafo nato per risolvere il problema della navigazione simbolica del codice, superando i limiti dello Scope Graph \cite{ScopeGraph}.
-La tecnologia e' stata presentata per la prima volta in una conferenza Strange Loop \cite{StackGraphConference}, di cui e' stato successivamente scritto un resoconto sotto forma di articolo \cite{StackGraphIntro}.
+Stack Graph \cite{StackGraph} \`e un modello di grafo nato per risolvere il problema della navigazione simbolica del codice, superando i limiti dello Scope Graph \cite{ScopeGraph}.
+La tecnologia \`e stata presentata per la prima volta in una conferenza Strange Loop \cite{StackGraphConference}, di cui \`e stato successivamente scritto un resoconto sotto forma di articolo \cite{StackGraphIntro}.
 Attraverso la costruzione di un grafo con nodi detti di "scope", "push" e "pop" permette di effettuare una ricerca di una reference fino alla sua definizione.
 
-Questa ricerca e' una vera e propria visita del grafo, che utilizza da una parte un Symbol Stack per tenere traccia dei simboli incontrati nella ricerca, e dall'altra tipi differenti di nodi visitabili che prescrivono come operare sul Symbol Stack e di conseguenza stabilire se un arco e' percorribile e se un percorso e' definito "completo".
-Un percorso e' detto tale se e solo se il Symbol Stack e' svuotato.
+Questa ricerca \`e una vera e propria visita del grafo, che utilizza da una parte un Symbol Stack per tenere traccia dei simboli incontrati nella ricerca, e dall'altra tipi differenti di nodi visitabili che prescrivono come operare sul Symbol Stack e di conseguenza stabilire se un arco \`e percorribile e se un percorso \`e definito "completo".
+Un percorso \`e detto tale se e solo se il Symbol Stack \`e svuotato.
 
-Un nodo "push" inserisce un simbolo nel Symbol Stack quando e' attraversato dalla visita.
+Un nodo "push" inserisce un simbolo nel Symbol Stack quando \`e attraversato dalla visita.
 Vice versa un nodo "pop" rimuove un simbolo dal Symbol Stack.
-In particolare questo limita gli archi percorribili in base a se e' possibile rimuovere il simbolo del nodo "pop".
+In particolare questo limita gli archi percorribili in base a se \`e possibile rimuovere il simbolo del nodo "pop".
 
 \section{In Rust}
 
@@ -38,7 +38,7 @@ use tree_sitter_stack_graphs::Variables;
 use tree_sitter_stack_graphs::StackGraphLanguage; 
 \end{lstlisting}
 
-Per prima cosa occorre creare la struttura dati del grafo usando il costruttore definito da essa e dichiarando la variabile come \emph{mutable}, visto che l'istanza verra' modificata inserendo nodi e archi.
+Per prima cosa occorre creare la struttura dati del grafo usando il costruttore definito da essa e dichiarando la variabile come \emph{mutable}, visto che l'istanza verr\`a modificata inserendo nodi e archi.
 Si crea anche una struttura che permetta di utilizzare le variabili globali definite sia dall'utente che dalla libreria.
 
 \begin{lstlisting}[language=Rust]
@@ -46,7 +46,7 @@ let mut stack_graph = StackGraph::new();
 let mut globals = Variables::new();
 \end{lstlisting}
 
-Quindi si procede con il caricare la grammatica del linguaggio di programmazione che verra' usata da tree sitter per fare il parsing dei sorgenti:
+Quindi si procede con il caricare la grammatica del linguaggio di programmazione che verr\`a usata da tree sitter per fare il parsing dei sorgenti:
 
 \begin{lstlisting}[language=Rust]
 let ts_grammar = tree_sitter_java::language();
@@ -59,7 +59,7 @@ let tsg_filepath = "path/to/file.tsg";
 let tsg_grammar = std::fs::read_string(tsg_filepath).unwrap().as_str();
 \end{lstlisting}
 
-Queste due grammatiche devono essere combinate per costruire l'oggetto che permettera' a Tree Sitter Stack Graph di costruire lo Stack Graph basandosi su regole ed albero sintattico:
+Queste due grammatiche devono essere combinate per costruire l'oggetto che permetter\`a a Tree Sitter Stack Graph di costruire lo Stack Graph basandosi su regole ed albero sintattico:
 
 \begin{lstlisting}[language=Rust]
 let stack_graph_language = StackGraphLanguage::from_str(ts_grammar, tsg_grammar).unwrap();
@@ -73,13 +73,13 @@ for filepath in sources {
 }
 \end{lstlisting}
 
-Alla fine delle iterazioni la variabile \textbf{stack\_graph} conterra' lo stack graph totale costruito sui file sorgente.
+Alla fine delle iterazioni la variabile \textbf{stack\_graph} conterr\`a lo stack graph totale costruito sui file sorgente.
 
 \subsection{risolvere le reference}
 
-Per risolvere le reference un metodo semplice e' utilizzare la funzione \emph{find\_all\_paths}: essa usa come input un insieme di nodi iniziali e il grafo Stack Graph generato nei passi precedenti e risolve tutte le reference appartenenti a quei nodi iniziali esplorando tutti i percorsi possibili che il cycle detector consente di processare.
+Per risolvere le reference un metodo semplice \`e utilizzare la funzione \emph{find\_all\_paths}: essa usa come input un insieme di nodi iniziali e il grafo Stack Graph generato nei passi precedenti e risolve tutte le reference appartenenti a quei nodi iniziali esplorando tutti i percorsi possibili che il cycle detector consente di processare.
 
-Nell'esempio seguente si processano tutti i nodi del grafo, tuttavia e' possibile passare il sottoinsieme dei nodi di reference iterando su essi ed aggiungendo gli elementi opportuni ad un vettore.
+Nell'esempio seguente si processano tutti i nodi del grafo, tuttavia \`e possibile passare il sottoinsieme dei nodi di reference iterando su essi ed aggiungendo gli elementi opportuni ad un vettore.
 
 \begin{lstlisting}[language=Rust]
 let mut paths = stack_graphs::paths::Paths::new();
@@ -95,12 +95,12 @@ paths.find_all_paths(
 ).unwrap();
 \end{lstlisting}
 
-Stack Graph fornisce anche un altro metodo per risolvere le reference, un metodo piu' manuale e consigliato dalla libreria stessa in quanto si presta di piu' a personalizzazioni, ottimizzazioni e ad input piu' grandi.
-Questo metodo coincide con quanto fatto dalla funzione precedente, ma implementandolo direttamente e' possibile processare una reference alla volta e bloccare il processo una volta trovata la corrispondenza della reference.
+Stack Graph fornisce anche un altro metodo per risolvere le reference, un metodo pi\`u manuale e consigliato dalla libreria stessa in quanto si presta di pi\`u a personalizzazioni, ottimizzazioni e ad input pi\`u grandi.
+Questo metodo coincide con quanto fatto dalla funzione precedente, ma implementandolo direttamente \`e possibile processare una reference alla volta e bloccare il processo una volta trovata la corrispondenza della reference.
 
 Ci si serve dell'oggetto CycleDetector e di una coda per tenere traccia dei percorsi processati e quelli da processare, quindi si itera su tutti gli oggetti estendendo manualmente l'oggetto \emph{path} in tutte le direzioni possibili e aggiungendo questi nuovi percorsi alla coda.
 
-Quindi si puo' applicare del codice che controlla se la reference soddisfa la ricerca e in quel caso interrompere il ciclo. Per controllare se un percorso e' completo si usa la funzione \emph{path.is\_complete(stack\_graph)}, di solito requisito necessario e sufficiente a definire la ricerca un successo.
+Quindi si pu\`o applicare del codice che controlla se la reference soddisfa la ricerca e in quel caso interrompere il ciclo. Per controllare se un percorso \`e completo si usa la funzione \emph{path.is\_complete(stack\_graph)}, di solito requisito necessario e sufficiente a definire la ricerca un successo.
 
 \begin{lstlisting}[language=Rust]
 let mut cycle_detector = CycleDetector::new();
@@ -123,7 +123,7 @@ while let Some(path) = queue.pop_front() {
 \section{Domain Specific Language}
 
 La libreria \textbf{Tree Sitter Stack Graph} \cite{TreeSitterStackGraph} funge da query engine per il Query Language definito da Tree Sitter e permette attraverso un linguaggio di scripting di costruire a runtime un grafo di tipo Stack Graph a partire da un file analizzato con Tree Sitter.
-Per farlo si avvale dell'uso di un'altra libreria, \textbf{Tree Sitter Graph} \cite{TreeSitterGraph}, la quale e' specializzata nella costruzione di grafi generici usando da una parte Tree Sitter e dall'altra una serie di regole con le quali specificare le operazioni da effettuare, i nodi da costruire e da collegare.
+Per farlo si avvale dell'uso di un'altra libreria, \textbf{Tree Sitter Graph} \cite{TreeSitterGraph}, la quale \`e specializzata nella costruzione di grafi generici usando da una parte Tree Sitter e dall'altra una serie di regole con le quali specificare le operazioni da effettuare, i nodi da costruire e da collegare.
 
 \subsection{sintassi}
 
@@ -134,12 +134,12 @@ Per farlo si avvale dell'uso di un'altra libreria, \textbf{Tree Sitter Graph} \c
 \end{lstlisting}
 
 Ad ogni query tree sitter si accompagna un blocco di codice \cite{TreeSitterGraphReferenceHighLevelStructure}.
-Un insieme di unita' siffatte e di dichiarazioni globali costituisce quella che in gergo viene chiamata \textbf{TSG Grammar}.
+Un insieme di unit\`a siffatte e di dichiarazioni globali costituisce quella che in gergo viene chiamata \textbf{TSG Grammar}.
 La grammatica TSG viene caricata da Tree Sitter Graph per costruire un oggetto manipolabile da Tree Sitter Stack Graph per costruire lo stack graph a partire dal codice.
 
-Ad ogni occorrenza di nodo sintattico trovata dalla query viene applicato il blocco di codice appaiato, che puo' contenere istruzioni per costruire nodi di grafo, aggiungere archi, impostare variabili o aggiungere attributi \cite{TreeSitterGraphReferenceTerminology}.
+Ad ogni occorrenza di nodo sintattico trovata dalla query viene applicato il blocco di codice appaiato, che pu\`o contenere istruzioni per costruire nodi di grafo, aggiungere archi, impostare variabili o aggiungere attributi \cite{TreeSitterGraphReferenceTerminology}.
 
-I commenti in linea sono espressi tramite il prefisso ";;", e questo rappresenta l'unico modo di inserire dei commenti, visto non e' prevista una sintassi specifica per commenti multi linea.
+I commenti in linea sono espressi tramite il prefisso ";;", e questo rappresenta l'unico modo di inserire dei commenti, visto non \`e prevista una sintassi specifica per commenti multi linea.
 Essi possono essere inseriti sia nei blocchi di codice che nel file della grammatica TSG in generale.
 
 \subsection{variabili}
@@ -154,7 +154,7 @@ Le variabili locali vengono dichiarate con l'uso di "let", e sono inerentemente 
 }
 \end{lstlisting}
 
-Per dichiarare variabili locali mutabili e' necessario usare "var":
+Per dichiarare variabili locali mutabili \`e necessario usare "var":
 
 \begin{lstlisting}
 (_) {
@@ -163,7 +163,7 @@ Per dichiarare variabili locali mutabili e' necessario usare "var":
 }
 \end{lstlisting}
 
-Una variabile di scope e' dichiarata in maniera simile. Essendo associata ad un nodo di query, puo' essere manipolata in piu' punti del codice.
+Una variabile di scope \`e dichiarata in maniera simile. Essendo associata ad un nodo di query, pu\`o essere manipolata in pi\`u punti del codice.
 
 \begin{lstlisting}
 (tagB)@B {
@@ -187,13 +187,13 @@ global GLOBAL_VARIABLE
 
 Tree Sitter Stack Graph definisce due variabili globali: FILE\_PATH e ROOT\_NODE.
 
-FILE\_PATH equivale al path corrente del file che sta venendo analizzato dall'engine e puo' risultare utile se si deve, per esempio, costruire un nodo nello stack graph corrispondente al file corrente per supportare la ricerca simbolica del codice importato nei linguaggi di programmazione il cui meccanismo di import dipende da path relativi (il caso di C++) piuttosto che da package o moduli (il caso di Java), o seppure nel secondo caso il nome del package corrente e' deciso dal nome del file (il caso di Python).
+FILE\_PATH equivale al path corrente del file che sta venendo analizzato dall'engine e pu\`o risultare utile se si deve, per esempio, costruire un nodo nello stack graph corrispondente al file corrente per supportare la ricerca simbolica del codice importato nei linguaggi di programmazione il cui meccanismo di import dipende da path relativi (il caso di C++) piuttosto che da package o moduli (il caso di Java), o seppure nel secondo caso il nome del package corrente \`e deciso dal nome del file (il caso di Python).
 
-ROOT\_NODE invece e' sempre uguale ad un nodo di scope istanziato dallo stack graph stesso che ne costituisce la radice, e che e' utile poter manipolare nella grammatica TSG per collegare i sotto grafi generati dal singolo file sorgente per costruire un grafo unico incrementalmente.
+ROOT\_NODE invece \`e sempre uguale ad un nodo di scope istanziato dallo stack graph stesso che ne costituisce la radice, e che \`e utile poter manipolare nella grammatica TSG per collegare i sotto grafi generati dal singolo file sorgente per costruire un grafo unico incrementalmente.
 
 \subsection{nodi}
 
-Un nodo dello stack graph puo' essere dichiarato usando la funzione \textbf{node} \cite{TreeSitterGraphReferenceGraphNodes}.
+Un nodo dello stack graph pu\`o essere dichiarato usando la funzione \textbf{node} \cite{TreeSitterGraphReferenceGraphNodes}.
 
 \begin{lstlisting}
 (tagA)@this {
@@ -202,17 +202,17 @@ Un nodo dello stack graph puo' essere dichiarato usando la funzione \textbf{node
 }
 \end{lstlisting}
 
-Ad ogni nodo e' associato un tipo impostabile con l'attributo "type" e di default uguale a "scope" \cite{TreeSitterStackGraphNodes}.
-Un nodo di tipo "push" aggiunge il simbolo associato sul Symbol Stack durante la risoluzione delle reference, mentre un nodo di tipo "pop" ne rimuove uno dallo stack se e solo se il simbolo e' presente sulla cima dello stack, di fatto limitando i possibili percorsi della ricerca.
+Ad ogni nodo \`e associato un tipo impostabile con l'attributo "type" e di default uguale a "scope" \cite{TreeSitterStackGraphNodes}.
+Un nodo di tipo "push" aggiunge il simbolo associato sul Symbol Stack durante la risoluzione delle reference, mentre un nodo di tipo "pop" ne rimuove uno dallo stack se e solo se il simbolo \`e presente sulla cima dello stack, di fatto limitando i possibili percorsi della ricerca.
 
 Esistono due attributi speciali che marcano i nodi di push/pop per applicare la semantica di uno stack graph: "is\_reference" e "is\_definition".
 Un path completo ha come nodo di partenza un nodo "reference" e come nodo di arrivo un nodo "definition".
-Un nodo reference e' un nodo push e un nodo definition e' un nodo pop.
+Un nodo reference \`e un nodo push e un nodo definition \`e un nodo pop.
 
 \subsection{archi}
 
 Gli archi del grafo vengono dichiarati con una sintassi intuitiva \cite{TreeSitterGraphReferenceEdges}.
-Lo stack graph e' un grafo diretto, quindi la sintassi si propone di rappresentare proprio la direzione degli archi in maniera facilmente leggibile.
+Lo stack graph \`e un grafo diretto, quindi la sintassi si propone di rappresentare proprio la direzione degli archi in maniera facilmente leggibile.
 
 \begin{lstlisting}
 (_) {
@@ -220,7 +220,7 @@ Lo stack graph e' un grafo diretto, quindi la sintassi si propone di rappresenta
 }
 \end{lstlisting}
 
-L'unico attributo che e' associabile ad un arco e' "precedence", ovvero un parametro intero utilizzato dall'algoritmo di ricerca di stack graph per implementare lo "shadowing" del codice \cite{TreeSitterStackGraphEdges}.
+L'unico attributo che \`e associabile ad un arco \`e "precedence", ovvero un parametro intero utilizzato dall'algoritmo di ricerca di stack graph per implementare lo "shadowing" del codice \cite{TreeSitterStackGraphEdges}.
 
 \subsection{attributi}
 
@@ -237,7 +237,7 @@ Per applicare un attributo ad un nodo o ad un arco si usa la seguente sintassi \
 }
 \end{lstlisting}
 
-Come detto in precedenza, lo statement seguente dichiara che il nodo \emph{nodeA} e' una reference da risolvere con l'algoritmo di stack graph e che il simbolo da appendere e' quello corrispondente al pezzo di codice sorgente che il nodo rappresenta:
+Come detto in precedenza, lo statement seguente dichiara che il nodo \emph{nodeA} \`e una reference da risolvere con l'algoritmo di stack graph e che il simbolo da appendere \`e quello corrispondente al pezzo di codice sorgente che il nodo rappresenta:
 
 \begin{lstlisting}
 (_) {
@@ -249,11 +249,11 @@ Come detto in precedenza, lo statement seguente dichiara che il nodo \emph{nodeA
 \end{lstlisting}
 
 \subsection{shorthands}
-Puo' essere utile ricorrere a shorthands per evitare duplicazione nella grammatica TSG, specialmente se la formula e' sperimentale e/o si prevede che cambiera' per qualche motivo.
+Pu\`o essere utile ricorrere a shorthands per evitare duplicazione nella grammatica TSG, specialmente se la formula \`e sperimentale e/o si prevede che cambier\`a per qualche motivo.
 
-Gli shorthands sono disponibili solo per gli attributi \cite{TreeSitterGraphReferenceAttributeShorthands}, i quali rappresentano se non altro la parte piu' ridondante della grammatica, e che in altre circostanze costituirebbero uno Shotgun Surgery.
+Gli shorthands sono disponibili solo per gli attributi \cite{TreeSitterGraphReferenceAttributeShorthands}, i quali rappresentano se non altro la parte pi\`u ridondante della grammatica, e che in altre circostanze costituirebbero uno Shotgun Surgery.
 
-La sintassi e':
+La sintassi \`e:
 
 \begin{lstlisting}
 attribute name = input =>
@@ -261,9 +261,9 @@ attribute name = input =>
     ...
 \end{lstlisting}
 
-La dichiarazione di \emph{name} e' simile ad una funzione con un parametro \emph{input} manipolabile nelle coppie chiave valore.
+La dichiarazione di \emph{name} \`e simile ad una funzione con un parametro \emph{input} manipolabile nelle coppie chiave valore.
 
-L'uso pratico di questa feature puo' essere di due tipi: abbreviare un attributo per renderlo piu' facilmente leggibile o compattare una serie di attributi che ci si aspetta vengano dichiarati insieme piu' volte allo stesso modo. Un esempio puo' essere:
+L'uso pratico di questa feature pu\`o essere di due tipi: abbreviare un attributo per renderlo pi\`u facilmente leggibile o compattare una serie di attributi che ci si aspetta vengano dichiarati insieme pi\`u volte allo stesso modo. Un esempio pu\`o essere:
 
 \begin{lstlisting}
 attribute
@@ -320,12 +320,12 @@ Nell'esempio seguente si risolve la locazione relativa di un modulo importato tr
 \end{lstlisting}
 
 La funzione \emph{source-text} estrare la stringa contenuta nel nodo con identificatore \emph{path}, si applica la funzione replace per eliminare i doppi apici contenuti in essa e si risolve il path relativo utilizzando come base la directory del file corrente.
-Quindi si chiama la funzione \emph{path-normalize} per ben formattare il path cosi' ottenuto.
+Quindi si chiama la funzione \emph{path-normalize} per ben formattare il path cos\`i ottenuto.
 
 \subsection{debugging}
 
-Per aiutare il programmatore nel debugging della grammatica TSG e' stata implementata una funzione \textbf{print} che stampa a schermo un valore \cite{TreeSitterGraphReferenceDebugging}.
-Si puo' usare per esempio per visualizzare informazioni costruite dalla grammatica che si vuole inserire nel grafo.
+Per aiutare il programmatore nel debugging della grammatica TSG \`e stata implementata una funzione \textbf{print} che stampa a schermo un valore \cite{TreeSitterGraphReferenceDebugging}.
+Si pu\`o usare per esempio per visualizzare informazioni costruite dalla grammatica che si vuole inserire nel grafo.
 
 In questo piccolo esempio si stampa a schermo la directory del file analizzato da Tree Sitter Stack Graph:
 
@@ -338,7 +338,7 @@ global FILE_PATH
 
 \subsection{complementi}
 
-Oltre agli attributi supportati da Tree Sitter Stack Graph c'e' la possibilita' di assegnare attributi detti di "debug" \cite{TreeSitterStackGraphDebugInfo} che permettono di tenere traccia sia di informazioni puramente di testing sia informazioni utili al processamento dello Stack Graph per estrarre informazioni altrimenti impossibili da ottenere.
+Oltre agli attributi supportati da Tree Sitter Stack Graph c'\`e la possibilit\`a di assegnare attributi detti di "debug" \cite{TreeSitterStackGraphDebugInfo} che permettono di tenere traccia sia di informazioni puramente di testing sia informazioni utili al processamento dello Stack Graph per estrarre informazioni altrimenti impossibili da ottenere.
 
 Per assegnare ad un nodo l'attributo di debug "varx" si usa la sintassi
 
@@ -349,7 +349,7 @@ Per assegnare ad un nodo l'attributo di debug "varx" si usa la sintassi
 }
 \end{lstlisting}
 
-Come detto precedentemente, e' utile poter definire ulteriori attributi che supportino l'analisi dello Stack Graph con algoritmi di esplorazione personalizzati.
+Come detto precedentemente, \`e utile poter definire ulteriori attributi che supportino l'analisi dello Stack Graph con algoritmi di esplorazione personalizzati.
 Ai fini dell'analisi delle dipendenze si definiscono due variabili di debug:
 
 \begin{itemize}
