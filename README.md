@@ -77,16 +77,16 @@
         - [x] Identificazione dei target
         - [x] Caricamento Lazy della TSG
         - [x] Parsing con Stack Graph incrementale
-      - [ ] Risoluzione delle Reference
-        - [ ] Identificazione delle reference
-        - [ ] Risoluzione intelligente delle reference
-      - [ ] Esplorazione Ricorsiva
-        - [ ] Identificazione del tipo di nodo
-        - [ ] Fully Qualified Name
-        - [ ] Relazioni di parentela
-        - [ ] Identificazione delle dipendenze
-        - [ ] Creazione di scope
-        - [ ] Passo ricorsivo
+      - [x] Risoluzione delle Reference
+        - [x] Identificazione delle reference
+        - [x] Risoluzione intelligente delle reference
+      - [x] Esplorazione Ricorsiva
+        - [x] Identificazione del tipo di nodo
+        - [x] Fully Qualified Name
+        - [x] Relazioni di parentela
+        - [x] Identificazione delle dipendenze
+        - [x] Creazione di scope
+        - [x] Passo ricorsivo
     - [ ] Esportazione
       - [ ] GraphML
       - [ ] PUML

@@ -6,6 +6,6 @@
 - [ ] Costruzione
     - [x] Introduzione
     - [x] Analisi del Codice Sorgente
-    - [ ] Risoluzione delle Reference
-    - [ ] Esplorazione Ricorsiva
+    - [x] Risoluzione delle Reference
+    - [x] Esplorazione Ricorsiva
 - [ ] Esportazione

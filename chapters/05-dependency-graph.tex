@@ -117,26 +117,107 @@ def resolve_references(stack_graph):
 
 L'esplorazione sara\`a una visita BFS a partire dalla radice dello Stack Graph, e per ogni nodo non ancora visitato si distinguer\`a in base al suo tipo.
 
-Per stabilire relazioni di parentela nel codice e' sufficiente badare all'ordine di esplorazione dei nodi: i nodi esplorati dopo un certo nodo possono essere considerati in questo modello "figli", quindi e' necessario tenere traccia dell'ultimo nodo visitato prima del corrente.
+Per stabilire relazioni di parentela nel codice \`e sufficiente badare all'ordine di esplorazione dei nodi: i nodi esplorati dopo un certo nodo possono essere considerati in questo modello "figli", quindi \`e necessario tenere traccia dell'ultimo nodo visitato prima del corrente. Essendo lo Stack Graph aciclico, salvo su nodi che necessariamente sono gi\`a stati esplorati, si \`e sicuri che le relazioni di parentela assegnate in tal modo siano corrette.
+
+Oltre alla gi\'a citata relazione "definedBy" si user\'a anche la relazione "nestedTo": la prima quando i due nodi hanno defkind differente, l'altra nel caso opposto.
+
+\paragraph{definition}
 
 Da un nodo di definizione con un \emph{defkind} valido si estrae il simbolo che rappresenta e si usa esso per calcolare il \emph{fully qualified name} concatenando il nome del nodo "padre" con il nome del nodo "figlio". Visto che i File non sono costrutti specifici di un linguaggio di programmazione si user\`a come delimitatore la stringa "::" invece del carattere ".".
 
+Quindi si crea il nodo del grafo in costruzione usano il nome composto e il defkind. Esistono linguaggi dove si possono trovare definizioni duplicate legittime, come per esempio i Package in Java, quindi si controlla prima che non ne esista gi\'a uno all'interno del grafo delle dipendenze.
+
+Come ultima cosa si crea la relazione di parentela se il nodo "padre" \`e definito non nullo e si applica il passo ricorsivo.
+Esso consiste nell'esplorare tutti i nodi collegati con archi ad esso usando come nodo padre il nodo del grafo delle dipendenze appena creato.
+
+\paragraph{reference}
+
+Se un nodo di reference ha nella mappa delle reference risolte in precedenza un'associazione ad un nodo di definizione, si associa una relazione di quel tipo (tradotta sia per motivi di leggibilit\`a, che per uniformarla alla notazione di Arcan) tra il nodo trovato e il nodo "padre".
+
+Quindi si applica una variante del passo ricorsivo dei nodi di definizione: l'unica differenza sta nella conservazione del nodo padre.
+
+\paragraph{altro}
+
+In tutti gli altri casi il nodo esplorato deve essere considerato come un nodo di transito: si applica solo il passo ricorsivo descritto per i nodi di reference.
+
 %TODO
 \begin{lstlisting}[language=Python, caption=pseudocodice]
+def walk_step_definition(reference_map, dependency_graph,
+                         parent_node, current_node):
+    defkind = get_defkind(current_node)
+    name = concat(parent_node, current_node)
+    
+    # prevenzione della duplicazione dei nodi
+    if dependency_graph.contains(name):
+        depgraph_node = dependency_graph.get(name)
+    else:
+        depgraph_node = dependency_graph.newNode(name, defkind)
+
+    # creazione relazioni definedBy e nestedTo
+    if some(parent_node):
+        if get_defkind(parent_node) == defkind:
+            dependency_graph.newEdge(depgraph_node,
+                                     parent_node,
+                                     "nestedTo")
+        else:
+            dependency_graph.newEdge(depgraph_node,
+                                     parent_node,
+                                     "definedBy")
+
+    # passo ricorsivo
+    for next_node in current_node.get_edges():
+        walk_step(reference_map, dependency_graph,
+                  depgraph_node, next_node)
+
+def translate(refkind):
+    if refkind == "Extends":
+        return "isChildOf"
+    elif refkind == "Implements":
+        return "isImplementationOf"
+    else:
+        return refkind
+
+def walk_step_reference(reference_map, dependency_graph,
+                        parent_node, current_node):
+    refkind = get_refkind(current_node)
+    if reference_map.has(current_node):
+        definition = reference_map.get(current_node)
+        dependency_graph.newEdge(parent_node,
+                                 current_node,
+                                 translate(refkind))
+
+    # passo ricorsivo
+    for next_node in current_node.get_edges():
+        walk_step(reference_map, dependency_graph,
+                  parent_node, next_node)
+
+def walk_step_other(reference_map, dependency_graph,
+                         parent_node, current_node):
+    # passo ricorsivo
+    for next_node in current_node.get_edges():
+        walk_step(reference_map, dependency_graph,
+                  parent_node, next_node)
+
 def walk_step(reference_map, dependency_graph,
               parent_node, current_node):
     if not_visited(current_node):
         visit(current_node)
 
         if is_definition(current_node) and has_defkind(current_node):
-            defkind = get_defkind(current_node)
+            walk_step_definition(reference_map, dependency_graph,
+                                 parent_node, current_node)
         elif is_reference(current_node) and has_refkind(current_node):
-            refkind = get_refkind(current_node)
+            walk_step_reference(reference_map, dependency_graph,
+                                 parent_node, current_node)
+        else:
+            walk_step_other(reference_map, dependency_graph,
+                            parent_node, current_node)
 
 def build_dependency_graph(stack_graph, reference_map):
     dependency_graph = DependencyGraph.new()
-    return walk_step(reference_map, dependency_graph,
+    walk_step(reference_map, dependency_graph,
                      None, stack_graph.get_root())
+    return dependency_graph
 \end{lstlisting}
 
 \section{Esportazione}
