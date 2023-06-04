@@ -1,115 +1,115 @@
 # Scaletta Programmatica
 
-- Introduzione &cross;
-    - Caso di studio - Arcan &cross;
-      - Architectural Smell e Dipendenze &cross;
-      - Tool Arcan &cross;
-    - Arcan Dependency Graph &cross;
-      - Nodi &cross;
-      - Archi &cross;
-    - Limitazioni Tecniche &cross;
-      - Uso di un LSP diverso per ogni linguaggio &cross;
-      - Basse prestazioni (salvo Java per Jdt) &cross;
-    - Alcune librerie utili &cross;
-      - Tree Sitter &cross;
-      - Stack Graph &cross;
-      - Tree Sitter Stack Graph &cross;
-    - La soluzione proposta &cross;
-      - Stack Graph &cross;
-      - Name Resolution &cross;
-      - Explorazione Ricorsiva &cross;
-    - Valuzione dei risultati &cross;
-      - Benchmark &cross;
-      - Scaffolding &cross;
-      - Arcan &cross;
-    - Sommario dei Capitoli &cross;
-- Tree Sitter &check;
-    - Introduzione &check;
-    - Esempio &check;
-    - In Rust &check;
-    - Il Query Language &check;
-      - Sintassi &check;
-      - Field &check;
-      - Nodi anonimi &check;
-      - Wildcard &check;
-      - Negazione &check;
-      - Quantificatori &check;
-      - Identificatori &check;
-      - Raggruppamenti &check;
-      - Ancoramento &check;
-      - Alternative &check;
-      - Predicati &check;
-- Stack Graph &check;
-    - Introduzione &check;
-    - In Rust &check;
-    - Il Domain Specific Language &check;
-      - Sintassi &check;
-      - Variabili &check;
-      - Nodi &check;
-      - Archi &check;
-      - Attributi &check;
-      - Shorthands &check;
-      - Condizionali &check;
-      - Iterazioni &check;
-      - Operazioni sulle Stringhe &check;
-      - Debugging &check;
-      - Complementazioni &check;
-- Grammatica TSG &check;
-    - Language Dependency &check;
-    - Algoritmo di Name Resolution di Stack Graph &cross;
-    - Uso di Push e Pop &check;
-    - Struttura degli Archi &check;
-    - Componenti Base &check;
-      - Identificatori &check;
-      - Classi, Interfacce, Enum e Annotazioni &check;
-      - Package &check;
-      - Variabili &check;
-      - Metodi &check;
-      - Accesso ai Campi &check;
-      - Chiamata di Metodi &check;
-      - Inclusione &check;
-      - File &check;
-- Dependency Graph &cross;
-    - Il Grafo &check;
-    - Esempio &check;
-    - Costruzione &cross;
-      - Analisi del Codice Sorgente &cross;
-        - Identificazione dei target &cross;
-        - Caricamento Lazy della TSG &cross;
-        - Parsing con Stack Graph incrementale &cross;
-      - Risoluzione delle Reference &cross;
-        - Identificazione delle reference &cross;
-        - Risoluzione intelligente delle reference &cross;
-      - Esplorazione Ricorsiva &cross;
-        - Identificazione del tipo di nodo &cross;
-        - Fully Qualified Name &cross;
-        - Relazioni di parentela &cross;
-        - Identificazione delle dipendenze &cross;
-        - Creazione di scope &cross;
-        - Passo ricorsivo &cross;
-    - Esportazione &cross;
-      - GraphML &cross;
-      - PUML &cross;
-      - Cytoscape &cross;
-- Analisi di Qualita' &cross;
-    - Approccio di Testing &cross;
-    - Scaffolding &cross;
-      - Test YAML &cross;
-      - Generatore di Test &cross;
-    - Benchmark &cross;
-    - Performance &cross;
-- Valutazione e Comparazione &cross;
-    - Scaffolding &cross;
-    - Benchmark &cross;
-      - Risultati &cross;
-      - Arcan &cross;
-    - Performance &cross;
-    - Limiti &cross;
-      - Dimensione dello Stack Graph &cross;
-      - Analisi non Differenziali &cross;
-      - Language Dependency &cross;
+- [ ] Introduzione
+    - [ ] Caso di studio - Arcan
+      - [ ] Architectural Smell e Dipendenze
+      - [ ] Tool Arcan
+    - [ ] Arcan Dependency Graph
+      - [ ] Nodi
+      - [ ] Archi
+    - [ ] Limitazioni Tecniche
+      - [ ] Uso di un LSP diverso per ogni linguaggio
+      - [ ] Basse prestazioni (salvo Java per Jdt)
+    - [ ] Alcune librerie utili
+      - [ ] Tree Sitter
+      - [ ] Stack Graph
+      - [ ] Tree Sitter Stack Graph
+    - [ ] La soluzione proposta
+      - [ ] Stack Graph
+      - [ ] Name Resolution
+      - [ ] Explorazione Ricorsiva
+    - [ ] Valuzione dei risultati
+      - [ ] Benchmark
+      - [ ] Scaffolding
+      - [ ] Arcan
+    - [ ] Sommario dei Capitoli
+- [x] Tree Sitter
+    - [x] Introduzione
+    - [x] Esempio
+    - [x] In Rust
+    - [x] Il Query Language
+      - [x] Sintassi
+      - [x] Field
+      - [x] Nodi anonimi
+      - [x] Wildcard
+      - [x] Negazione
+      - [x] Quantificatori
+      - [x] Identificatori
+      - [x] Raggruppamenti
+      - [x] Ancoramento
+      - [x] Alternative
+      - [x] Predicati
+- [x] Stack Graph
+    - [x] Introduzione
+    - [x] In Rust
+    - [x] Il Domain Specific Language
+      - [x] Sintassi
+      - [x] Variabili
+      - [x] Nodi
+      - [x] Archi
+      - [x] Attributi
+      - [x] Shorthands
+      - [x] Condizionali
+      - [x] Iterazioni
+      - [x] Operazioni sulle Stringhe
+      - [x] Debugging
+      - [x] Complementazioni
+- [x] Grammatica TSG
+    - [x] Language Dependency
+    - [x] Algoritmo di Name Resolution di Stack Graph
+    - [x] Uso di Push e Pop
+    - [x] Struttura degli Archi
+    - [x] Componenti Base
+      - [x] Identificatori
+      - [x] Classi, Interfacce, Enum e Annotazioni
+      - [x] Package
+      - [x] Variabili
+      - [x] Metodi
+      - [x] Accesso ai Campi
+      - [x] Chiamata di Metodi
+      - [x] Inclusione
+      - [x] File
+- [ ] Dependency Graph
+    - [x] Il Grafo
+    - [x] Esempio
+    - [ ] Costruzione
+      - [ ] Analisi del Codice Sorgente
+        - [ ] Identificazione dei target
+        - [ ] Caricamento Lazy della TSG
+        - [ ] Parsing con Stack Graph incrementale
+      - [ ] Risoluzione delle Reference
+        - [ ] Identificazione delle reference
+        - [ ] Risoluzione intelligente delle reference
+      - [ ] Esplorazione Ricorsiva
+        - [ ] Identificazione del tipo di nodo
+        - [ ] Fully Qualified Name
+        - [ ] Relazioni di parentela
+        - [ ] Identificazione delle dipendenze
+        - [ ] Creazione di scope
+        - [ ] Passo ricorsivo
+    - [ ] Esportazione
+      - [ ] GraphML
+      - [ ] PUML
+      - [ ] Cytoscape
+- [ ] Analisi di Qualita'
+    - [ ] Approccio di Testing
+    - [ ] Scaffolding
+      - [ ] Test YAML
+      - [ ] Generatore di Test
+    - [ ] Benchmark
+    - [ ] Performance
+- [ ] Valutazione e Comparazione
+    - [ ] Scaffolding
+    - [ ] Benchmark
+      - [ ] Risultati
+      - [ ] Arcan
+    - [ ] Performance
+    - [ ] Limiti
+      - [ ] Dimensione dello Stack Graph
+      - [ ] Analisi non Differenziali
+      - [ ] Language Dependency
 
-[//]: <> (- Socialismo e Barbarie &cross;)
-[//]: <> (  - Scarica barile sul neo liberismo &cross;)
-[//]: <> (  - Insulti gratuiti a Istituto Liberale &cross;)
-[//]: <> (  - Ode alla Carrozza Vicinale Piano Ribassato &cross;)
+[//]: <> (- [ ] Socialismo e Barbarie)
+[//]: <> (  - [ ] Scarica barile sul neo liberismo)
+[//]: <> (  - [ ] Insulti gratuiti a Istituto Liberale)
+[//]: <> (  - [ ] Ode alla Carrozza Vicinale Piano Ribassato)
