@@ -45,13 +45,29 @@ Il procedimento di costruzione presentato in questo capitolo deve essere in grad
 
 \putimage{diagrams/05/depGraphExample.png}{"Esempio di Grafo delle Dipendenze"}{fig:depGraphExample}
 
+In questa immagine le componenti sono renderizzate con Cytoscape.js, una libreria Javascript adatta alla visualizzazione di grafi, in modo da distinguere i nodi in base al \emph{defkind} con forma e colore: quindi per esempio i quadrati rossi sono di tipo Method e gli esagono blu sono di tipo Class.
+Si puo' notare come oltre alle reference gia' citate si tiene traccia anche della relazione di parentela \emph{definedBy}, che mette in relazione il codice sorgente contenuto con il contenitore.
+
 \section{Costruzione}
 
-\paragraph{Name Resolution}
+La costruzione avvera' in tre fasi.
+Prima di tutto si usa Tree Sitter Stack Graph per costruire lo Stack Graph del codice usando una grammatica costruita con il modello del Capitolo 4.
+Quindi si procedera' a risolvere le reference dello Stack Graph: questa operazione e' molto importante in quanto permettera' ad una esplorazione successiva di sostituire immediatamente i nodi di reference delle relazioni con i nodi concreti di definizione e quindi costruire relazioni con i nodi del grafo delle dipendenze giusti.
+L'ultimo passo sara' una esplorazione ricorsiva che permettera' di evidenziare tutti i nodi di definizione e costruire le relazioni di parentela e quelle dettate dalle reference.
+Al termine dell'operazione sara' necessario poter esportare il grafo per permettere ad ulteriore software di fare elaborazioni successive, come per esempio Arcan.
+
+\paragraph{Analisi del Codice Sorgente}
+
+%TODO
+
+\paragraph{Risoluzione delle Reference}
+
 %TODO
 
 \paragraph{Esplorazione Ricorsiva}
+
 %TODO
 
 \section{Esportazione}
+
 %TODO
