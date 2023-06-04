@@ -73,10 +73,10 @@
     - [x] Il Grafo
     - [x] Esempio
     - [ ] Costruzione
-      - [ ] Analisi del Codice Sorgente
-        - [ ] Identificazione dei target
-        - [ ] Caricamento Lazy della TSG
-        - [ ] Parsing con Stack Graph incrementale
+      - [x] Analisi del Codice Sorgente
+        - [x] Identificazione dei target
+        - [x] Caricamento Lazy della TSG
+        - [x] Parsing con Stack Graph incrementale
       - [ ] Risoluzione delle Reference
         - [ ] Identificazione delle reference
         - [ ] Risoluzione intelligente delle reference

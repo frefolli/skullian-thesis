@@ -59,13 +59,28 @@ Al termine dell'operazione sara' necessario poter esportare il grafo per permett
 \paragraph{Analisi del Codice Sorgente}
 
 Il software legge dalla linea di comando una lista di \emph{target}, ovvero la lista dei progetti da analizzare.
-Ogni target puo' essere un file singolo o una cartella, nel secondo caso si considereranno tutti i file di essa ricorsivamente.
+Ogni target puo' essere un file singolo o una cartella, nel secondo caso si considereranno tutti i file di essa ricorsivamente. Se il target e' una cartella ci si sposta all'interno di essa, per ridurre la complessita' dei \emph{fully qualified name} per le grammatiche che necessitano dell'unita' \emph{File}.
+Si itera quindi su tutti i target, ed in particolare su tutti i file contenuti ricorsivamente nei target che sono cartelle, costruendo incrementalmente lo Stack Graph.
 
+Per semplicita' si puo' considerare l'analisi di progetti costituiti di un solo linguaggio di programmazione, ma il processo si adatta anche alla possibilita' di avere progetti misti. Prima di costruire lo Stack Graph e' necessario caricare la grammatica TSG che Tree Sitter Graph usera' per costruirlo: in Rust questa e' una operazione onerosa, quindi si rende necessario l'uso di una \emph{cache} che non solo permetta di caricare dinamicamente e riutilizzare le grammatiche ma si presti bene a scalare il numero di linguaggi utilizzati nel progetto.
 
 \begin{lstlisting}[language=Python, caption=pseudocodice]
-for target in config.targets:
-    
+def build_stack_graph(config):
+    # inizializzazione delle strutture dati
+    stack_graph = StackGraph.new()
+    tsg_cache = TSGCache.new()
 
+    # iterazione sui target
+    for target in config.targets:
+        if is_directory(target):
+            change_directory(target)
+
+        # iterazione sui file
+        for file in all_files_from(target):
+            language = get_programming_language(file)
+            tsg_grammar = get_tsg_grammar(tsg_cache, language)
+            stack_graph.extend(file, tsg_grammar)
+    return stack_graph
 \end{lstlisting}
 
 \paragraph{Risoluzione delle Reference}
