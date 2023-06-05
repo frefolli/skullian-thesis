@@ -225,6 +225,91 @@ def walk_step_other(reference_map, dependency_graph,
                   parent_node, next_node)
 \end{lstlisting}
 
-\subsection{Esportazione}
+\section{Esportazione}
 
-%TODO
+In questa sezione vengono trattati i tre principali formati utilizzati durante lo sviluppo del software e delle grammatiche TSG per visualizzare i progressi, per ricevere un feedback sullo stato del lavoro, e che possono essere utilizzati anche come mezzo di condivisione dei risultati dell'analisi delle dipendenze.
+
+\subsection{PlantUML}
+
+PlantUML \`e un software FOSS utilizzato per generare diagrammi e grafici a partire da una descrizione degli stessi in plain text.
+
+Prima si produce la lista dei nodi accompagnandoli con il rispettivo \emph{defkind}, quindi si inseriscono le relazioni con una sintazzi molto intuitiva:
+
+\begin{lstlisting}
+;; esempio di nodo
+(fully_qualified_name) <<defkind>>
+
+;; esempio di relazione
+(classeA) ----> (packageB) : definedBy
+\end{lstlisting}
+
+\subsection{Cytoscape}
+
+Cytoscape \`e un framework per la visualizzazione di grafi e reticoli che utilizza JSON come formato di markup per la rappresentazione di nodi ed archi.
+
+Il file prodotto consiste essenzialmente di un array di oggetti contenenti nodi o archi: non c'\`e un ordine prestabilito. Un esempio di rappresentazione \`e il seguente:
+
+\begin{lstlisting}[language=JSON, caption=esempio di nodo]
+{
+    "data": {
+        "id": "0",
+        "label": "name",
+        "kind": "defkind"
+    }
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=JSON, caption=esempio di arco]
+{
+    "data": {
+        "id": "1 -> 0",
+        "label": "extends",
+        "kind": "extends",
+        "source": "1",
+        "target": "0"
+    }
+}
+\end{lstlisting}
+
+\subsection{GraphML}
+
+Con GraphML si intende un formato standard per la rappresentazione dei grafi che usa XML come base e si prefigge di essere semplice e generale.
+
+La struttura del documento \`e simile a questa:
+
+\begin{lstlisting}[language=XML, caption=file GraphML]
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"
+         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
+         xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns
+            http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">
+    <key id=\"name\" for=\"node\"
+         attr.name=\"name\" attr.type=\"string\">
+        <default>yellow</default>
+    </key>
+    <key id=\"kind\" for=\"node\"
+         attr.name=\"kind\" attr.type=\"string\">
+        <default>yellow</default>
+    </key>
+    <key id=\"relationship\" for=\"edge\"
+         attr.name=\"relationship\" attr.type=\"string\"/>
+    <graph id=\"dep-graph\" edgedefault=\"directed\">
+        <!-- dati del grafo -->
+    </graph>
+</graphml>
+\end{lstlisting}
+
+Ogni elemento del tag \emph{graph} sar\`a un nodo o un arco:
+
+\begin{lstlisting}[language=XML, caption=esempio di nodo]
+<node id=\"0\">
+    <data key=\"name\">name</data>
+    <data key=\"kind\">defkind</data>
+</node>
+\end{lstlisting}
+
+\begin{lstlisting}[language=XML, caption=esempio di arco]
+<edge source=\"0\" target=\"1\">
+    <data key=\"relationship\">relationship</data>
+</edge>
+\end{lstlisting}
