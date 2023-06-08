@@ -1,4 +1,20 @@
-# Scaletta Programmatica
+# Tesi del corso di Laurea in Informatica, anno 2022/2023
+
+## Abstract
+
+Nell'Ingegneria del Software e' importante avere a disposizione tool automatici che permettano di controllare le violazioni delle politiche nel codice, tuttavia essi richiedono di analizzare relazioni e dipendenze dei componenti di una code base di grandi dimensioni e che puo' essere scritta con vari linguaggi di programmazione.
+La maggior parte dei tool presenti nel mercato del software proprietario o libero fanno uso di ulteriori software di terze parti per ottenere il grafo delle dipendenze di un certo progetto e questa operazione, oltre ad essere molto onerosa quando si decida di appoggiarsi a Language Server o moduli simili, richiede di usare un software diverso per ogni linguaggio di programmazione da analizzare.
+Lo scopo di questa ricerca e' verificare sotto quali condizioni si puo' rimuovere la language dependency della costruzione del grafo delle dipendenze usano due librerie: Tree Sitter e Stack Graph.
+Dopo avere analizzato le due tecnologie proposte ed il modello introdotto ad hoc e la sua implementazione, vengono valutate l'efficacia e l'accuratezza di questa soluzione.
+
+## Titoli proposti
+
+- [ ] Dependency Graph con Tree Sitter e Stack Graph
+- [ ] TBD
+- [ ] TBD
+- [ ] TBD
+
+## Scaletta Programmatica
 
 - [ ] Introduzione
     - [ ] Caso di studio - Arcan
@@ -69,10 +85,10 @@
       - [x] Chiamata di Metodi
       - [x] Inclusione
       - [x] File
-- [ ] Dependency Graph
+- [x] Dependency Graph
     - [x] Il Grafo
     - [x] Esempio
-    - [ ] Costruzione
+    - [x] Costruzione
       - [x] Analisi del Codice Sorgente
         - [x] Identificazione dei target
         - [x] Caricamento Lazy della TSG
@@ -87,17 +103,17 @@
         - [x] Identificazione delle dipendenze
         - [x] Creazione di scope
         - [x] Passo ricorsivo
-    - [ ] Esportazione
-      - [ ] GraphML
-      - [ ] PUML
-      - [ ] Cytoscape
-- [ ] Testing Framework'
-    - [ ] Approccio di Testing
-    - [ ] Scaffolding
-      - [ ] Test YAML
-      - [ ] Generatore di Test
-    - [ ] Benchmark
-    - [ ] Performance
+    - [x] Esportazione
+      - [x] GraphML
+      - [x] PUML
+      - [x] Cytoscape
+- [x] Testing Framework'
+    - [x] Approccio di Testing
+    - [x] Scaffolding
+      - [x] Test YAML
+      - [x] Generatore di Test
+    - [x] Benchmark
+    - [x] Performance
 - [ ] Valutazione e Comparazione
     - [ ] Scaffolding
     - [ ] Benchmark
@@ -108,8 +124,3 @@
       - [ ] Dimensione dello Stack Graph
       - [ ] Analisi non Differenziali
       - [ ] Language Dependency
-
-[//]: <> (- [ ] Socialismo e Barbarie)
-[//]: <> (  - [ ] Scarica barile sul neo liberismo)
-[//]: <> (  - [ ] Insulti gratuiti a Istituto Liberale)
-[//]: <> (  - [ ] Ode alla Carrozza Vicinale Piano Ribassato)
