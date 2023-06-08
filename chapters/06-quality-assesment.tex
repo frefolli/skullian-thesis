@@ -5,8 +5,53 @@ In questo capitolo si descrive l'approccio di testing, le librerie e il material
 \section{Approccio di Testing}
 %TODO
 
+Per validare il processo di costruzione del grafo delle dipendenze ci si deve avvalere di uno o pi\'u meccanismi che permettano di verificare che le features dei linguaggi siano supportate, che tutte le relazioni e i nodi vengano identificati correttamente e che il processo riesca a scalare nella complessita' in termini di dimensione del codice.
+
 \section{Scaffolding}
 %TODO
+
+Si necessita la creazione di un meccanismo che verifichi il rispetto di politiche espresse in termini di contratti circa il risultato del grafo delle dipendenze. Questo e' stato implementato direttamente nel software sviluppato: tramite una opportuna opzione da linea di comando si configura il test.
+
+Ogni file contratto conterr\'a sia vincoli su nodi e relazioni, che indicazioni sui file da analizzare:
+
+\begin{lstlisting}
+filepaths:
+    - file.java
+nodes:
+    - name: <qualified-name>
+      kind: <defkind>
+edges:
+    - source: <qualified-name>
+      sink: <qualified-name>
+      kind: <relationship>
+\end{lstlisting}
+
+Il software legge usa i file indicati nel campo \emph{filepaths} per costruire il Grafo delle Dipendenze, quindi verifica uno a uno i vincoli specificati: per ogni vincolo di nodo che esista un nodo con quel nome e quel tipo, per ogni relazione che ne esista una tra i nodi specificati tramite i nomi.
+
+Alla fine del processo di test il software tira le somme delineando il risultato, cosa manca e producendo in output un report collettivo, specialmente utile se si processano pi\'u test con lo stesso comando. Di seguito un esempio di report in formato Markdown:
+
+\begin{markdown}
+## Tests
+
+## "tests/graph/tsg/java/implementation_bridge/test.yml"
+
+| node | kind | detected |
+| --- | --- | --- |
+| Main | class | OK |
+| Main.field | attribute | OK |
+| Main.foo | function | OK |
+| Type | class | OK |
+| Base | interface | OK |
+| Base.method | function | OK |
+
+| source | sink | kind | detected |
+| --- | --- | --- | --- |
+| Main.foo | Base.method | calls | OK |
+
+score: 7 / 7 =$= 100%
+\end{markdown}
+
+Esso appende inoltre nel report una tabella vuota per tenere traccia a mano dei problemi principali che \`e possibile inferire dal report e dalla conoscenza di cosa \`e stato implementato.
 
 \section{Benchmark}
 %TODO

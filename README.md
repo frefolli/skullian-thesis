@@ -91,7 +91,7 @@
       - [ ] GraphML
       - [ ] PUML
       - [ ] Cytoscape
-- [ ] Analisi di Qualita'
+- [ ] Testing Framework'
     - [ ] Approccio di Testing
     - [ ] Scaffolding
       - [ ] Test YAML
