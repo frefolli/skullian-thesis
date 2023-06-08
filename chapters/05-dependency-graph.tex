@@ -11,43 +11,6 @@ Per quanto riguarda invece le relazioni, esse saranno all'incirca identiche, sep
 Sia $G = (V, E)$ un grafo delle dipendenze, il generico nodo $v \in V$ sar\`a etichettato con il suo \emph{fully qualified name} e avr\`a associato il \emph{defkind}.
 Quindi il generico arco $e \in E$ sar\`a etichettato con il nome della relazione che esso rappresenta.
 
-\section{Esempio}
-
-Sia dato il seguente codice d'esempio Java:
-
-\begin{lstlisting}[language=Java]
-package unimib.ingsof;
-
-class Animal {
-  String name;
-  public void eat() {
-    System.out.println("I can eat");
-  }
-}
-
-class Dog extends Animal {
-  public void display() {
-    System.out.println("My name is " + name);
-  }
-}
-
-class Main {
-  public static void main(String[] args) {
-    Dog labrador = new Dog();
-    labrador.name = "Rohu";
-    labrador.display();
-    labrador.eat();
-  }
-}
-\end{lstlisting}
-
-Il procedimento di costruzione presentato in questo capitolo deve essere in grado di costruire il seguente Grafo delle Dipendenze:
-
-\putimage{diagrams/05/depGraphExample.png}{"Esempio di Grafo delle Dipendenze"}{fig:depGraphExample}
-
-In questa immagine le componenti sono renderizzate con Cytoscape.js, una libreria Javascript adatta alla visualizzazione di grafi, in modo da distinguere i nodi in base al \emph{defkind} con forma e colore: quindi per esempio i quadrati rossi sono di tipo Method e gli esagono blu sono di tipo Class.
-Si pu\`o notare come oltre alle reference gi\`a citate si tiene traccia anche della relazione di parentela \emph{definedBy}, che mette in relazione il codice sorgente contenuto con il contenitore.
-
 \section{Costruzione}
 
 La costruzione avver\`a in tre fasi.
@@ -115,7 +78,7 @@ def resolve_references(stack_graph):
 
 \subsection{Esplorazione Ricorsiva}
 
-L'esplorazione sara\`a una visita BFS a partire dalla radice dello Stack Graph, e per ogni nodo non ancora visitato si distinguer\`a in base al suo tipo.
+L'esplorazione sar\`a una visita BFS a partire dalla radice dello Stack Graph, e per ogni nodo non ancora visitato si distinguer\`a in base al suo tipo.
 
 Per stabilire relazioni di parentela nel codice \`e sufficiente badare all'ordine di esplorazione dei nodi: i nodi esplorati dopo un certo nodo possono essere considerati in questo modello "figli", quindi \`e necessario tenere traccia dell'ultimo nodo visitato prima del corrente. Essendo lo Stack Graph aciclico, salvo su nodi che necessariamente sono gi\`a stati esplorati, si \`e sicuri che le relazioni di parentela assegnate in tal modo siano corrette.
 
@@ -231,7 +194,7 @@ In questa sezione vengono trattati i tre principali formati utilizzati durante l
 
 \subsection{PlantUML}
 
-PlantUML \`e un software FOSS utilizzato per generare diagrammi e grafici a partire da una descrizione degli stessi in plain text.
+PlantUML \cite{PlantUML} \`e un software FOSS utilizzato per generare diagrammi e grafici a partire da una descrizione degli stessi in plain text.
 
 Prima si produce la lista dei nodi accompagnandoli con il rispettivo \emph{defkind}, quindi si inseriscono le relazioni con una sintazzi molto intuitiva:
 
@@ -245,7 +208,7 @@ Prima si produce la lista dei nodi accompagnandoli con il rispettivo \emph{defki
 
 \subsection{Cytoscape}
 
-Cytoscape \`e un framework per la visualizzazione di grafi e reticoli che utilizza JSON come formato di markup per la rappresentazione di nodi ed archi.
+Cytoscape \cite{CytoscapeJS} \`e un framework per la visualizzazione di grafi e reticoli che utilizza JSON come formato di markup per la rappresentazione di nodi ed archi.
 
 Il file prodotto consiste essenzialmente di un array di oggetti contenenti nodi o archi: non c'\`e un ordine prestabilito. Un esempio di rappresentazione \`e il seguente:
 
@@ -273,7 +236,7 @@ Il file prodotto consiste essenzialmente di un array di oggetti contenenti nodi 
 
 \subsection{GraphML}
 
-Con GraphML si intende un formato standard per la rappresentazione dei grafi che usa XML come base e si prefigge di essere semplice e generale.
+Con GraphML \cite{GraphML} si intende un formato standard per la rappresentazione dei grafi che usa XML come base e si prefigge di essere semplice e generale.
 
 La struttura del documento \`e simile a questa:
 
@@ -313,3 +276,40 @@ Ogni elemento del tag \emph{graph} sar\`a un nodo o un arco:
     <data key=\"relationship\">relationship</data>
 </edge>
 \end{lstlisting}
+
+\section{Esempio}
+
+Sia dato il seguente codice d'esempio Java:
+
+\begin{lstlisting}[language=Java]
+package unimib.ingsof;
+
+class Animal {
+  String name;
+  public void eat() {
+    System.out.println("I can eat");
+  }
+}
+
+class Dog extends Animal {
+  public void display() {
+    System.out.println("My name is " + name);
+  }
+}
+
+class Main {
+  public static void main(String[] args) {
+    Dog labrador = new Dog();
+    labrador.name = "Rohu";
+    labrador.display();
+    labrador.eat();
+  }
+}
+\end{lstlisting}
+
+Il procedimento di costruzione presentato in questo capitolo deve essere in grado di costruire il seguente Grafo delle Dipendenze:
+
+\putimage{diagrams/05/depGraphExample.png}{"Esempio di Grafo delle Dipendenze"}{fig:depGraphExample}
+
+In questa immagine le componenti sono renderizzate con Cytoscape.js, una libreria Javascript adatta alla visualizzazione di grafi, in modo da distinguere i nodi in base al \emph{defkind} con forma e colore: quindi per esempio i quadrati rossi sono di tipo Method e gli esagono blu sono di tipo Class.
+Si pu\`o notare come oltre alle reference gi\`a citate si tiene traccia anche della relazione di parentela \emph{definedBy}, che mette in relazione il codice sorgente contenuto con il contenitore.

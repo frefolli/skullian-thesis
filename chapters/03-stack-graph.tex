@@ -6,8 +6,9 @@ In questo capitolo si parla di Stack Graph, come usarlo con Rust, sia per costru
 
 Stack Graph \cite{StackGraph} \`e un modello di grafo nato per risolvere il problema della navigazione simbolica del codice, superando i limiti dello Scope Graph \cite{ScopeGraph}.
 La tecnologia \`e stata presentata per la prima volta in una conferenza Strange Loop \cite{StackGraphConference}, di cui \`e stato successivamente scritto un resoconto sotto forma di articolo \cite{StackGraphIntro}.
-Attraverso la costruzione di un grafo con nodi detti di "scope", "push" e "pop" permette di effettuare una ricerca di una reference fino alla sua definizione.
+La letteratura in merito a questa tecnologia molto giovane si ferma alla pubblicazione di un paper del professore olandese Van Antwerpen \cite{StackGraphNameResolutionAtScale}, dove viene spiegato a livello logico come funziona Stack Graph.
 
+Attraverso la costruzione di un grafo con nodi detti di "scope", "push" e "pop" permette di effettuare una ricerca di una reference fino alla sua definizione.
 Questa ricerca \`e una vera e propria visita del grafo, che utilizza da una parte un Symbol Stack per tenere traccia dei simboli incontrati nella ricerca, e dall'altra tipi differenti di nodi visitabili che prescrivono come operare sul Symbol Stack e di conseguenza stabilire se un arco \`e percorribile e se un percorso \`e definito "completo".
 Un percorso \`e detto tale se e solo se il Symbol Stack \`e svuotato.
 

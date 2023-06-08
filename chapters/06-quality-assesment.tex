@@ -3,16 +3,14 @@
 In questo capitolo si descrive l'approccio di testing, le librerie e il materiale utilizzato per sviluppare il framework di test e alcuni criteri aggiuntivi di valutazione della qualit\`a relativamente alla soluzione adottata correntemente da Arcan.
 
 \section{Approccio di Testing}
-%TODO
 
-Per validare il processo di costruzione del grafo delle dipendenze ci si deve avvalere di uno o pi\'u meccanismi che permettano di verificare che le features dei linguaggi siano supportate, che tutte le relazioni e i nodi vengano identificati correttamente e che il processo riesca a scalare nella complessita' in termini di dimensione del codice.
+Per validare il processo di costruzione del grafo delle dipendenze ci si deve avvalere di uno o pi\`u meccanismi che permettano di verificare che le features dei linguaggi siano supportate, che tutte le relazioni e i nodi vengano identificati correttamente e che il processo riesca a scalare nella complessita' in termini di dimensione del codice.
 
 \section{Scaffolding}
-%TODO
 
 Si necessita la creazione di un meccanismo che verifichi il rispetto di politiche espresse in termini di contratti circa il risultato del grafo delle dipendenze. Questo e' stato implementato direttamente nel software sviluppato: tramite una opportuna opzione da linea di comando si configura il test.
 
-Ogni file contratto conterr\'a sia vincoli su nodi e relazioni, che indicazioni sui file da analizzare:
+Ogni file contratto conterr\`a sia vincoli su nodi e relazioni, che indicazioni sui file da analizzare:
 
 \begin{lstlisting}
 filepaths:
@@ -28,33 +26,23 @@ edges:
 
 Il software legge usa i file indicati nel campo \emph{filepaths} per costruire il Grafo delle Dipendenze, quindi verifica uno a uno i vincoli specificati: per ogni vincolo di nodo che esista un nodo con quel nome e quel tipo, per ogni relazione che ne esista una tra i nodi specificati tramite i nomi.
 
-Alla fine del processo di test il software tira le somme delineando il risultato, cosa manca e producendo in output un report collettivo, specialmente utile se si processano pi\'u test con lo stesso comando. Di seguito un esempio di report in formato Markdown:
+Alla fine del processo di test il software tira le somme delineando il risultato, cosa manca e producendo in output un report collettivo, specialmente utile se si processano pi\`u test con lo stesso comando. Di seguito un esempio di report in formato Markdown:
 
-\begin{markdown}
-## Tests
-
-## "tests/graph/tsg/java/implementation_bridge/test.yml"
-
-| node | kind | detected |
-| --- | --- | --- |
-| Main | class | OK |
-| Main.field | attribute | OK |
-| Main.foo | function | OK |
-| Type | class | OK |
-| Base | interface | OK |
-| Base.method | function | OK |
-
-| source | sink | kind | detected |
-| --- | --- | --- | --- |
-| Main.foo | Base.method | calls | OK |
-
-score: 7 / 7 =$= 100%
-\end{markdown}
+\putimage{diagrams/06/testingReportExample.png}{"Esempio di Report di un contratto"}{fig:testingReportExample}
 
 Esso appende inoltre nel report una tabella vuota per tenere traccia a mano dei problemi principali che \`e possibile inferire dal report e dalla conoscenza di cosa \`e stato implementato.
 
+\putimage{diagrams/06/problemsReport.png}{"Esempio di Report di un contratto"}{fig:testingReportExample}
+
 \section{Benchmark}
-%TODO
+
+Oltre a test individuali per controllare il supporto delle singole caratteristiche, si fa uso anche di un framework per la verifica dell'identificazione delle dipendenze descritto in un paper di Leo Pruijt \cite{DBLP:journals/spe/PruijtKWB17} dove si tratta di valutazione dei sistemi di analisi statica delle dipendenze del codice.
+
+\putimage{diagrams/06/directDependencies.png}{"Dipendenze dirette da rilevare nel codice"}{fig:directDependencies}
+
+\putimage{diagrams/06/indirectDependencies.png}{"Dipendenze indirette da rilevare nel codice"}{fig:indirectDependencies}
 
 \section{Performace}
-%TODO
+
+Oltre alla correttezza dell'analisi e' opportuno tenere traccia delle performance del software e delle grammatiche che vengono utilizzare per costruire il grafo, quindi non solo di valuta la velocit\`a con cui viene generato ma anche la quantit\`a di memoria che viene consumata e la scalabilit\`a del processo.
+Per questo alternare test individuali con test pi\`u massivi per mette di stabilire quanto incide la complessit\`a di un progetto rispetto al tempo e alla spazio impiegati.

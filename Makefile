@@ -21,4 +21,7 @@ clean:
 	rm -rf $$(find . -name "*.blg" -not -path '*/.*')
 	rm -rf $$(find . -name "*.run.xml" -not -path '*/.*')
 	rm -rf $$(find . -name "*.toc" -not -path '*/.*')
+	rm -rf $$(find . -name "*.lua" -not -path '*/.*')
+	rm -rf $$(find . -name "*.in" -not -path '*/.*')
+	rm -rf $$(find . -name "*-blx.bib" -not -path '*/.*')
 	make -C diagrams clean
