@@ -32,12 +32,10 @@ def build_stack_graph(config):
     # inizializzazione delle strutture dati
     stack_graph = StackGraph.new()
     tsg_cache = TSGCache.new()
-
     # iterazione sui target
     for target in config.targets:
         if is_directory(target):
             change_directory(target)
-
         # iterazione sui file
         for file in all_files_from(target):
             language = get_programming_language(file)
@@ -59,15 +57,12 @@ Visto che lo scopo \`e instaurare relazioni tra due nodi del Grafo delle Dipende
 def resolve_references(stack_graph):
     # inizializzazione
     map: Map<Node, Node>.new()
-
     # iterazione sui nodi
     for node in stack_graph.get_nodes():
-
         # controllo dei requisiti
         if is_reference(node):
             if has_refkind(node):
                 definition = resolve_reference(stack_graph, node)
-                
                 # controllo di avvenuta risoluzione
                 # e dei requisiti del nodo trovato
                 if is_some(definition):
@@ -89,7 +84,6 @@ def walk_step(reference_map, dependency_graph,
               parent_node, current_node):
     if not_visited(current_node):
         visit(current_node)
-
         if is_definition(current_node) and has_defkind(current_node):
             walk_step_definition(reference_map, dependency_graph,
                                  parent_node, current_node)
@@ -99,7 +93,6 @@ def walk_step(reference_map, dependency_graph,
         else:
             walk_step_other(reference_map, dependency_graph,
                             parent_node, current_node)
-
 def build_dependency_graph(stack_graph, reference_map):
     dependency_graph = DependencyGraph.new()
     walk_step(reference_map, dependency_graph,
@@ -121,13 +114,11 @@ def walk_step_definition(reference_map, dependency_graph,
                          parent_node, current_node):
     defkind = get_defkind(current_node)
     name = concat(parent_node, current_node)
-    
     # prevenzione della duplicazione dei nodi
     if dependency_graph.contains(name):
         depgraph_node = dependency_graph.get(name)
     else:
         depgraph_node = dependency_graph.newNode(name, defkind)
-
     # creazione relazioni definedBy e nestedTo
     if some(parent_node):
         if get_defkind(parent_node) == defkind:
@@ -138,7 +129,6 @@ def walk_step_definition(reference_map, dependency_graph,
             dependency_graph.newEdge(depgraph_node,
                                      parent_node,
                                      "definedBy")
-
     # passo ricorsivo
     for next_node in current_node.get_edges():
         walk_step(reference_map, dependency_graph,
@@ -159,7 +149,6 @@ def translate(refkind):
         return "isImplementationOf"
     else:
         return refkind
-
 def walk_step_reference(reference_map, dependency_graph,
                         parent_node, current_node):
     refkind = get_refkind(current_node)
@@ -168,7 +157,6 @@ def walk_step_reference(reference_map, dependency_graph,
         dependency_graph.newEdge(parent_node,
                                  current_node,
                                  translate(refkind))
-
     # passo ricorsivo
     for next_node in current_node.get_edges():
         walk_step(reference_map, dependency_graph,
@@ -201,7 +189,6 @@ Prima si produce la lista dei nodi accompagnandoli con il rispettivo \emph{defki
 \begin{lstlisting}
 ;; esempio di nodo
 (fully_qualified_name) <<defkind>>
-
 ;; esempio di relazione
 (classeA) ----> (packageB) : definedBy
 \end{lstlisting}
@@ -283,20 +270,17 @@ Sia dato il seguente codice d'esempio Java:
 
 \begin{lstlisting}[language=Java]
 package unimib.ingsof;
-
 class Animal {
   String name;
   public void eat() {
     System.out.println("I can eat");
   }
 }
-
 class Dog extends Animal {
   public void display() {
     System.out.println("My name is " + name);
   }
 }
-
 class Main {
   public static void main(String[] args) {
     Dog labrador = new Dog();

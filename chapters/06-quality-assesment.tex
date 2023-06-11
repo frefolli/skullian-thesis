@@ -34,6 +34,33 @@ Esso appende inoltre nel report una tabella vuota per tenere traccia a mano dei 
 
 \putimage{diagrams/06/problemsReport.png}{"Esempio di Report di un contratto"}{fig:testingReportExample}
 
+Grazie a questo strumento di testing si pu\`o adottare un approccio sistematico nell'implementazione delle grammatiche da una parte, e dell'algoritmo che costruisce il grafo dall'altra. Per tenere traccia delle operazioni e organizzare le implementazioni si puo' fare uso di uno strumento di Version Control come Git, specialmente se si lavora in team in parallelo. Nel caso corrente \`e stato utilizzato per gestire la versione in produzione affinch\`e non avesse implementazioni sperimentali o parziali.
+
+\begin{lstlisting}[caption="Processo di implementazione", language=Python]
+for language in SUPPORTED_LANGUAGES:
+    # creazione ipotetica del fork del branch di sviluppo
+    branch = forkBranch("development")
+    # elencazione per enumerazione di tutte le features del linguaggio di
+    # programmazione che siano utili ai fini delle relazioni da identificare o
+    # che richiedano approcci ad hoc
+    features = findLanguageFeatures()
+    for feature in features:
+        # costruzione di casi di test come coppia (sorgente, politica);
+        # un numero di test adeguato rispetto alla variabilit\`a del costrutto e
+        # alle possibili implicazioni rispetto ad altre relazioni gi\`a sviluppate
+        buildTestFor(language, feature)
+        # implementazione nella grammatica TSG e nel codice rust per introdurre
+        # la rilevazione di nodi e archi del grafo delle dipendenze
+        implementFeature(language, feature)
+        # esecuzione di tutti i test fin'ora implementati per assicurarsi che
+        # la nuova feature non vada ad interferire con le altre gi\`a presenti
+        integrationTest()
+        # salvare iterativamente i progressi permette di garantire la presenza
+        # di un punto di ritorno sicuro nel caso si commetta qualche errore durante lo sviluppo
+        commitBranch(branch)
+    joinBranch("development", branch)
+\end{lstlisting}
+
 \section{Benchmark}
 
 Oltre a test individuali per controllare il supporto delle singole caratteristiche, si fa uso anche di un framework per la verifica dell'identificazione delle dipendenze descritto in un paper di Leo Pruijt \cite{DBLP:journals/spe/PruijtKWB17} dove si tratta di valutazione dei sistemi di analisi statica delle dipendenze del codice.
@@ -41,6 +68,8 @@ Oltre a test individuali per controllare il supporto delle singole caratteristic
 \putimage{diagrams/06/directDependencies.png}{"Dipendenze dirette da rilevare nel codice"}{fig:directDependencies}
 
 \putimage{diagrams/06/indirectDependencies.png}{"Dipendenze indirette da rilevare nel codice"}{fig:indirectDependencies}
+
+Da queste tabelle il team di Arcan ha costruito una code base di esempio e quindi estratto una checklist di dipendenze legate alla code base che pu\`o essere utilizzata per accertare la capacit\`a di un tool di rilevare correttamente tutte le principali dipendenze del codice. Nella fase di validazione del software descritto in questi capitolo si fa uso della code base Java e della checklist, quest'ultima opportunamente tradotta in relazioni rilevabili dal modello in esame.
 
 \section{Performace}
 
