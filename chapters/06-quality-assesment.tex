@@ -25,14 +25,10 @@ edges:
 \end{lstlisting}
 
 Il software legge usa i file indicati nel campo \emph{filepaths} per costruire il Grafo delle Dipendenze, quindi verifica uno a uno i vincoli specificati: per ogni vincolo di nodo che esista un nodo con quel nome e quel tipo, per ogni relazione che ne esista una tra i nodi specificati tramite i nomi.
-
-Alla fine del processo di test il software tira le somme delineando il risultato, cosa manca e producendo in output un report collettivo, specialmente utile se si processano pi\`u test con lo stesso comando. Di seguito un esempio di report in formato Markdown:
+Alla fine del processo di test il software tira le somme delineando il risultato, cosa manca e producendo in output un report collettivo, specialmente utile se si processano pi\`u test con lo stesso comando. Esso appende inoltre nel report una tabella Markdown vuota per tenere traccia a mano dei problemi principali che \`e possibile inferire dal report e dalla conoscenza di cosa \`e stato implementato. Di seguito un esempio di report in formato Markdown:
 
 \putimage{diagrams/06/testingReportExample.png}{"Esempio di Report di un contratto"}{fig:testingReportExample}
 
-Esso appende inoltre nel report una tabella vuota per tenere traccia a mano dei problemi principali che \`e possibile inferire dal report e dalla conoscenza di cosa \`e stato implementato.
-
-\putimage{diagrams/06/problemsReport.png}{"Esempio di Report di un contratto"}{fig:testingReportExample}
 
 Grazie a questo strumento di testing si pu\`o adottare un approccio sistematico nell'implementazione delle grammatiche da una parte, e dell'algoritmo che costruisce il grafo dall'altra. Per tenere traccia delle operazioni e organizzare le implementazioni si puo' fare uso di uno strumento di Version Control come Git, specialmente se si lavora in team in parallelo. Nel caso corrente \`e stato utilizzato per gestire la versione in produzione affinch\`e non avesse implementazioni sperimentali o parziali.
 
