@@ -95,7 +95,7 @@ si ottiene il seguente albero sintattico:
 \section{Query Language}
 
 L'albero sintattico \`e graficamente rappresentato attraverso delle \textbf{sexp} che usano identificatori e struttura definiti dalla grammatica del linguaggio.
-\textbf{Tree sitter} definisce un \textbf{Domain Specific Language} \cite{TreeSitterQuerySyntax} tramite il quale eseguire delle query ad un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
+\textbf{Tree sitter} definisce un \textbf{Domain Specific Language} \cite{TreeSitterQuerySyntax} tramite il quale eseguire delle query a un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
 Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific}, la sintassi generale del \textbf{DSL} \`e universale.
 
 Questo linguaggio di query pu\`o essere usato da un engine di query per implementare un linguaggio di scripting con cui permettere all'utente di operare in diversi modi su un file sorgente.
@@ -108,7 +108,7 @@ Con l'apposita libreria \textbf{tree-sitter-stack-graphs} \`e possibile fare del
 \end{lstlisting}
 
 Il query language non si discosta dalla rappresentazione in sexp.
-Ogni nodo \`e rappresentato tramite una sexp dove gli identificatori sono i nomi dei node dell'AST.
+Ogni nodo \`e rappresentato tramite una sexp dove gli identificatori sono i nomi dei nodi dell'AST.
 La stringa del testo a cui un nodo fa riferimento non \`e esplicitamente contenuta n\'e nella rappresentazione dell'AST, n\'e nella query.
 Un engine che applica delle query pu\`o fornire un'API per ottenere le informazioni corrispondenti ai nodi.
 
@@ -120,7 +120,7 @@ Un engine che applica delle query pu\`o fornire un'API per ottenere le informazi
 
 In una query \`e possibile specificare i field del nodo che si vogliono riconoscere.
 In questo modo \`e possibile selezionare costrutti che per esempio fanno uso dei field per ordinare i valori in una sexp.
-Si noti che l'accesso al field \`e unico, ad ogni field \`e associato al pi\`u un nodo.
+Si noti che l'accesso al field \`e unico, a ogni field \`e associato al pi\`u un nodo.
 Introdurre il field nella query esclude le occorrenze di tagA che non hanno per esempio associato un valore al field B.
 
 \subsection{nodi anonimi}
@@ -130,7 +130,7 @@ Introdurre il field nella query esclude le occorrenze di tagA che non hanno per 
 \end{lstlisting}
 
 Pu\`o risultare utile specificare al query engine una query siffatta.
-Ad essa saranno associate tutte le occorrenze di tagA che contengano nodi la cui string nel testo sia uguale a "string".
+A essa saranno associate tutte le occorrenze di tagA che contengano nodi la cui string nel testo sia uguale a "string".
 \`E importante sottolineare che la struttura del nodo associato a "string" pu\`o essere complessa a piacere.
 
 \subsection{wildcard}
@@ -166,7 +166,7 @@ La semantica \`e quella tipica delle espressioni regolari.
 (tagA (_)@child)@top
 \end{lstlisting}
 
-\`E possibile associare ad ognun nodo del risultato della query un nodo utilizzando la notazione \emph{(node)@id}.
+\`E possibile associare a ognun nodo del risultato della query un nodo utilizzando la notazione \emph{(node)@id}.
 Se l'engine supporta linguaggi di scripting o strumenti affini torna utile potersi riferire ai singoli nodi.
 
 \subsection{raggruppamenti}
@@ -196,7 +196,7 @@ Non vi potranno essere nodi compresi tra quelli che corrispondono al match.
 (parent . (child)@c1)
 \end{lstlisting}
 
-\`E anche possibile esplicitare l'ancoramento rispetto ad un lato.
+\`E anche possibile esplicitare l'ancoramento rispetto a un lato.
 Per cui interporre l'operatore di concatenazione tra il parent tag e il nodo child permette di esplicitare che quel nodo child \`e il primo nodo figlio del nodo parent.
 
 \begin{lstlisting}
@@ -231,7 +231,7 @@ Come in un'espressione regolare, la query trova un'occorrenza in cui uno dei nod
 \end{lstlisting}
 
 Tree sitter descrive l'uso di alcuni predicati che permettono di asserire condizioni ulteriori di match.
-I predicati implementati in pratica non fanno parte di uno standard, Tree Sitter si limita ad esporli ad un engine che a sua volta deve implementare e supportare il loro uso.
+I predicati implementati in pratica non fanno parte di uno standard, Tree Sitter si limita a esporli a un engine che a sua volta deve implementare e supportare il loro uso.
 
 Nel caso proposto si applica un predicato \emph{pred} ai nodi argomenti \emph{A} e \emph{B}.
 \`E possibile anche usare come argomenti delle stringhe.

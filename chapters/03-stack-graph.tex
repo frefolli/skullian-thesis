@@ -80,7 +80,7 @@ Alla fine delle iterazioni la variabile \textbf{stack\_graph} conterr\`a lo stac
 
 Per risolvere le reference un metodo semplice \`e utilizzare la funzione \emph{find\_all\_paths}: essa usa come input un insieme di nodi iniziali e il grafo Stack Graph generato nei passi precedenti e risolve tutte le reference appartenenti a quei nodi iniziali esplorando tutti i percorsi possibili che il cycle detector consente di processare.
 
-Nell'esempio seguente si processano tutti i nodi del grafo, tuttavia \`e possibile passare il sottoinsieme dei nodi di reference iterando su essi ed aggiungendo gli elementi opportuni ad un vettore.
+Nell'esempio seguente si processano tutti i nodi del grafo, tuttavia \`e possibile passare il sottoinsieme dei nodi di reference iterando su essi ed aggiungendo gli elementi opportuni a un vettore.
 
 \begin{lstlisting}[language=Rust]
 let mut paths = stack_graphs::paths::Paths::new();
@@ -96,7 +96,7 @@ paths.find_all_paths(
 ).unwrap();
 \end{lstlisting}
 
-Stack Graph fornisce anche un altro metodo per risolvere le reference, un metodo pi\`u manuale e consigliato dalla libreria stessa in quanto si presta di pi\`u a personalizzazioni, ottimizzazioni e ad input pi\`u grandi.
+Stack Graph fornisce anche un altro metodo per risolvere le reference, un metodo pi\`u manuale e consigliato dalla libreria stessa in quanto si presta di pi\`u a personalizzazioni, ottimizzazioni e a input pi\`u grandi.
 Questo metodo coincide con quanto fatto dalla funzione precedente, ma implementandolo direttamente \`e possibile processare una reference alla volta e bloccare il processo una volta trovata la corrispondenza della reference.
 
 Ci si serve dell'oggetto CycleDetector e di una coda per tenere traccia dei percorsi processati e quelli da processare, quindi si itera su tutti gli oggetti estendendo manualmente l'oggetto \emph{path} in tutte le direzioni possibili e aggiungendo questi nuovi percorsi alla coda.
@@ -144,7 +144,7 @@ I commenti in linea sono espressi tramite il prefisso ";;", e questo rappresenta
 Essi possono essere inseriti sia nei blocchi di codice che nel file della grammatica TSG in generale.
 
 \subsection{variabili}
-Il linguaggio di scripting supporta l'uso di variabili \cite{TreeSitterGraphReferenceVariables}, che possono essere locali, globali o di scope (associati ad un nodo sintattico).
+Il linguaggio di scripting supporta l'uso di variabili \cite{TreeSitterGraphReferenceVariables}, che possono essere locali, globali o di scope (associati a un nodo sintattico).
 
 Le variabili locali vengono dichiarate con l'uso di "let", e sono inerentemente immutabili:
 
@@ -164,7 +164,7 @@ Per dichiarare variabili locali mutabili \`e necessario usare "var":
 }
 \end{lstlisting}
 
-Una variabile di scope \`e dichiarata in maniera simile. Essendo associata ad un nodo di query, pu\`o essere manipolata in pi\`u punti del codice.
+Una variabile di scope \`e dichiarata in maniera simile. Essendo associata a un nodo di query, pu\`o essere manipolata in pi\`u punti del codice.
 
 \begin{lstlisting}
 (tagB)@B {
@@ -190,7 +190,7 @@ Tree Sitter Stack Graph definisce due variabili globali: FILE\_PATH e ROOT\_NODE
 
 FILE\_PATH equivale al path corrente del file che sta venendo analizzato dall'engine e pu\`o risultare utile se si deve, per esempio, costruire un nodo nello stack graph corrispondente al file corrente per supportare la ricerca simbolica del codice importato nei linguaggi di programmazione il cui meccanismo di import dipende da path relativi (il caso di C++) piuttosto che da package o moduli (il caso di Java), o seppure nel secondo caso il nome del package corrente \`e deciso dal nome del file (il caso di Python).
 
-ROOT\_NODE invece \`e sempre uguale ad un nodo di scope istanziato dallo stack graph stesso che ne costituisce la radice, e che \`e utile poter manipolare nella grammatica TSG per collegare i sotto grafi generati dal singolo file sorgente per costruire un grafo unico incrementalmente.
+ROOT\_NODE invece \`e sempre uguale a un nodo di scope istanziato dallo stack graph stesso che ne costituisce la radice, e che \`e utile poter manipolare nella grammatica TSG per collegare i sotto grafi generati dal singolo file sorgente per costruire un grafo unico incrementalmente.
 
 \subsection{nodi}
 
@@ -221,11 +221,11 @@ Lo stack graph \`e un grafo diretto, quindi la sintassi si propone di rappresent
 }
 \end{lstlisting}
 
-L'unico attributo che \`e associabile ad un arco \`e "precedence", ovvero un parametro intero utilizzato dall'algoritmo di ricerca di stack graph per implementare lo "shadowing" del codice \cite{TreeSitterStackGraphEdges}.
+L'unico attributo che \`e associabile a un arco \`e "precedence", ovvero un parametro intero utilizzato dall'algoritmo di ricerca di stack graph per implementare lo "shadowing" del codice \cite{TreeSitterStackGraphEdges}.
 
 \subsection{attributi}
 
-Per applicare un attributo ad un nodo o ad un arco si usa la seguente sintassi \cite{TreeSitterGraphReferenceAttributes}:
+Per applicare un attributo a un nodo o a un arco si usa la seguente sintassi \cite{TreeSitterGraphReferenceAttributes}:
 
 \begin{lstlisting}
 (_) {
@@ -262,7 +262,7 @@ attribute name = input =>
     ...
 \end{lstlisting}
 
-La dichiarazione di \emph{name} \`e simile ad una funzione con un parametro \emph{input} manipolabile nelle coppie chiave valore.
+La dichiarazione di \emph{name} \`e simile a una funzione con un parametro \emph{input} manipolabile nelle coppie chiave valore.
 
 L'uso pratico di questa feature pu\`o essere di due tipi: abbreviare un attributo per renderlo pi\`u facilmente leggibile o compattare una serie di attributi che ci si aspetta vengano dichiarati insieme pi\`u volte allo stesso modo. Un esempio pu\`o essere:
 
@@ -341,7 +341,7 @@ global FILE_PATH
 
 Oltre agli attributi supportati da Tree Sitter Stack Graph c'\`e la possibilit\`a di assegnare attributi detti di "debug" \cite{TreeSitterStackGraphDebugInfo} che permettono di tenere traccia sia di informazioni puramente di testing sia informazioni utili al processamento dello Stack Graph per estrarre informazioni altrimenti impossibili da ottenere.
 
-Per assegnare ad un nodo l'attributo di debug "varx" si usa la sintassi
+Per assegnare a un nodo l'attributo di debug "varx" si usa la sintassi
 
 \begin{lstlisting}
 (_) {

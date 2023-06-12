@@ -22,7 +22,7 @@ Questo approccio permette di limitare la dipendenza da software di terze parti (
 
 \subsection{Algoritmo di Name Resolution di Stack Graph}
 
-\`E importante comprendere come Stack Graphs effettivamente risolve le reference perch\'e non solo abilita il programmatore ad ottimizzazioni consapevoli, ma permette anche di implementare risoluzioni pi\`u complesse.
+\`E importante comprendere come Stack Graphs effettivamente risolve le reference perch\'e non solo abilita il programmatore a ottimizzazioni consapevoli, ma permette anche di implementare risoluzioni pi\`u complesse.
 
 \par
 Sia dato un grafo $G = (V, E)$ di tipo Stack Graph, e sia $r \in V$ il nodo che corrisponde alla reference da risolvere. Questo nodo sar\`a il nodo iniziale della ricerca: dopo aver inizializzato una coda $Q$ vuota, si costruisce il path $p_r = (r,)$ che ha come nodo di partenza il nodo iniziale $r$ e si inserisce il suddetto path $p$ nella coda $Q$.
@@ -43,7 +43,7 @@ A questo punto, se il path deve essere analizzato, la prima cosa che occorre far
 Ulteriori informazioni di circostanza ("defkind" e "refkind" per esempio) possono definire regole ulteriori per definire quali definizioni devono essere accettate: nella soluzione proposta si va a valutare solo i path completi i cui nodi finali siano "definition" con un "defkind" non nullo e i cui nodi iniziali siano "reference" con "refkind" non nulla. Chiaramente la seconda condizione pu\`o essere controllata nel momento stesso in cui si decide di risolvere un nodo di reference.
 
 \par
-Se il path corrente non \`e "completo", lo si va ad "estendere": per ogni arco del nodo finale si verifica la possibilit\`a di attraversarlo (in base al Symbol Stack e alle operazioni di pop) e in quel caso si aggiunge il nuovo path alla coda.
+Se il path corrente non \`e "completo", lo si va a "estendere": per ogni arco del nodo finale si verifica la possibilit\`a di attraversarlo (in base al Symbol Stack e alle operazioni di pop) e in quel caso si aggiunge il nuovo path alla coda.
 
 \par
 \`E bene notare come non solo ogni arco, ma anche ogni ciclo all'interno del grafo possono aggiungere molti path concorrenti alla coda.
@@ -79,7 +79,7 @@ Il grafo delle dipendenze verr\`a creato tramite una esplorazione del grafo a pa
 
 \par
 Non \`e tuttavia l'unico vincolo che \`e necessario imporre alla struttura degli archi: nell'ottica di ridurre il numero di path creati durante l'esplorazione \`e nessario ridurre al minimo i cicli.
-Questa ottimizzazione non \`e complessa da adottare, ma il grafo non pu\`o essere completamente aciclico: deve essere possibile durante la ricerca ritornare quanto mento alla radice del grafo (\emph{ROOT\_NODE}) per permettere ad essa di discendere nel prossimo sottoalbero da esplorare per trovare le definizioni in successione.
+Questa ottimizzazione non \`e complessa da adottare, ma il grafo non pu\`o essere completamente aciclico: deve essere possibile durante la ricerca ritornare quanto mento alla radice del grafo (\emph{ROOT\_NODE}) per permettere a essa di discendere nel prossimo sottoalbero da esplorare per trovare le definizioni in successione.
 
 \par
 Per evitare cicli interni ogni nodi che definisce scope far\`a progredire due nodi distinti che corrisponderanno rispettivamente al percorso verso l'alto e verso il basso: questo permetter\`a sia alle reference di fluire verso la radice, appendendo eventuali simboli che definiscono lo scope (ex: nome della classe), sia alle definizioni e alle reference stesse di essere identificate durante la fase di risoluzione delle reference e durante la fase di esplorazione dall'alto.
@@ -87,8 +87,8 @@ Per evitare cicli interni ogni nodi che definisce scope far\`a progredire due no
 \section{Le Componenti di Base}
 
 Ciascuna unit\`a costruita dal modello disporr\`a di 5 campi.
-Il nodo radice dell'unit\`a che permette ad essa di comunicare verso l'alto \`e \emph{scope}.
-Rispettivamente \emph{push\_start} e \emph{push\_end} sono i nodi di inizio e di fine del percorso che attraversa l'unit\`a verso l'alto e che serve a costruire incrementalmente il percorso che la risoluzione delle reference seguir\`a fino ad un apice dove si inizier\`a a scendere alla ricerca di definizioni combacianti.
+Il nodo radice dell'unit\`a che permette a essa di comunicare verso l'alto \`e \emph{scope}.
+Rispettivamente \emph{push\_start} e \emph{push\_end} sono i nodi di inizio e di fine del percorso che attraversa l'unit\`a verso l'alto e che serve a costruire incrementalmente il percorso che la risoluzione delle reference seguir\`a fino a un apice dove si inizier\`a a scendere alla ricerca di definizioni combacianti.
 Vice versa \emph{pop\_start} e \emph{pop\_end} sono i nodi nella direzione opposta che indicano la direzione di definizione dell'unit\`a.
 Questi campi possono sia contenere nodi concreti che riferimenti a nodi definiti altrove, per supportare la combinazione tra unit\`a.
 
@@ -315,7 +315,7 @@ L'accesso ai campi pu\`o essere trattato in maniera molto simile alla concatenaz
   }
 \end{lstlisting}
 
-Ci sono per\`o altri tipi di accesso: per esempio l'accesso ad un elemento di un array o l'accesso al contenuto di una variabile nello scope. A seconda del linguaggio analizzato il Query Language potrebbe possedere costruitti appositi, come in java, o trattarli in maniera simile all'esempio precedente.
+Ci sono per\`o altri tipi di accesso: per esempio l'accesso a un elemento di un array o l'accesso al contenuto di una variabile nello scope. A seconda del linguaggio analizzato il Query Language potrebbe possedere costruitti appositi, come in java, o trattarli in maniera simile all'esempio precedente.
 Nel secondo caso ogni reference particolare deve essere segnalata con un'apposita regola.
 L'esempio seguente marca come reference da risolvere gli identificatori passati come argomento di una chiamata di funzione, utilizzati in espressioni binarie o che siano nomi di array:
 

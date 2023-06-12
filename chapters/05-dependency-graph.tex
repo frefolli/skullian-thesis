@@ -15,9 +15,9 @@ Quindi il generico arco $e \in E$ sar\`a etichettato con il nome della relazione
 
 La costruzione avver\`a in tre fasi.
 Prima di tutto si usa Tree Sitter Stack Graph per costruire lo Stack Graph del codice usando una grammatica costruita con il modello del Capitolo 4.
-Quindi si proceder\`a a risolvere le reference dello Stack Graph: questa operazione \`e molto importante in quanto permetter\`a ad una esplorazione successiva di sostituire immediatamente i nodi di reference delle relazioni con i nodi concreti di definizione e quindi costruire relazioni con i nodi del grafo delle dipendenze giusti.
+Quindi si proceder\`a a risolvere le reference dello Stack Graph: questa operazione \`e molto importante in quanto permetter\`a a una esplorazione successiva di sostituire immediatamente i nodi di reference delle relazioni con i nodi concreti di definizione e quindi costruire relazioni con i nodi del grafo delle dipendenze giusti.
 L'ultimo passo sar\`a una esplorazione ricorsiva che permetter\`a di evidenziare tutti i nodi di definizione e costruire le relazioni di parentela e quelle dettate dalle reference.
-Al termine dell'operazione sar\`a necessario poter esportare il grafo per permettere ad ulteriore software di fare elaborazioni successive, come per esempio Arcan.
+Al termine dell'operazione sar\`a necessario poter esportare il grafo per permettere a ulteriore software di fare elaborazioni successive, come per esempio Arcan.
 
 \subsection{Analisi del Codice Sorgente}
 
@@ -107,7 +107,7 @@ Da un nodo di definizione con un \emph{defkind} valido si estrae il simbolo che 
 Quindi si crea il nodo del grafo in costruzione usano il nome composto e il defkind. Esistono linguaggi dove si possono trovare definizioni duplicate legittime, come per esempio i Package in Java, quindi si controlla prima che non ne esista gi\'a uno all'interno del grafo delle dipendenze.
 
 Come ultima cosa si crea la relazione di parentela se il nodo "padre" \`e definito non nullo e si applica il passo ricorsivo.
-Esso consiste nell'esplorare tutti i nodi collegati con archi ad esso usando come nodo padre il nodo del grafo delle dipendenze appena creato.
+Esso consiste nell'esplorare tutti i nodi collegati con archi a esso usando come nodo padre il nodo del grafo delle dipendenze appena creato.
 
 \begin{lstlisting}[language=Python, caption=pseudocodice]
 def walk_step_definition(reference_map, dependency_graph,
@@ -137,7 +137,7 @@ def walk_step_definition(reference_map, dependency_graph,
 
 \paragraph{reference}
 
-Se un nodo di reference ha nella mappa delle reference risolte in precedenza un'associazione ad un nodo di definizione, si associa una relazione di quel tipo (tradotta sia per motivi di leggibilit\`a, che per uniformarla alla notazione di Arcan) tra il nodo trovato e il nodo "padre".
+Se un nodo di reference ha nella mappa delle reference risolte in precedenza un'associazione a un nodo di definizione, si associa una relazione di quel tipo (tradotta sia per motivi di leggibilit\`a, che per uniformarla alla notazione di Arcan) tra il nodo trovato e il nodo "padre".
 
 Quindi si applica una variante del passo ricorsivo dei nodi di definizione: l'unica differenza sta nella conservazione del nodo padre.
 

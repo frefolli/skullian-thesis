@@ -36,23 +36,27 @@ Grazie a questo strumento di testing si pu\`o adottare un approccio sistematico 
 for language in SUPPORTED_LANGUAGES:
     # creazione ipotetica del fork del branch di sviluppo
     branch = forkBranch("development")
-    # elencazione per enumerazione di tutte le features del linguaggio di
-    # programmazione che siano utili ai fini delle relazioni da identificare o
-    # che richiedano approcci ad hoc
+    # elencazione per enumerazione di tutte le features
+    # del linguaggio di programmazione che siano utili
+    # ai fini delle relazioni da identificare
+    # o che richiedano approcci ad hoc
     features = findLanguageFeatures()
     for feature in features:
         # costruzione di casi di test come coppia (sorgente, politica);
-        # un numero di test adeguato rispetto alla variabilit\`a del costrutto e
-        # alle possibili implicazioni rispetto ad altre relazioni gi\`a sviluppate
+        # un numero di test adeguato rispetto
+        # alla variabilit\`a del costrutto e
+        # alle possibili implicazioni rispetto
+        # ad altre relazioni gi\`a sviluppate
         buildTestFor(language, feature)
         # implementazione nella grammatica TSG e nel codice rust per introdurre
         # la rilevazione di nodi e archi del grafo delle dipendenze
         implementFeature(language, feature)
-        # esecuzione di tutti i test fin'ora implementati per assicurarsi che
-        # la nuova feature non vada ad interferire con le altre gi\`a presenti
+        # esecuzione di tutti i test finora implementati per assicurarsi che
+        # la nuova feature non vada a interferire con le altre gi\`a presenti
         integrationTest()
-        # salvare iterativamente i progressi permette di garantire la presenza
-        # di un punto di ritorno sicuro nel caso si commetta qualche errore durante lo sviluppo
+        # salvare iterativamente i progressi permette di garantire
+        # la presenza di un punto di ritorno sicuro
+        # nel caso si commetta qualche errore durante lo sviluppo
         commitBranch(branch)
     joinBranch("development", branch)
 \end{lstlisting}
