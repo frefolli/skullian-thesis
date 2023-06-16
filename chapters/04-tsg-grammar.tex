@@ -13,12 +13,12 @@ Tuttavia bisogna ricordare che l'albero sintattico di due linguaggi diversi allo
 
 \par
 Se quindi da una parte le query delle regole saranno necessariamente distinte a causa di questi canoni, bisogna considerare che i linguaggi di programmazione sono eterogenei anche nei costrutti.
-Rust, per esempio, non possiede n\'e classi n\'e interfacce. Un concetto simile a quest'ultime sono i \textbf{Traits}, ma vengono applicati secondo una filosofia \emph{Composition over Inheritance}.
+Rust, per esempio, non possiede n\'e classi n\'e interfacce. Un concetto simile a quest'ultime sono i \textbf{Traits}, ma vengono applicati secondo una filosofia \emph{Composition over Inheritance} \cite{gamma1995design}.
 La mancanza o la rielaborazione di costrutti e componenti nei linguaggi \`e anche quindi strettamente legata ai loro paradigmi. Tuttavia possono sussistere differenze molto pi\`u sottili che necessitano di strutture ad hoc nelle grammatiche TSG: si pensi per esempio ai nomi dei package, problema gi\`a citato nel capitolo precedente.
 
 \par
 Non potendo scrivere un'unica grammatica TSG per ogni linguaggio, l'approccio a questo problema deve essere sistematico: si elabora un modello per componenti e requisiti, il pi\`u generale possibile, e si implementa tale modello nei vari linguaggi che si ritiene utile supportare.
-Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi pi\`u sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
+Questo approccio permette di limitare la dipendenza da software di terze parti (si pensi ai Language Server \cite{LanguageServer}) e allo stesso tempo di evitare soluzioni standalone specifiche per ogni linguaggio, creando un solido strato di astrazione che permetta anche agli algoritmi pi\`u sofisticati di operare ed analizzare gli Stack Graph dei sorgenti uniformando componenti, relazioni e struttura.
 
 \subsection{Algoritmo di Name Resolution di Stack Graph}
 
