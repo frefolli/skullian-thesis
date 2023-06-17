@@ -65,9 +65,71 @@ for language in SUPPORTED_LANGUAGES:
 
 Oltre a test individuali per controllare il supporto delle singole caratteristiche, si fa uso anche di un framework per la verifica dell'identificazione delle dipendenze descritto in un paper di Pruijt et al \cite{DBLP:journals/spe/PruijtKWB17} dove si tratta di valutazione dei sistemi di analisi statica delle dipendenze del codice.
 
-\putimage{diagrams/06/directDependencies.png}{"Dipendenze dirette da rilevare nel codice"}{fig:directDependencies}
+\begin{center}
+    \begin{tabular}{|c c|}
+        \hline
+        Dependency type & Example code \\
+        \hline
+        Import &  \\
+        Class import & import ModuleB.ModuleB2.Class3; \\
+        Declaration &  \\
+        Instance variable & private Class3 class3; \\
+        Class variable & private static Class3 class3; \\
+        Local variable & public void method() {Class3 class3; } \\
+        Parameter & public void method(Class3 class3) {} \\
+        Return type & public Class3 method() {} \\
+        Exception & public void method() throws Class4{throw new Class4 ("..."); } \\
+        Type cast & Object o = (Class3) new Object(); \\
+        Call &  \\
+        Instance method & variable = class3.method(); \\
+        Instance method-inherited & variable = class3.methodSuper(); \\
+        Class method & variable = class3.classMethod(); \\
+        Constructor & new Class3(); \\
+        Inner class & method variable = class3.InnerClass.method(); \\
+        Interface method & interface1.interfaceMethod(); \\
+        Library class method & libraryClass1.libraryMethod(); \\
+        Access &  \\
+        Instance variable & variable = class3.variable; \\
+        Instance variable-inherited & variable = class3.variableSuper; \\
+        Class variable & variable = Class3.classVariable; \\
+        Constant variable & variable = class3.constantVariable; \\
+        Enumeration & System.out.println(Enumeration.VAL1); \\
+        Object reference & method(class3); \\
+        Inheritance &  \\
+        Extends class & public class Class1 extends Class3 { } \\
+        Extends abstract & class Idem but in this case Class3 should be abstract. \\
+        Implements interface & public class Class1 implements Interface1 { } \\
+        Annotation &  \\
+        Class annotation & @Class3 \\
+        \hline
+    \end{tabular}
+\end{center}
 
-\putimage{diagrams/06/indirectDependencies.png}{"Dipendenze indirette da rilevare nel codice"}{fig:indirectDependencies}
+\begin{center}
+    \begin{tabular}{|c c|}
+        \hline
+        Dependency type & Example code \\
+        \hline
+        Call &  \\
+        Instance method & variable = class2.class3.method(); \\
+        Instance method-inherited & variable = class2.methodSuper(); \\
+        Class method & variable = class2.class3.classMethod(); \\
+        Access &  \\
+        Instance variable & variable = class2.class3.variable; \\
+        Instance variable-inherited & variable = class2.variableSuper(); \\
+        Class variable & variable = class2.class3.classVariable; \\
+        Object reference-Reference var & variable = class2.method(class2.class3.class4); \\
+        Object reference-Return value & Object o = (Object) class2.getClass4(); \\
+        Inheritance &  \\
+        Extends-implements variations & public class Class1 extends Class2 { } \\
+         & public class Class2 extends SuperClass { } \\
+        \hline
+    \end{tabular}
+\end{center}
+
+%\putimage{diagrams/06/directDependencies.png}{"Dipendenze dirette da rilevare nel codice"}{fig:directDependencies}
+
+%\putimage{diagrams/06/indirectDependencies.png}{"Dipendenze indirette da rilevare nel codice"}{fig:indirectDependencies}
 
 Da queste tabelle il team di Arcan ha costruito una code base di esempio e quindi estratto una checklist di dipendenze legate alla code base che pu\`o essere utilizzata per accertare la capacit\`a di un tool di rilevare correttamente tutte le principali dipendenze del codice. Nella fase di validazione del software descritto in questi capitolo si fa uso della code base Java e della checklist, quest'ultima opportunamente tradotta in relazioni rilevabili dal modello in esame.
 

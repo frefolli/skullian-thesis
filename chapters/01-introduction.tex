@@ -16,26 +16,27 @@ I processi impiegati per molto tempo hanno giocato un ruolo fondamentale nell'az
 
 Con gli anni sono nati progressivamente nuovi strumenti e framework che permettono di valutare la qualit\`a del software e di implementare fin da subito modelli orientati al riuso e all'espansione: si pensi per esempio ai Design Pattern \cite{gamma1995design} e ai \cite{fowler1999refactoring}. Ad oggi esistono strumenti che effettuano un'analisi basata su esecuzione simbolica del codice o sulla valutazione di alcune metriche, e che permettono di identificare in breve tempo devianze nello sviluppo del codice. Tuttavia le pi\`u importanti violazioni da osservare sono quelle nell'architettura di un software: spesso un design abbozzato e poco lungimirante porta a futuri guai sia nell'espansione dell'architettura, sia nell'implementazione dello stesso modello previsto. Per questo esistono una serie di strumenti che si prefiggono lo scopo di individuare questi problemi, detti \emph{Architectural Smell}, tramite l'analisi delle dipendenze di funzioni, package, classi e altre tipologie di componenti del codice: un esempio \`e Arcan \cite{Arcan}
 
+\subsection{Arcan}
+
 \paragraph{Tool Arcan}
+
+Arcan \`e uno strumento che permette di rilevare le violazioni architetturali di un progetto software tramite l'analisi delle dipendenze delle sue componenti. Esso prima costruisce il Grafo delle Dipendenze, quindi lo esplora identificando pattern che suggeriscono Architectural Smells.
+
+\putimage{diagrams/01/arcanDepgraph.png}{"Modello di Grafo delle Dipendenze costruito da Arcan - dal Manuale"}{fig:arcanDepgraph}
+% TODO: grafo delle dipendenze
+
+\putimage{diagrams/01/arcanSmells.png}{"Modello degli Architectural Smells costruito da Arcan - dal Manuale"}{fig:arcanSmells}
+% TODO: grafo degli smell
+
+\paragraph{Limitazioni Tecniche}
+
+% TODO: Language Dependency
+% TODO: Basse Prestazioni
+
+\section{Alcune tecnologie utili}
+
+\paragraph{Rust}
 % TODO
-
-\section{Arcan Dependency Graph}
-
-\paragraph{Nodi}
-% TODO
-
-\paragraph{Archi}
-% TODO
-
-\section{Limitazioni Tecniche}
-
-\paragraph{Language Dependency}
-% TODO
-
-\paragraph{Basse Prestazioni}
-% TODO
-
-\section{Alcune librerie utili}
 
 \paragraph{Tree Sitter}
 % TODO
