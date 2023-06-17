@@ -59,7 +59,7 @@ let new_tree = parser.parse(new_source_text, Some(&tree));
 
 La variabile \textbf{new\_tree} conterr\`a l'albero aggiornato.
 
-\section{Esempio}
+\subsection{Esempio}
 
 Con il seguente file java:
 
@@ -101,7 +101,7 @@ Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific}, la s
 Questo linguaggio di query pu\`o essere usato da un engine di query per implementare un linguaggio di scripting con cui permettere all'utente di operare in diversi modi su un file sorgente.
 Con l'apposita libreria \textbf{tree-sitter-stack-graphs} \`e possibile fare delle query all'AST per generare un grafo qualsiasi in modo strutturato usando il suo linguaggio di scripting, descritto in dettaglio nel prossimo successivo.
 
-\subsection{sintassi}
+\paragraph{sintassi}
 
 \begin{lstlisting}
 (tagA (tagB (tagC)) (tagD))
@@ -112,7 +112,7 @@ Ogni nodo \`e rappresentato tramite una sexp dove gli identificatori sono i nomi
 La stringa del testo a cui un nodo fa riferimento non \`e esplicitamente contenuta n\'e nella rappresentazione dell'AST, n\'e nella query.
 Un engine che applica delle query pu\`o fornire un'API per ottenere le informazioni corrispondenti ai nodi.
 
-\subsection{field}
+\paragraph{field}
 
 \begin{lstlisting}
 (tagA B: (tagB (tagC)) D: (tagD))
@@ -123,7 +123,7 @@ In questo modo \`e possibile selezionare costrutti che per esempio fanno uso dei
 Si noti che l'accesso al field \`e unico, a ogni field \`e associato al pi\`u un nodo.
 Introdurre il field nella query esclude le occorrenze di tagA che non hanno per esempio associato un valore al field B.
 
-\subsection{nodi anonimi}
+\paragraph{nodi anonimi}
 
 \begin{lstlisting}
 (tagA "string")
@@ -133,7 +133,7 @@ Pu\`o risultare utile specificare al query engine una query siffatta.
 A essa saranno associate tutte le occorrenze di tagA che contengano nodi la cui string nel testo sia uguale a "string".
 \`E importante sottolineare che la struttura del nodo associato a "string" pu\`o essere complessa a piacere.
 
-\subsection{wildcard}
+\paragraph{wildcard}
 
 \begin{lstlisting}
 (tagA (_))
@@ -141,7 +141,7 @@ A essa saranno associate tutte le occorrenze di tagA che contengano nodi la cui 
 
 Un altro modo per specificare un nodo che con valore indefinito ma senza introdurre vincoli sulle stringhe del testo sono le wildcard.
 
-\subsection{negatori}
+\paragraph{negatori}
 
 \begin{lstlisting}
 (tagA !tagB)
@@ -150,7 +150,7 @@ Un altro modo per specificare un nodo che con valore indefinito ma senza introdu
 \`E anche possibile specificare field da non trovare nella sexp per definire un match.
 Questa feature \`e particolarmente rilevante quando si vuole dividere le query in casi per diminuire la complessit\`a del programma non dovendo fare affidamento su un unica query molto complessa e inutilmente generale.
 
-\subsection{quantificatori}
+\paragraph{quantificatori}
 
 \begin{lstlisting}
 (tagA (tagB)+ (tagC)? (tagD)*)
@@ -160,7 +160,7 @@ La negazione di un nodo fa parte di una categoria pi\`u grande, i quantificatori
 \`E utile poter esprimere una query che raggruppi potenzialmente pi\`u nodi dello stesso tipo in un unico risultato, specialmente se l'engine permette di poter iterare sui nodi del risultato.
 La semantica \`e quella tipica delle espressioni regolari.
 
-\subsection{identificatori}
+\paragraph{identificatori}
 
 \begin{lstlisting}
 (tagA (_)@child)@top
@@ -169,7 +169,7 @@ La semantica \`e quella tipica delle espressioni regolari.
 \`E possibile associare a ognun nodo del risultato della query un nodo utilizzando la notazione \emph{(node)@id}.
 Se l'engine supporta linguaggi di scripting o strumenti affini torna utile potersi riferire ai singoli nodi.
 
-\subsection{raggruppamenti}
+\paragraph{raggruppamenti}
 
 \begin{lstlisting}
 (
@@ -181,7 +181,7 @@ Se l'engine supporta linguaggi di scripting o strumenti affini torna utile poter
 Con questa sintatti si va a cercare una qualsiasi occorrenza nell'AST in cui i due nodi sono in sequenza e figli dello stesso nodo.
 Questo significa per\`o che vi possono essere nodi frapposti tra quelli elencati nella query.
 
-\subsection{ancoramento}
+\paragraph{ancoramento}
 
 \begin{lstlisting}
 (parent (child)@c1 . (child)@c2)
@@ -205,7 +205,7 @@ Per cui interporre l'operatore di concatenazione tra il parent tag e il nodo chi
 
 Allo stesso modo \`e possibile indicare l'ultimo nodo figlio.
 
-\subsection{alternative}
+\paragraph{alternative}
 
 \begin{lstlisting}
 [
@@ -218,7 +218,7 @@ Se in una query due nodi o configurazioni di nodi possono essere trattati allo s
 Come in un'espressione regolare, la query trova un'occorrenza in cui uno dei nodi tra le parentesi quadre combacia con quello reale.
 
 
-\subsection{predicati}
+\paragraph{predicati}
 
 \begin{lstlisting}
 (

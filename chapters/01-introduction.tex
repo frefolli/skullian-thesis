@@ -4,8 +4,17 @@ In questo capitolo si descrive il contesto della ricerca, il problema affrontato
 
 \section{Caso di studio - Arcan}
 
-\paragraph{Architectural Smell e Dipendenze}
-% TODO
+\paragraph{Ingegneria del Software}
+
+Lo sviluppo del software \`e un processo lungo, complesso e spesso prono ad errori e fallimenti: sono innumerevoli i casi in cui un software diviene cos\`i complicato da sviluppare o gestire da venire abbandonato in favore di una nuova implementazione. Questo specialmente per il fatto che il processo di sviluppo non ha una data di fine se essa non coincide con la morte del software stesso. Il software deve essere aperto a cambiamenti e ottimizzazioni, i requisiti sono in continua evoluzione sia perch\'e il contesto \`e quello di un'economia capitalista in cui il focus \`e nell'espansione dei servizi e della portata degli stessi, sia perch\'e gli stessi servizi dipendono dai requisiti della societ\`a e delle attivit\`a umane, le quali soprattutto negli ultimi anni hanno dimostrato di essere in costante divenire. Qualora un software non potesse evolvere diventerebbe immediatamente obsoleto e quindi da una parte rimpiazzabile, dall'altra insoddisfacente.
+
+\paragraph{Processi Software}
+
+I processi impiegati per molto tempo hanno giocato un ruolo fondamentale nell'azzoppare il futuro splendore di un software: si pensi per esempio al Processo a Cascata \cite{larman2002applying}, il quale impedisce fino all'ultimo momento di valutare la reale utilit\`a di ci\`o che \`e stato implementato. Con la nascita dei metodi Agili \cite{larman2002applying} ci si \`e affrancati da processi che impedivano di osservare periodicamente la qualit\`a del software dal punto di vista tecnico / funzionale, di rianalizzare i requisiti del cliente e quindi di dirottare il processo verso nuovo pi\`u utili obiettivi. Inoltre si inizi\`o a mettere in risalto l'importanza della qualit\`a del software dal codice all'architettura.
+
+\paragraph{Qualit\`a del Software}
+
+Con gli anni sono nati progressivamente nuovi strumenti e framework che permettono di valutare la qualit\`a del software e di implementare fin da subito modelli orientati al riuso e all'espansione: si pensi per esempio ai Design Pattern \cite{gamma1995design} e ai \cite{fowler1999refactoring}. Ad oggi esistono strumenti che effettuano un'analisi basata su esecuzione simbolica del codice o sulla valutazione di alcune metriche, e che permettono di identificare in breve tempo devianze nello sviluppo del codice. Tuttavia le pi\`u importanti violazioni da osservare sono quelle nell'architettura di un software: spesso un design abbozzato e poco lungimirante porta a futuri guai sia nell'espansione dell'architettura, sia nell'implementazione dello stesso modello previsto. Per questo esistono una serie di strumenti che si prefiggono lo scopo di individuare questi problemi, detti \emph{Architectural Smell}, tramite l'analisi delle dipendenze di funzioni, package, classi e altre tipologie di componenti del codice: un esempio \`e Arcan \cite{Arcan}
 
 \paragraph{Tool Arcan}
 % TODO

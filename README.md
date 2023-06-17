@@ -1,4 +1,8 @@
-# Tesi del corso di Laurea in Informatica, anno 2022/2023
+# Un framework multi-linguaggio per l'identificazione delle dipendenze del codice sorgente
+
+## A language-agnostic framework to build source code dependency graph
+
+## Tesi del corso di Laurea in Informatica, anno 2022/2023
 
 ## Abstract
 
@@ -8,7 +12,7 @@ Nell'Ingegneria del Software e' importante avere a disposizione tool automatici 
 
 - [ ] Introduzione
     - [ ] Caso di studio - Arcan
-      - [ ] Architectural Smell e Dipendenze
+      - [x] Architectural Smell e Dipendenze
       - [ ] Tool Arcan
     - [ ] Arcan Dependency Graph
       - [ ] Nodi

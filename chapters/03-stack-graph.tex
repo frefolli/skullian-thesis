@@ -126,7 +126,7 @@ while let Some(path) = queue.pop_front() {
 La libreria \textbf{Tree Sitter Stack Graph} \cite{TreeSitterStackGraph} funge da query engine per il Query Language definito da Tree Sitter e permette attraverso un linguaggio di scripting di costruire a runtime un grafo di tipo Stack Graph a partire da un file analizzato con Tree Sitter.
 Per farlo si avvale dell'uso di un'altra libreria, \textbf{Tree Sitter Graph} \cite{TreeSitterGraph}, la quale \`e specializzata nella costruzione di grafi generici usando da una parte Tree Sitter e dall'altra una serie di regole con le quali specificare le operazioni da effettuare, i nodi da costruire e da collegare.
 
-\subsection{sintassi}
+\paragraph{sintassi}
 
 \begin{lstlisting}
 (tagA) {
@@ -143,7 +143,7 @@ Ad ogni occorrenza di nodo sintattico trovata dalla query viene applicato il blo
 I commenti in linea sono espressi tramite il prefisso ";;", e questo rappresenta l'unico modo di inserire dei commenti, visto non \`e prevista una sintassi specifica per commenti multi linea.
 Essi possono essere inseriti sia nei blocchi di codice che nel file della grammatica TSG in generale.
 
-\subsection{variabili}
+\paragraph{variabili}
 Il linguaggio di scripting supporta l'uso di variabili \cite{TreeSitterGraphReferenceVariables}, che possono essere locali, globali o di scope (associati a un nodo sintattico).
 
 Le variabili locali vengono dichiarate con l'uso di "let", e sono inerentemente immutabili:
@@ -192,7 +192,7 @@ FILE\_PATH equivale al path corrente del file che sta venendo analizzato dall'en
 
 ROOT\_NODE invece \`e sempre uguale a un nodo di scope istanziato dallo stack graph stesso che ne costituisce la radice, e che \`e utile poter manipolare nella grammatica TSG per collegare i sotto grafi generati dal singolo file sorgente per costruire un grafo unico incrementalmente.
 
-\subsection{nodi}
+\paragraph{nodi}
 
 Un nodo dello stack graph pu\`o essere dichiarato usando la funzione \textbf{node} \cite{TreeSitterGraphReferenceGraphNodes}.
 
@@ -210,7 +210,7 @@ Esistono due attributi speciali che marcano i nodi di push/pop per applicare la 
 Un path completo ha come nodo di partenza un nodo "reference" e come nodo di arrivo un nodo "definition".
 Un nodo reference \`e un nodo push e un nodo definition \`e un nodo pop.
 
-\subsection{archi}
+\paragraph{archi}
 
 Gli archi del grafo vengono dichiarati con una sintassi intuitiva \cite{TreeSitterGraphReferenceEdges}.
 Lo stack graph \`e un grafo diretto, quindi la sintassi si propone di rappresentare proprio la direzione degli archi in maniera facilmente leggibile.
@@ -223,7 +223,7 @@ Lo stack graph \`e un grafo diretto, quindi la sintassi si propone di rappresent
 
 L'unico attributo che \`e associabile a un arco \`e "precedence", ovvero un parametro intero utilizzato dall'algoritmo di ricerca di stack graph per implementare lo "shadowing" del codice \cite{TreeSitterStackGraphEdges}.
 
-\subsection{attributi}
+\paragraph{attributi}
 
 Per applicare un attributo a un nodo o a un arco si usa la seguente sintassi \cite{TreeSitterGraphReferenceAttributes}:
 
@@ -249,7 +249,7 @@ Come detto in precedenza, lo statement seguente dichiara che il nodo \emph{nodeA
 }
 \end{lstlisting}
 
-\subsection{shorthands}
+\paragraph{shorthands}
 Pu\`o essere utile ricorrere a shorthands per evitare duplicazione nella grammatica TSG, specialmente se la formula \`e sperimentale e/o si prevede che cambier\`a per qualche motivo.
 
 Gli shorthands sono disponibili solo per gli attributi \cite{TreeSitterGraphReferenceAttributeShorthands}, i quali rappresentano se non altro la parte pi\`u ridondante della grammatica, e che in altre circostanze costituirebbero uno Shotgun Surgery.
@@ -277,7 +277,7 @@ attribute
         is_definition
 \end{lstlisting}
 
-\subsection{istruzioni condizionali}
+\paragraph{istruzioni condizionali}
 
 Nel blocco di codice possiamo trovare anche le istruzioni condizionali \cite{TreeSitterGraphReferenceConditionals}, particolarmente utili dal momento che si dispone dei quantificatori nelle query.
 Essi accettano una espressione come condizione, per esempio:
@@ -292,7 +292,7 @@ Essi accettano una espressione come condizione, per esempio:
 }
 \end{lstlisting}
 
-\subsection{iterazioni}
+\paragraph{iterazioni}
 
 Similarmente si possono usare le iterazioni \cite{TreeSitterGraphReferenceListIterations} sui nodi trovati dalla query coperti da quantificatore:
 
@@ -304,7 +304,7 @@ Similarmente si possono usare le iterazioni \cite{TreeSitterGraphReferenceListIt
 }
 \end{lstlisting}
 
-\subsection{operazioni sulle stringhe}
+\paragraph{operazioni sulle stringhe}
 
 Essendo i simboli dell'albero sintattico stringhe, sono state implementate alcune funzioni nel linguaggio di scripting per manipolarle \cite{TreeSitterGraphReferenceFunctions} \cite{TreeSitterStackGraphPaths}.
 
@@ -323,7 +323,7 @@ Nell'esempio seguente si risolve la locazione relativa di un modulo importato tr
 La funzione \emph{source-text} estrare la stringa contenuta nel nodo con identificatore \emph{path}, si applica la funzione replace per eliminare i doppi apici contenuti in essa e si risolve il path relativo utilizzando come base la directory del file corrente.
 Quindi si chiama la funzione \emph{path-normalize} per ben formattare il path cos\`i ottenuto.
 
-\subsection{debugging}
+\paragraph{debugging}
 
 Per aiutare il programmatore nel debugging della grammatica TSG \`e stata implementata una funzione \textbf{print} che stampa a schermo un valore \cite{TreeSitterGraphReferenceDebugging}.
 Si pu\`o usare per esempio per visualizzare informazioni costruite dalla grammatica che si vuole inserire nel grafo.
@@ -337,7 +337,7 @@ global FILE_PATH
 }
 \end{lstlisting}
 
-\subsection{complementi}
+\paragraph{complementi}
 
 Oltre agli attributi supportati da Tree Sitter Stack Graph c'\`e la possibilit\`a di assegnare attributi detti di "debug" \cite{TreeSitterStackGraphDebugInfo} che permettono di tenere traccia sia di informazioni puramente di testing sia informazioni utili al processamento dello Stack Graph per estrarre informazioni altrimenti impossibili da ottenere.
 
