@@ -15,19 +15,15 @@ Nell'Ingegneria del Software e' importante avere a disposizione tool automatici 
       - [x] Architectural Smell e Dipendenze
       - [ ] Tool Arcan
       - [x] Limitazioni Tecniche
-    - [ ] Alcune librerie utili
-      - [x] Rust
-      - [ ] Tree Sitter
-      - [ ] Stack Graph
-      - [ ] Tree Sitter Stack Graph
     - [ ] La soluzione proposta
-      - [ ] Stack Graph
-      - [ ] Name Resolution
-      - [ ] Explorazione Ricorsiva
-    - [ ] Valuzione dei risultati
-      - [ ] Benchmark
-      - [ ] Scaffolding
-      - [ ] Arcan
+      - [ ] Alcune librerie utili
+        - [x] Rust
+        - [x] Tree Sitter
+        - [x] Stack Graph
+        - [x] Tree Sitter Stack Graph
+      - [ ] L'approccio
+        - [x] Stack Graph in azione
+        - [ ] Valuzione dei risultati
     - [ ] Sommario dei Capitoli
 - [x] Tree Sitter
     - [x] Introduzione
@@ -108,3 +104,4 @@ Nell'Ingegneria del Software e' importante avere a disposizione tool automatici 
   - [ ] Dimensione dello Stack Graph
   - [ ] Analisi non Differenziali
   - [ ] Language Dependency
+  - [ ] Ulteriori Sviluppi

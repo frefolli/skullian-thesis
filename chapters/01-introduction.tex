@@ -36,7 +36,8 @@ Non \`e altrettanto vantaggioso dover dipendere da una tale variet\`a di softwar
 
 Altri aspetti da non sottovalutare sono l'efficacia della collaborazione tra Arcan e il software di terze parti, e l'efficienza stessa del software che analizza il codice sorgente. Per Java viene usato Eclipse JDT, una libreria facente parte del progetto Eclipse che effettua un'analisi statica del codice Java ed espone un API con cui richiedere informazioni sul sorgente; tuttavia per molti altri linguaggi di programmazione si \`e costretti a dipendere dai Language Server \cite{LanguageServer}, software notevolmente pi\`u impattanti sulle prestazioni che oltre alla semplice analisi statica effettuano in molti casi anche analisi dinamiche, simboliche e dinamiche. Per tutti questi motivi si \`e alla ricerca di metodo il pi\`u possibile language agnostic che permetta di ottenere gli stessi risultati con prestazioni migliori.
 
-\section{Alcune tecnologie utili}
+\section{La soluzione proposta}
+\subsection{Alcune tecnologie utili}
 
 \paragraph{Rust}
 
@@ -50,22 +51,17 @@ Tree Sitter \cite{TreeSitter} \`e una libreria accessibile in Rust per la genera
 
 Stack Graph \cite{StackGraph} \`e una nuova struttura dati presentata \cite{StackGraphNameResolutionAtScale} come evoluzione dello Scope Graph \cite{ScopeGraph}. Essa permette di risolvere le reference nel codice e si presta a scalare verticalmente per costruire il grafo in modo incrementale, file per file. Per generare un generico Stack Graph partendo dal codice sorgente \`e stata sviluppata Tree Sitter Stack Graph, una libreria che combina Tree Sitter Graph e Stack Graph per automatizzare il processo di costruzione.
 
-\section{La soluzione proposta}
+\section{L'approccio}
 
-\paragraph{Stack Graph}
+\paragraph{Stack Graph in azione}
 
 Si vuole studiare la fattibilit\`a dell'impiego di Stack Graph per risolvere le reference di un codice sorgente e identificare le dipendenze di cui necessita Arcan impiegando il meno possibile soluzioni ad hoc ed evitando l'uso di software diversi per ogni linguaggio di programmazione. Il tutto limitando la dimensione degli asset language specific e ricercando le migliori prestazioni ottenibili con questo approccio.
 
-\section{Valuzione dei risultati}
+\paragraph{Valuzione dei risultati}
 
-\paragraph{Benchmark}
-% TODO
-
-\paragraph{Scaffolding}
-% TODO
-
-\paragraph{Arcan}
-% TODO
+% TODO: Benchmark
+% TODO: Scaffolding
+% TODO: Arcan
 
 \section{Sommario dei Capitoli}
 % TODO
