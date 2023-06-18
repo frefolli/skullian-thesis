@@ -14,13 +14,9 @@ Nell'Ingegneria del Software e' importante avere a disposizione tool automatici 
     - [ ] Caso di studio - Arcan
       - [x] Architectural Smell e Dipendenze
       - [ ] Tool Arcan
-    - [ ] Arcan Dependency Graph
-      - [ ] Nodi
-      - [ ] Archi
-    - [ ] Limitazioni Tecniche
-      - [ ] Uso di un LSP diverso per ogni linguaggio
-      - [ ] Basse prestazioni (salvo Java per Jdt)
+      - [x] Limitazioni Tecniche
     - [ ] Alcune librerie utili
+      - [x] Rust
       - [ ] Tree Sitter
       - [ ] Stack Graph
       - [ ] Tree Sitter Stack Graph
@@ -108,13 +104,7 @@ Nell'Ingegneria del Software e' importante avere a disposizione tool automatici 
       - [x] Generatore di Test
     - [x] Benchmark
     - [x] Performance
-- [ ] Valutazione e Comparazione
-    - [ ] Scaffolding
-    - [ ] Benchmark
-      - [ ] Risultati
-      - [ ] Arcan
-    - [ ] Performance
-    - [ ] Limiti
-      - [ ] Dimensione dello Stack Graph
-      - [ ] Analisi non Differenziali
-      - [ ] Language Dependency
+- [ ] Conclusione
+  - [ ] Dimensione dello Stack Graph
+  - [ ] Analisi non Differenziali
+  - [ ] Language Dependency

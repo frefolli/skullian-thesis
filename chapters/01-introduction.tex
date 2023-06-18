@@ -30,13 +30,16 @@ Arcan \`e uno strumento che permette di rilevare le violazioni architetturali di
 
 \paragraph{Limitazioni Tecniche}
 
-% TODO: Language Dependency
-% TODO: Basse Prestazioni
+Allo stato attuale il tool Arcan, cos\`i come qualsiasi altro software che si serve del grafo delle dipendenze, utilizza software e librerie di terze parti per costruire tale grafo, uno per ogni linguaggio di programmazione. Il fatto di dover dipendere da vari software e installare molte librerie mina la scalabilit\`a orizzontale di un tool del genere: ogni nuova istanza avr\`a bisogno di notevole spazio di archiviazione per poter immagazzinare tutto il necessario per far funzionare Arcan.
+
+Non \`e altrettanto vantaggioso dover dipendere da una tale variet\`a di software per ogni linguaggio da supportare: sia perch\'e non sempre \`e possibile trovare una libreria che permetta di analizzare staticamente il codice sorgente in quel linguaggio, si\`a perch\'e ogni collaborazione con un software diverso necessita talvolta di implementazioni distinte all'interno di Arcan, quindi aumentanto ulteriormente il peso dell'applicativo sia in memoria centrale che in memoria secondaria.
+
+Un altro aspetto da non sottovalutare \`e da una parte l'efficacia della collaborazione tra Arcan e il software di terze parti, e l'efficienza stessa del software che analizza il codice sorgente. Per Java viene usato Eclipse JDT, una libreria facente parte del progetto Eclipse che effettua un'analisi statica del codice Java ed espone un API con cui richiedere informazioni sul sorgente; tuttavia per molti altri linguaggi di programmazione si \`e costretti a dipendere dai Language Server \cite{Language Server}, software notevolmente pi\`u impattanti sulle prestazioni che oltre alla semplice analisi statica effettuano in molti casi anche analisi dinamiche, simboliche e dinamiche. Per tutti questi motivi si \`e alla ricerca di metodo il pi\`u possibile language agnostic che permetta di ottenere gli stessi risultati con prestazioni migliori.
 
 \section{Alcune tecnologie utili}
 
 \paragraph{Rust}
-% TODO
+Rust \cite{Rust} \`e un linguaggio di programmazione compilato e memory safe by design: utilizza un modello di gestione della memoria a "prestito" in modo da impedire memory leak e compilare ogni componente con la massima efficienza possibile. \`E stato scelto per implementare un prototipo sia per queste sue doti, sia perch\`e presenta alcune librerie interessanti da trattare ed utili ai fini del progetto.
 
 \paragraph{Tree Sitter}
 % TODO
