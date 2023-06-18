@@ -39,27 +39,22 @@ Altri aspetti da non sottovalutare sono l'efficacia della collaborazione tra Arc
 \section{Alcune tecnologie utili}
 
 \paragraph{Rust}
+
 Rust \cite{blandy2017programming} \`e un linguaggio di programmazione compilato e memory safe by design: utilizza un modello di gestione della memoria a "prestito" in modo da impedire memory leak e compilare ogni componente con la massima efficienza possibile. \`E stato scelto per implementare un prototipo sia per queste sue doti, sia perch\`e presenta alcune librerie interessanti da trattare ed utili ai fini del progetto.
 
 \paragraph{Tree Sitter}
-% TODO
+
+Tree Sitter \cite{TreeSitter} \`e una libreria accessibile in Rust per la generazione automatica di parser e lexer \cite{sestoft2017programming}, che mette a disposizione parser per molti linguaggi di programmazione, anche i pi\`u desueti. Questi parser producono un Concrete Syntax Tree, struttura dati simile per certi versi ai pi\`u noti Abstract Syntax Tree: i primi rappresentano concretamente l'espansione della grammatica del linguaggio utilizzata dal parser durante l'analisi invece che solo pezzi del codice sorgente, quindi si prestano maggiormente ad elaborazioni complesse da parser di vari software. Tree Sitter Graph \`e un'ulteriore libreria che usa Tree Sitter insieme ad un file con grammatica \bold{T}ree \bold{S}itter \bold{G}raph per costruire un grafo qualsiasi a partire dal Concrete Syntax Tree realizzato da Tree Sitter.
 
 \paragraph{Stack Graph}
-% TODO
 
-\paragraph{Tree Sitter Stack Graph}
-% TODO
+Stack Graph \cite{StackGraph} \`e una nuova struttura dati presentata \cite{StackGraphNameResolutionAtScale} come evoluzione dello Scope Graph \cite{ScopeGraph}. Essa permette di risolvere le reference nel codice e si presta a scalare verticalmente per costruire il grafo in modo incrementale, file per file. Per generare un generico Stack Graph partendo dal codice sorgente \`e stata sviluppata Tree Sitter Stack Graph, una libreria che combina Tree Sitter Graph e Stack Graph per automatizzare il processo di costruzione.
 
 \section{La soluzione proposta}
 
 \paragraph{Stack Graph}
-% TODO
 
-\paragraph{Name Resolution}
-% TODO
-
-\paragraph{Esplorazione Ricorsiva}
-% TODO
+Si vuole studiare la fattibilit\`a dell'impiego di Stack Graph per risolvere le reference di un codice sorgente e identificare le dipendenze di cui necessita Arcan impiegando il meno possibile soluzioni ad hoc ed evitando l'uso di software diversi per ogni linguaggio di programmazione. Il tutto limitando la dimensione degli asset language specific e ricercando le migliori prestazioni ottenibili con questo approccio.
 
 \section{Valuzione dei risultati}
 
