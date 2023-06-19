@@ -73,7 +73,7 @@ def resolve_references(stack_graph):
 
 \subsection{Esplorazione Ricorsiva}
 
-L'esplorazione sar\`a una visita BFS a partire dalla radice dello Stack Graph, e per ogni nodo non ancora visitato si distinguer\`a in base al suo tipo.
+L'esplorazione sar\`a una visita Depth First \cite{cormen2009introduction} a partire dalla radice dello Stack Graph, e per ogni nodo non ancora visitato si distinguer\`a in base al suo tipo.
 
 Per stabilire relazioni di parentela nel codice \`e sufficiente badare all'ordine di esplorazione dei nodi: i nodi esplorati dopo un certo nodo possono essere considerati in questo modello "figli", quindi \`e necessario tenere traccia dell'ultimo nodo visitato prima del corrente. Essendo lo Stack Graph aciclico, salvo su nodi che necessariamente sono gi\`a stati esplorati, si \`e sicuri che le relazioni di parentela assegnate in tal modo siano corrette.
 
