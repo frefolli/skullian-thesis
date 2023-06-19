@@ -15,16 +15,16 @@ Nell'Ingegneria del Software e' importante avere a disposizione tool automatici 
       - [x] Architectural Smell e Dipendenze
       - [ ] Tool Arcan
       - [x] Limitazioni Tecniche
-    - [ ] La soluzione proposta
-      - [ ] Alcune librerie utili
+    - [x] La soluzione proposta
+      - [x] Alcune librerie utili
         - [x] Rust
         - [x] Tree Sitter
         - [x] Stack Graph
         - [x] Tree Sitter Stack Graph
-      - [ ] L'approccio
+      - [x] L'approccio
         - [x] Stack Graph in azione
-        - [ ] Valuzione dei risultati
-    - [ ] Sommario dei Capitoli
+        - [x] Valuzione dei risultati
+    - [x] Sommario dei Capitoli
 - [x] Tree Sitter
     - [x] Introduzione
     - [x] Esempio
