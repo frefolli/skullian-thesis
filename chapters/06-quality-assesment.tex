@@ -25,10 +25,11 @@ edges:
 \end{lstlisting}
 
 Il software legge usa i file indicati nel campo \emph{filepaths} per costruire il Grafo delle Dipendenze, quindi verifica uno a uno i vincoli specificati: per ogni vincolo di nodo che esista un nodo con quel nome e quel tipo, per ogni relazione che ne esista una tra i nodi specificati tramite i nomi.
-Alla fine del processo di test il software tira le somme delineando il risultato, cosa manca e producendo in output un report collettivo, specialmente utile se si processano pi\`u test con lo stesso comando. Esso appende inoltre nel report una tabella Markdown vuota per tenere traccia a mano dei problemi principali che \`e possibile inferire dal report e dalla conoscenza di cosa \`e stato implementato. Di seguito un esempio di report in formato Markdown:
+Alla fine del processo di test il software tira le somme delineando il risultato, cosa manca e producendo in output un report collettivo, specialmente utile se si processano pi\`u test con lo stesso comando. Esso appende inoltre nel report una tabella Markdown vuota per tenere traccia a mano dei problemi principali che \`e possibile inferire dal report e dalla conoscenza di cosa \`e stato implementato.
 
-\putimage{diagrams/06/testingReportExample.png}{"Esempio di Report di un contratto"}{fig:testingReportExample}
+L'implementazione del prototipo ha previsto lo sviluppo della grammatica TSG per Java e dei relativi test. Di seguito un esempio di report in formato Markdown di uno dei test:
 
+\putimage{diagrams/06/testingReportExample.png}{"Test della stuite realizzato per Java sulle relazioni di inclusione misto con relazioni di uso per aumentare la complessit\`a e garantire l'usabilit\`a"}{fig:testingReportExample}
 
 Grazie a questo strumento di testing si pu\`o adottare un approccio sistematico nell'implementazione delle grammatiche da una parte, e dell'algoritmo che costruisce il grafo dall'altra. Per tenere traccia delle operazioni e organizzare le implementazioni si puo' fare uso di uno strumento di Version Control come Git, specialmente se si lavora in team in parallelo. Nel caso corrente \`e stato utilizzato per gestire la versione in produzione affinch\`e non avesse implementazioni sperimentali o parziali.
 
@@ -61,11 +62,51 @@ for language in SUPPORTED_LANGUAGES:
     joinBranch("development", branch)
 \end{lstlisting}
 
+Di seguito la tabella dei test creata per il linguaggio Java con l'indicazione delle relazioni e delle feature testate.
+
+\begin{center}
+    \caption{Test per Java sulle dipendenze e i loro relativi esiti}
+    \begin{tabular}{|c c c|}
+        \hline
+        Test & Relazioni & Risultato \\
+        \hline
+        implementation_bridge & calls & \checkmark \\
+        class_methods_with_parameters & definedBy & \checkmark \\
+        class_implementation & isImplementationOf & \checkmark \\
+        class_with_attributes & definedBy & \checkmark \\
+        class_methods_with_attributes & definedBy & \checkmark \\
+        class_method_call & calls & \checkmark \\
+        type_inference & calls, accessField & \checkmark \\
+        enums & definedBy, accessField & \checkmark \\
+        class_inheritance & isChildOf, nestedTo & \checkmark \\
+        object_creation & usesType & \checkmark \\
+        class_type_usage_nested_packages & definedBy, usesType & \checkmark \\
+        nested_classes & nestedTo & \checkmark \\
+        casts_type & castsType & \checkmark \\
+        class_type_usage & definedBy, usesType & \checkmark \\
+        throws_type & throwsType & \checkmark \\
+        imports & definedBy, includes, usesType & \checkmark \\
+        interface_inheritance & isChildOf & \checkmark \\
+        type_inference_with_packages & calls, accessField & \checkmark \\
+        extension_bridge & calls & \checkmark \\
+        class_constructors & definedBy & \checkmark \\
+        class_field_access & accessField & \checkmark \\
+        class_packages & definedBy, includes & \checkmark \\
+        annotation & usesType & \checkmark \\
+        array_creation & usesType & \checkmark \\
+        class_inheritance_with_packages & isChildOf & \checkmark \\
+        class_methods & definedBy & \checkmark \\
+        \hline
+    \end{tabular}
+\end{center}
+
+
 \section{Benchmark}
 
 Oltre a test individuali per controllare il supporto delle singole caratteristiche, si fa uso anche di un framework per la verifica dell'identificazione delle dipendenze descritto in un paper di Pruijt et al \cite{DBLP:journals/spe/PruijtKWB17} dove si tratta di valutazione dei sistemi di analisi statica delle dipendenze del codice.
 
 \begin{center}
+    \caption{Direct dependency types in the Benchmark test}
     \begin{tabular}{|c c|}
         \hline
         Dependency type & Example code \\
@@ -106,6 +147,7 @@ Oltre a test individuali per controllare il supporto delle singole caratteristic
 \end{center}
 
 \begin{center}
+    \caption{Indirect dependency types in the Benchmark test}
     \begin{tabular}{|c c|}
         \hline
         Dependency type & Example code \\
