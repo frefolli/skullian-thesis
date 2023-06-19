@@ -176,43 +176,49 @@ Da queste tabelle il team di Arcan ha costruito una code base di esempio e quind
 
 \begin{center}
     \centering
-    \captionof{table}{Risultati del Benchmark del Prototipo}
-    \begin{tabular}{|c c c | c|}
+    \captionof{table}{Risultati del Benchmark del Prototipo e di Arcan}
+    \begin{tabular}{|c c c | c | c|}
         \hline
-        Sorgente & Destinazione & Relazione & Prototipo \\
+        Sorgente & Destinazione & Relazione & Prototipo & Arcan \\
         \hline
-        AccessClassVariable & CheckInDAO & accessField & \cmark \\
-        AccessClassVariableConstant & UserDAO & accessField & \cmark \\
-        AccessClassVariableInterface & ISierraDAO & accessField & \cmark \\
-        AccessEnumeration & TipDAO & accessField & \cmark \\
-        AccessInstanceVariableRead & ProfileDAO & accessField & \xmark \\
-        AccessInstanceVariableWrite & ProfileDAO & accessField & \xmark \\
-        AccessInstanceVariableConstant & UserDAO & accessField & \xmark \\
-        AccessInstanceVariableSuperClass & CallInstanceSuperClassDAO & accessField & \xmark \\
-        AccessInstanceVariableSuperSuperClass & CallInstanceSuperClassDAO & accessField & \xmark \\
-        AccessObjectReferenceAsParameter & Base & accessField & \cmark \\
-        AccessObjectReferenceWithinIfStatement & Base & accessField & \cmark \\
-        AnnotationDependency & SettingsAnnotation & usesType & \cmark \\
-        CallClassMethod & BadgesDAO & calls & \cmark \\
-        CallConstructor & AccountDAO & usesType & \cmark \\
-        CallInstance & ProfileDAO & calls & \xmark \\
-        CallInstanceInnerClass & CallInstanceOuterClassDAO & calls & \xmark \\
-        CallInstanceInterface & CallInstanceInterfaceDAO & calls & \xmark \\
-        CallInstanceSuperClass & CallInstanceSuperClassDAO & calls & \xmark \\
-        CallInstanceSuperSuperClass & CallInstanceSuperClassDAO & calls & \xmark \\
-        DeclarationExceptionThrows & StaticsException & throwsType & \cmark \\
-        DeclarationParameter & ProfileDAO & usesType & \cmark \\
-        DeclarationReturnType & VenueDAO & usesType & \cmark \\
-        DeclarationTypeCast & ProfileDAO & castsType & \cmark \\
-        DeclarationTypeCastOfArgument & ProfileDAO & castsType & \cmark \\
-        DeclarationVariableInstance & ProfileDAO & usesType & \cmark \\
-        DeclarationVariableLocal & ProfileDAO & usesType & \cmark \\
-        DeclarationVariableLocal\_Initialized & ProfileDAO & usesType & \cmark \\
-        DeclarationVariableStatic & ProfileDAO & usesType & \cmark \\
-        domain.direct.violating & AccountDAO & includes & \cmark \\
-        InheritanceExtends & HistoryDAO & isChildOf & \cmark \\
-        InheritanceExtendsAbstractClass & FriendsDAO & isChildOf & \cmark \\
-        InheritanceImplementsInterface & IMapDAO & isImplementationOf & \cmark \\
+        \textbf{Access} &&&& \\
+        AccessClassVariable & CheckInDAO & accessField & \cmark & \cmark \\
+        AccessClassVariableConstant & UserDAO & accessField & \cmark & \cmark \\
+        AccessClassVariableInterface & ISierraDAO & accessField & \cmark & \cmark \\
+        AccessEnumeration & TipDAO & accessField & \cmark & \cmark \\
+        AccessInstanceVariableRead & ProfileDAO & accessField & \xmark & \cmark \\
+        AccessInstanceVariableWrite & ProfileDAO & accessField & \xmark & \cmark \\
+        AccessInstanceVariableConstant & UserDAO & accessField & \xmark & \cmark \\
+        AccessInstanceVariableSuperClass & CallInstanceSuperClassDAO & accessField & \xmark & \xmark \\
+        AccessInstanceVariableSuperSuperClass & CallInstanceSuperClassDAO & accessField & \xmark & \xmark \\
+        AccessObjectReferenceAsParameter & Base & accessField & \cmark & \xmark \\
+        AccessObjectReferenceWithinIfStatement & Base & accessField & \cmark & \xmark \\
+        \textbf{Annotations} &&&& \\
+        AnnotationDependency & SettingsAnnotation & usesType & \cmark & \cmark \\
+        \textbf{Call} &&&& \\
+        CallClassMethod & BadgesDAO & calls & \cmark & \cmark \\
+        CallConstructor & AccountDAO & usesType & \cmark & \cmark \\
+        CallInstance & ProfileDAO & calls & \xmark & \xmark \\
+        CallInstanceInnerClass & CallInstanceOuterClassDAO & calls & \xmark & \xmark \\
+        CallInstanceInterface & CallInstanceInterfaceDAO & calls & \xmark & \xmark \\
+        CallInstanceSuperClass & CallInstanceSuperClassDAO & calls & \xmark & \cmark \\
+        CallInstanceSuperSuperClass & CallInstanceSuperClassDAO & calls & \xmark & \cmark \\
+        \textbf{Declaration} &&&& \\
+        DeclarationExceptionThrows & StaticsException & throwsType & \cmark & \cmark \\
+        DeclarationParameter & ProfileDAO & usesType & \cmark & \cmark \\
+        DeclarationReturnType & VenueDAO & usesType & \cmark & \cmark \\
+        DeclarationTypeCast & ProfileDAO & castsType & \cmark & \cmark \\
+        DeclarationTypeCastOfArgument & ProfileDAO & castsType & \cmark & \cmark \\
+        DeclarationVariableInstance & ProfileDAO & usesType & \cmark & \cmark \\
+        DeclarationVariableLocal & ProfileDAO & usesType & \cmark & \cmark \\
+        DeclarationVariableLocal\_Initialized & ProfileDAO & usesType & \cmark & \cmark \\
+        DeclarationVariableStatic & ProfileDAO & usesType & \cmark & \cmark \\
+        \textbf{Import} &&&& \\
+        domain.direct.violating & AccountDAO & includes & \cmark & \xmark \\
+        \textbf{Inheritance} &&&& \\
+        InheritanceExtends & HistoryDAO & isChildOf & \cmark & \cmark \\
+        InheritanceExtendsAbstractClass & FriendsDAO & isChildOf & \cmark & \cmark \\
+        InheritanceImplementsInterface & IMapDAO & isImplementationOf & \cmark & \cmark \\
         \hline
     \end{tabular}
 \end{center}
