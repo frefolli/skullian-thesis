@@ -71,32 +71,32 @@ Di seguito la tabella dei test creata per il linguaggio Java con l'indicazione d
         \hline
         Test & Relazioni & Risultato \\
         \hline
-        implementation_bridge & calls & \checkmark \\
-        class_methods_with_parameters & definedBy & \checkmark \\
-        class_implementation & isImplementationOf & \checkmark \\
-        class_with_attributes & definedBy & \checkmark \\
-        class_methods_with_attributes & definedBy & \checkmark \\
-        class_method_call & calls & \checkmark \\
-        type_inference & calls, accessField & \checkmark \\
-        enums & definedBy, accessField & \checkmark \\
-        class_inheritance & isChildOf, nestedTo & \checkmark \\
-        object_creation & usesType & \checkmark \\
-        class_type_usage_nested_packages & definedBy, usesType & \checkmark \\
-        nested_classes & nestedTo & \checkmark \\
-        casts_type & castsType & \checkmark \\
-        class_type_usage & definedBy, usesType & \checkmark \\
-        throws_type & throwsType & \checkmark \\
-        imports & definedBy, includes, usesType & \checkmark \\
-        interface_inheritance & isChildOf & \checkmark \\
-        type_inference_with_packages & calls, accessField & \checkmark \\
-        extension_bridge & calls & \checkmark \\
-        class_constructors & definedBy & \checkmark \\
-        class_field_access & accessField & \checkmark \\
-        class_packages & definedBy, includes & \checkmark \\
-        annotation & usesType & \checkmark \\
-        array_creation & usesType & \checkmark \\
-        class_inheritance_with_packages & isChildOf & \checkmark \\
-        class_methods & definedBy & \checkmark \\
+        implementation\_bridge & calls & \cmark \\
+        class\_methods\_with\_parameters & definedBy & \cmark \\
+        class\_implementation & isImplementationOf & \cmark \\
+        class\_with\_attributes & definedBy & \cmark \\
+        class\_methods\_with\_attributes & definedBy & \cmark \\
+        class\_method\_call & calls & \cmark \\
+        type\_inference & calls, accessField & \cmark \\
+        enums & definedBy, accessField & \cmark \\
+        class\_inheritance & isChildOf, nestedTo & \cmark \\
+        object\_creation & usesType & \cmark \\
+        class\_type\_usage\_nested\_packages & definedBy, usesType & \cmark \\
+        nested\_classes & nestedTo & \cmark \\
+        casts\_type & castsType & \cmark \\
+        class\_type\_usage & definedBy, usesType & \cmark \\
+        throws\_type & throwsType & \cmark \\
+        imports & definedBy, includes, usesType & \cmark \\
+        interface\_inheritance & isChildOf & \cmark \\
+        type\_inference\_with\_packages & calls, accessField & \cmark \\
+        extension\_bridge & calls & \cmark \\
+        class\_constructors & definedBy & \cmark \\
+        class\_field\_access & accessField & \cmark \\
+        class\_packages & definedBy, includes & \cmark \\
+        annotation & usesType & \cmark \\
+        array\_creation & usesType & \cmark \\
+        class\_inheritance\_with\_packages & isChildOf & \cmark \\
+        class\_methods & definedBy & \cmark \\
         \hline
     \end{tabular}
 \end{table}
@@ -171,10 +171,6 @@ Oltre a test individuali per controllare il supporto delle singole caratteristic
         \hline
     \end{tabular}
 \end{table}
-
-%\putimage{diagrams/06/directDependencies.png}{"Dipendenze dirette da rilevare nel codice"}{fig:directDependencies}
-
-%\putimage{diagrams/06/indirectDependencies.png}{"Dipendenze indirette da rilevare nel codice"}{fig:indirectDependencies}
 
 Da queste tabelle il team di Arcan ha costruito una code base di esempio e quindi estratto una checklist di dipendenze legate alla code base che pu\`o essere utilizzata per accertare la capacit\`a di un tool di rilevare correttamente tutte le principali dipendenze del codice. Nella fase di validazione del software descritto in questi capitolo si fa uso della code base Java e della checklist, quest'ultima opportunamente tradotta in relazioni rilevabili dal modello in esame.
 
