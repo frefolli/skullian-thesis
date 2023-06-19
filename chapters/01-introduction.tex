@@ -23,14 +23,12 @@ Con gli anni sono nati progressivamente nuovi strumenti e framework che permetto
 Arcan \`e uno strumento che permette di rilevare le violazioni architetturali di un progetto software tramite l'analisi delle dipendenze delle sue componenti. Esso prima costruisce il Grafo delle Dipendenze, quindi lo esplora identificando pattern che suggeriscono Architectural Smells.
 
 \putimage{diagrams/01/arcanDepgraph.png}{"Modello di Grafo delle Dipendenze costruito da Arcan - dal Manuale"}{fig:arcanDepgraph}
-% TODO: grafo delle dipendenze
 
 \putimage{diagrams/01/arcanSmells.png}{"Modello degli Architectural Smells costruito da Arcan - dal Manuale"}{fig:arcanSmells}
-% TODO: grafo degli smell
 
 \paragraph{Limitazioni Tecniche}
 
-Allo stato attuale il tool Arcan, cos\`i come qualsiasi altro software che si serve del grafo delle dipendenze, utilizza software e librerie di terze parti per costruire tale grafo, uno per ogni linguaggio di programmazione. Il fatto di dover dipendere da vari software e installare molte librerie mina la scalabilit\`a orizzontale di un tool del genere: ogni nuova istanza avr\`a bisogno di notevole spazio di archiviazione per poter immagazzinare tutto il necessario per far funzionare Arcan.
+Allo stato attuale il tool Arcan, cos\`i come qualsiasi altro software che si serva del grafo delle dipendenze, utilizza software e librerie di terze parti per costruire tale grafo, uno per ogni linguaggio di programmazione. Il fatto di dover dipendere da vari software e installare molte librerie mina la scalabilit\`a orizzontale di un tool del genere: ogni nuova istanza avr\`a bisogno di notevole spazio di archiviazione per poter immagazzinare tutto il necessario per far funzionare Arcan.
 
 Non \`e altrettanto vantaggioso dover dipendere da una tale variet\`a di software per ogni linguaggio da supportare: sia perch\'e non sempre \`e possibile trovare una libreria che permetta di analizzare staticamente il codice sorgente in quel linguaggio, si\`a perch\'e ogni collaborazione con un software diverso necessita talvolta di implementazioni distinte all'interno di Arcan, quindi aumentanto ulteriormente il peso dell'applicativo sia in memoria centrale che in memoria secondaria.
 
