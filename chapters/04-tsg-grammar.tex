@@ -33,10 +33,14 @@ Ad ogni iterazione del ciclo si estrae un path $p$ dalla coda $Q$: si applica un
 Questa funzione specifica se \`e necessario, o pi\`u che altro conveniente, analizzare il path appena estratto, specialmente per evitare di rianalizzare due volte lo stesso path (o un path simile) e quindi liberarsi dai cicli infiniti.
 
 \par
-Prima essa controlla se quell'esatto percorso \`e gi\`a stato visitato, quindi lo compara cercando la quantit\`a di percorsi con nodi iniziale e finale uguali e con lunghezza inferiore gi\`a visitati: definito questo numero come \emph{N} e data una costante $MAX\_SIMILAR\_PATH\_COUNT = 7$, se si verifica la condizione $N > MAX\_SIMILAR\_PATH\_COUNT$ allora il percorso corrente pu\`o essere considerato come duplicato.
+\begin{sloppypar}
+Prima essa controlla se quell'esatto percorso \`e gi\`a stato visitato, quindi lo compara cercando la quantit\`a di percorsi con nodi iniziale e finale uguali e con lunghezza inferiore gi\`a visitati: definito questo numero come \emph{N} e data una costante \emph{MAX\_SIMILAR\_PATH\_COUNT~=~7}, se si verifica la condizione \emph{N~>~MAX\_SIMILAR\_PATH\_COUNT} allora il percorso corrente pu\`o essere considerato come duplicato.
+\end{sloppypar}
 
 \par
-La costante \emph{MAX\_SIMILAR\_PATH\_COUNT} pu\`o essere modificata riscrivendo un'implementazione personalizzata del componente Cycle Detector e sperimentalmente si \`e ottenuto come valore ottimale $MAX\_SIMILAR\_PATH\_COUNT = 30$: n\'e troppo basso da perdere troppi percorsi n\'e troppo alto da pregiudicare la fattibilit\`a in termini di risorse della risoluzione delle reference.
+\begin{sloppypar}
+La costante \emph{MAX\_SIMILAR\_PATH\_COUNT} pu\`o essere modificata riscrivendo un'implementazione personalizzata del componente Cycle Detector e sperimentalmente si \`e ottenuto come valore ottimale \emph{MAX\_SIMILAR\_PATH\_COUNT~=~30}: n\'e troppo basso da perdere troppi percorsi n\'e troppo alto da pregiudicare la fattibilit\`a in termini di risorse della risoluzione delle reference.
+\end{sloppypar}
 
 \par
 A questo punto, se il path deve essere analizzato, la prima cosa che occorre fare \`e controllare se \`e un path definito "completo", ovvero se il Symbol Stack \`e vuoto e il nodo finale del path \`e un nodo di tipo "definition": in questo caso la reference \`e stata trovata e si pu\`o interrompere la ricerca.
