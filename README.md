@@ -100,8 +100,8 @@ Nell'Ingegneria del Software e' importante avere a disposizione tool automatici 
       - [x] Generatore di Test
     - [x] Benchmark
     - [x] Performance
-- [ ] Conclusione
-  - [ ] Dimensione dello Stack Graph
-  - [ ] Analisi non Differenziali
-  - [ ] Language Dependency
-  - [ ] Ulteriori Sviluppi
+- [x] Conclusione
+  - [x] Dimensione dello Stack Graph
+  - [x] Analisi non Differenziali
+  - [x] Language Dependency
+  - [x] Ulteriori Sviluppi

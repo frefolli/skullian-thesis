@@ -225,6 +225,7 @@ Per semplicit\`a di lettura sono indicate la classi o i package che fanno riferi
 
 Oltre alla correttezza dell'analisi e' opportuno tenere traccia delle performance del software e delle grammatiche che vengono utilizzare per costruire il grafo, quindi non solo di valuta la velocit\`a con cui viene generato ma anche la quantit\`a di memoria che viene consumata e la scalabilit\`a del processo.
 Per questo alternare test individuali con test pi\`u massivi per mette di stabilire quanto incide la complessit\`a di un progetto rispetto al tempo e alla spazio impiegati. La verifica delle prestazioni \`e effettuata tramite l'uso del comando unix \emph{time} come prologo del comando di lancio dei due software. Eseguendo il benchmark si pu\`o notare come il prototipo sia significativamente pi\'u veloce di Arcan. Tuttavia \`e bene considerare che il primo \`e scritto in un linguaggio di programmazione pi\`u efficiente del secondo: questo ha comunque un impatto dal punto di vista delle risorse utilizzate e del tempo impiegato, aumentato potenzialmente i margini di efficienza su input pi\`u grandi.
+Entrambi i test sono stati eseguiti nelle medesime condizioni sullo stesso hardware e sistema operativo: un portatile \emph{HP Pavilion Laptop 15-eg0xxx} con CPU \emph{11th Gen Intel i5-1135G7 (8) @ 2.420GHz}, GPU \emph{Intel(R) Iris(R) Xe Graphics}, RAM \emph{8 GB}, e sistema operativo \emph{Linux} distribuzione \emph{Arch Linux} con gli ultimi aggiornamenti possibili installati.
 
 \begin{center}
     \captionof{table}{Tempi di analisi del Benchmark del Prototipo e di Arcan}
@@ -238,3 +239,4 @@ Per questo alternare test individuali con test pi\`u massivi per mette di stabil
         \hline
     \end{tabular}
 \end{center}
+
