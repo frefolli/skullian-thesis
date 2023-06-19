@@ -64,7 +64,8 @@ for language in SUPPORTED_LANGUAGES:
 
 Di seguito la tabella dei test creata per il linguaggio Java con l'indicazione delle relazioni e delle feature testate.
 
-\begin{center}
+\begin{table}
+    \centering
     \caption{Test per Java sulle dipendenze e i loro relativi esiti}
     \begin{tabular}{|c c c|}
         \hline
@@ -98,14 +99,15 @@ Di seguito la tabella dei test creata per il linguaggio Java con l'indicazione d
         class_methods & definedBy & \checkmark \\
         \hline
     \end{tabular}
-\end{center}
+\end{table}
 
 
 \section{Benchmark}
 
 Oltre a test individuali per controllare il supporto delle singole caratteristiche, si fa uso anche di un framework per la verifica dell'identificazione delle dipendenze descritto in un paper di Pruijt et al \cite{DBLP:journals/spe/PruijtKWB17} dove si tratta di valutazione dei sistemi di analisi statica delle dipendenze del codice.
 
-\begin{center}
+\begin{table}
+    \centering
     \caption{Direct dependency types in the Benchmark test}
     \begin{tabular}{|c c|}
         \hline
@@ -144,9 +146,10 @@ Oltre a test individuali per controllare il supporto delle singole caratteristic
         Class annotation & @Class3 \\
         \hline
     \end{tabular}
-\end{center}
+\end{table}
 
-\begin{center}
+\begin{table}
+    \centering
     \caption{Indirect dependency types in the Benchmark test}
     \begin{tabular}{|c c|}
         \hline
@@ -167,7 +170,7 @@ Oltre a test individuali per controllare il supporto delle singole caratteristic
          & public class Class2 extends SuperClass { } \\
         \hline
     \end{tabular}
-\end{center}
+\end{table}
 
 %\putimage{diagrams/06/directDependencies.png}{"Dipendenze dirette da rilevare nel codice"}{fig:directDependencies}
 
