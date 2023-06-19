@@ -64,9 +64,9 @@ for language in SUPPORTED_LANGUAGES:
 
 Di seguito la tabella dei test creata per il linguaggio Java con l'indicazione delle relazioni e delle feature testate.
 
-\begin{table}
+\begin{center}
     \centering
-    \caption{Test per Java sulle dipendenze e i loro relativi esiti}
+    \captionof{table}{Test per Java sulle dipendenze e i loro relativi esiti}
     \begin{tabular}{|c c c|}
         \hline
         Test & Relazioni & Risultato \\
@@ -99,16 +99,16 @@ Di seguito la tabella dei test creata per il linguaggio Java con l'indicazione d
         class\_methods & definedBy & \cmark \\
         \hline
     \end{tabular}
-\end{table}
+\end{center}
 
 
 \section{Benchmark}
 
 Oltre a test individuali per controllare il supporto delle singole caratteristiche, si fa uso anche di un framework per la verifica dell'identificazione delle dipendenze descritto in un paper di Pruijt et al \cite{DBLP:journals/spe/PruijtKWB17} dove si tratta di valutazione dei sistemi di analisi statica delle dipendenze del codice.
 
-\begin{table}
+\begin{center}
     \centering
-    \caption{Direct dependency types in the Benchmark test}
+    \captionof{table}{Direct dependency types in the Benchmark test}
     \begin{tabular}{|c c|}
         \hline
         Dependency type & Example code \\
@@ -146,11 +146,11 @@ Oltre a test individuali per controllare il supporto delle singole caratteristic
         Class annotation & @Class3 \\
         \hline
     \end{tabular}
-\end{table}
+\end{center}
 
-\begin{table}
+\begin{center}
     \centering
-    \caption{Indirect dependency types in the Benchmark test}
+    \captionof{table}{Indirect dependency types in the Benchmark test}
     \begin{tabular}{|c c|}
         \hline
         Dependency type & Example code \\
@@ -170,9 +170,54 @@ Oltre a test individuali per controllare il supporto delle singole caratteristic
          & public class Class2 extends SuperClass { } \\
         \hline
     \end{tabular}
-\end{table}
+\end{center}
 
-Da queste tabelle il team di Arcan ha costruito una code base di esempio e quindi estratto una checklist di dipendenze legate alla code base che pu\`o essere utilizzata per accertare la capacit\`a di un tool di rilevare correttamente tutte le principali dipendenze del codice. Nella fase di validazione del software descritto in questi capitolo si fa uso della code base Java e della checklist, quest'ultima opportunamente tradotta in relazioni rilevabili dal modello in esame.
+Da queste tabelle il team di Arcan ha costruito una code base di esempio e quindi estratto una checklist di dipendenze legate alla code base che pu\`o essere utilizzata per accertare la capacit\`a di un tool di rilevare correttamente tutte le principali dipendenze del codice. Nella fase di validazione del software descritto in questi capitolo si fa uso della code base Java e della checklist, quest'ultima opportunamente tradotta in relazioni rilevabili dal modello in esame. Di seguito i risultati del benchmark in formato di tabella:
+
+\begin{center}
+    \centering
+    \captionof{table}{Risultati del Benchmark del Prototipo}
+    \begin{tabular}{|c c c | c|}
+        \hline
+        Sorgente & Destinazione & Relazione & Prototipo \\
+        \hline
+        AccessClassVariable & CheckInDAO & accessField & \cmark \\
+        AccessClassVariableConstant & UserDAO & accessField & \cmark \\
+        AccessClassVariableInterface & ISierraDAO & accessField & \cmark \\
+        AccessEnumeration & TipDAO & accessField & \cmark \\
+        AccessInstanceVariableRead & ProfileDAO & accessField & \xmark \\
+        AccessInstanceVariableWrite & ProfileDAO & accessField & \xmark \\
+        AccessInstanceVariableConstant & UserDAO & accessField & \xmark \\
+        AccessInstanceVariableSuperClass & CallInstanceSuperClassDAO & accessField & \xmark \\
+        AccessInstanceVariableSuperSuperClass & CallInstanceSuperClassDAO & accessField & \xmark \\
+        AccessObjectReferenceAsParameter & Base & accessField & \cmark \\
+        AccessObjectReferenceWithinIfStatement & Base & accessField & \cmark \\
+        AnnotationDependency & SettingsAnnotation & usesType & \cmark \\
+        CallClassMethod & BadgesDAO & calls & \cmark \\
+        CallConstructor & AccountDAO & usesType & \cmark \\
+        CallInstance & ProfileDAO & calls & \xmark \\
+        CallInstanceInnerClass & CallInstanceOuterClassDAO & calls & \xmark \\
+        CallInstanceInterface & CallInstanceInterfaceDAO & calls & \xmark \\
+        CallInstanceSuperClass & CallInstanceSuperClassDAO & calls & \xmark \\
+        CallInstanceSuperSuperClass & CallInstanceSuperClassDAO & calls & \xmark \\
+        DeclarationExceptionThrows & StaticsException & throwsType & \cmark \\
+        DeclarationParameter & ProfileDAO & usesType & \cmark \\
+        DeclarationReturnType & VenueDAO & usesType & \cmark \\
+        DeclarationTypeCast & ProfileDAO & castsType & \cmark \\
+        DeclarationTypeCastOfArgument & ProfileDAO & castsType & \cmark \\
+        DeclarationVariableInstance & ProfileDAO & usesType & \cmark \\
+        DeclarationVariableLocal & ProfileDAO & usesType & \cmark \\
+        DeclarationVariableLocal\_Initialized & ProfileDAO & usesType & \cmark \\
+        DeclarationVariableStatic & ProfileDAO & usesType & \cmark \\
+        domain.direct.violating & AccountDAO & includes & \cmark \\
+        InheritanceExtends & HistoryDAO & isChildOf & \cmark \\
+        InheritanceExtendsAbstractClass & FriendsDAO & isChildOf & \cmark \\
+        InheritanceImplementsInterface & IMapDAO & isImplementationOf & \cmark \\
+        \hline
+    \end{tabular}
+\end{center}
+
+Per semplicit\`a di lettura sono indicate la classi o i package che fanno riferimento alla relazione invece delle componenti precise, tuttavia i dati completi sono disponibili nel repository del prototipo nel file \emph{report\_java.md} \cite{SkullianRepository}. Il prototipo rileva correttamente solo 22 delle 32 dipendenze totali presenti nel benchmark, un'analisi del problema e' presente nel capitolo conclusivo.
 
 \section{Performace}
 
