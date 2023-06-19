@@ -10,10 +10,10 @@ Nell'Ingegneria del Software e' importante avere a disposizione tool automatici 
 
 ## Scaletta Programmatica
 
-- [ ] Introduzione
-    - [ ] Caso di studio - Arcan
+- [x] Introduzione
+    - [x] Caso di studio - Arcan
       - [x] Architectural Smell e Dipendenze
-      - [ ] Tool Arcan
+      - [x] Tool Arcan
       - [x] Limitazioni Tecniche
     - [x] La soluzione proposta
       - [x] Alcune librerie utili
