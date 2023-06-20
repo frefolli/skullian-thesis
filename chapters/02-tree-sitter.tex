@@ -6,12 +6,12 @@ Nel presente capitolo viene descritto Tree Sitter, il suo uso con Rust e il Quer
 
 \textbf{Tree Sitter} \cite{TreeSitter} \`e un software in grado di generare un parser (con lexer incorporato) per costruire l'Abstract Syntax Tree di un testo basandosi su un file di configurazione che descriva la grammatica del linguaggio considerato.
 
-Il tool \cite{TreeSitterCreatingParsers} genera un parser in linguaggio \textbf{C} e insieme al codice extra che funge da language binding, in modo tale da poter chiamare il nuovo parser usando un linguaggio di programmazione a tra quelli supportati.
+Il tool \cite{TreeSitterCreatingParsers} genera un parser in linguaggio \textbf{C} insieme al codice extra che funge da language binding, in modo tale da poter chiamare il nuovo parser usando un linguaggio di programmazione a tra quelli supportati.
 Il software generato \`e privo di dipendenze, questo ne assicura la portabilit\`a.
 
 L'aspetto che pi\`u lo differenzia rispetto ai suoi competitori \`e la possibilit\`a di fare analisi incrementali \cite{TreeSitterAdvancedParsing}.
 \`E particolarmente efficiente quando si tratta di dover rianalizzare un file che ha subito delle modifiche.
-\`E in grado generare l'albero sintattico del nuovo file sorgente utilizzando come base l'albero sintattico obsoleto e una struttura dati che contiene le modifiche che ha subito il file nel suo complesso.
+\`E in grado di generare l'albero sintattico del nuovo file sorgente utilizzando come base l'albero sintattico obsoleto e una struttura dati che contiene le modifiche che ha subito il file nel suo complesso.
 
 \section{In Rust}
 
@@ -25,11 +25,11 @@ Per utilizzare \textbf{tree sitter} in \textbf{rust} \cite{TreeSitterCrate} prim
   tree-sitter-java = "*"
 \end{lstlisting}
 
-Se si vuole utilizzare il parser tree sitter per il java per esempio si deve inserire tra le dipendenze \textbf{tree-sitter-java}.
+Se si vuole utilizzare il parser Tree Sitter per Java per esempio si deve inserire tra le dipendenze \textbf{tree-sitter-java}.
 In generale per un linguaggio \textbf{x} \`e necessario importare ed utilizzare la libreria \textbf{tree-sitter-x} \cite{TreeSitterRustGrammars}.
 La lista dei linguaggi supportati \`e disponibile sul sito del progetto Tree Sitter.
 
-Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente snippet:
+Quindi per utilizzare il parser del linguaggio \textbf{Java} si usa il seguente snippet:
 
 \begin{lstlisting}[language=Rust]
   let mut the_parser = tree_sitter::Parser::new();
@@ -38,7 +38,7 @@ Quindi per utilizzare il parser del linguaggio \textbf{java} si usa il seguente 
   let tree = the_parser.parse(the_text);
 \end{lstlisting}
 
-La variabile \textbf{tree : tree\_sitter::Tree} conterr\`a l'albero generato da tree sitter.
+La variabile \textbf{tree : tree\_sitter::Tree} conterr\`a l'albero generato da Tree Sitter.
 
 \subsection{Aggiornamento dell'Albero}
 
@@ -61,7 +61,7 @@ La variabile \textbf{new\_tree} conterr\`a l'albero aggiornato.
 
 \subsection{Esempio}
 
-Con il seguente file java:
+Con il seguente file Java:
 
 \begin{lstlisting}[language=Java]
 class Main {
@@ -95,7 +95,7 @@ si ottiene il seguente albero sintattico:
 \section{Query Language}
 
 L'albero sintattico \`e graficamente rappresentato attraverso delle \textbf{sexp} che usano identificatori e struttura definiti dalla grammatica del linguaggio.
-\textbf{Tree sitter} definisce un \textbf{Domain Specific Language} \cite{TreeSitterQuerySyntax} tramite il quale eseguire delle query a un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
+\textbf{Tree Sitter} definisce un \textbf{Domain Specific Language} \cite{TreeSitterQuerySyntax} tramite il quale eseguire delle query a un engine per ottenere tutte le occorrenze di un certo pattern strutturale.
 Se le \textbf{sexp} utilizzate nelle query sono \textbf{language specific}, la sintassi generale del \textbf{DSL} \`e universale.
 
 Questo linguaggio di query pu\`o essere usato da un engine di query per implementare un linguaggio di scripting con cui permettere all'utente di operare in diversi modi su un file sorgente.
