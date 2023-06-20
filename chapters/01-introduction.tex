@@ -4,15 +4,15 @@ In questo capitolo si descrive il contesto della ricerca, il problema affrontato
 
 \section{Caso di studio - Arcan}
 
-\paragraph{Ingegneria del Software}
+% \paragraph{Ingegneria del Software}
 
 Lo sviluppo del software \`e un processo lungo, complesso e spesso prono ad errori e fallimenti: sono innumerevoli i casi in cui un software diviene cos\`i complicato da sviluppare o gestire da venire abbandonato in favore di una nuova implementazione. Questo specialmente per il fatto che il processo di sviluppo non ha una data di fine se essa non coincide con la morte del software stesso. Il software deve essere aperto a cambiamenti e ottimizzazioni, i requisiti sono in continua evoluzione sia perch\'e il contesto \`e quello di un'economia capitalista in cui il focus \`e nell'espansione dei servizi e della portata degli stessi, sia perch\'e gli stessi servizi dipendono dai requisiti della societ\`a e delle attivit\`a umane, le quali soprattutto negli ultimi anni hanno dimostrato di essere in costante divenire. Qualora un software non potesse evolvere diventerebbe immediatamente obsoleto e quindi da una parte rimpiazzabile, dall'altra insoddisfacente.
 
-\paragraph{Processi Software}
+% \paragraph{Processi Software}
 
 I processi impiegati per molto tempo hanno giocato un ruolo fondamentale nell'azzoppare il futuro splendore di un software: si pensi per esempio al Processo a Cascata \cite{larman2002applying}, il quale impedisce fino all'ultimo momento di valutare la reale utilit\`a di ci\`o che \`e stato implementato. Con la nascita dei metodi Agili \cite{larman2002applying} ci si \`e affrancati da processi che impedivano di osservare periodicamente la qualit\`a del software dal punto di vista tecnico / funzionale, di rianalizzare i requisiti del cliente e quindi di dirottare il processo verso nuovo pi\`u utili obiettivi. Inoltre si inizi\`o a mettere in risalto l'importanza della qualit\`a del software dal codice all'architettura.
 
-\paragraph{Qualit\`a del Software}
+% \paragraph{Qualit\`a del Software}
 
 Con gli anni sono nati progressivamente nuovi strumenti e framework che permettono di valutare la qualit\`a del software e di implementare fin da subito modelli orientati al riuso e all'espansione: si pensi per esempio ai Design Pattern \cite{gamma1995design} e ai Code Smells\cite{fowler1999refactoring}. Ad oggi esistono strumenti che effettuano un'analisi basata su esecuzione simbolica del codice o sulla valutazione di alcune metriche, e che permettono di identificare in breve tempo devianze nello sviluppo del codice. Tuttavia le pi\`u importanti violazioni da osservare sono quelle nell'architettura di un software: spesso un design abbozzato e poco lungimirante porta a futuri guai sia nell'espansione dell'architettura, sia nell'implementazione dello stesso modello previsto. Per questo esistono una serie di strumenti che si prefiggono lo scopo di individuare questi problemi, detti \emph{Architectural Smells}, tramite l'analisi delle dipendenze di funzioni, package, classi e altre tipologie di componenti del codice: un esempio \`e Arcan \cite{Arcan}
 
@@ -37,25 +37,25 @@ Altri aspetti da non sottovalutare sono l'efficacia della collaborazione tra Arc
 \section{La soluzione proposta}
 \subsection{Alcune tecnologie utili}
 
-\paragraph{Rust}
+% \paragraph{Rust}
 
 Rust \cite{blandy2017programming} \`e un linguaggio di programmazione compilato e memory safe by design: utilizza un modello di gestione della memoria a "prestito" in modo da impedire memory leak e compilare ogni componente con la massima efficienza possibile. \`E stato scelto per implementare un prototipo sia per queste sue doti, sia perch\`e presenta alcune librerie interessanti da trattare ed utili ai fini del progetto.
 
-\paragraph{Tree Sitter}
+% \paragraph{Tree Sitter}
 
 Tree Sitter \cite{TreeSitter} \`e una libreria accessibile in Rust per la generazione automatica di parser e lexer \cite{sestoft2017programming}, che mette a disposizione parser per molti linguaggi di programmazione, anche i pi\`u desueti. Questi parser producono un Concrete Syntax Tree, struttura dati simile per certi versi ai pi\`u noti Abstract Syntax Tree: i primi rappresentano concretamente l'espansione della grammatica del linguaggio utilizzata dal parser durante l'analisi invece che solo pezzi del codice sorgente, quindi si prestano maggiormente ad elaborazioni complesse da parte di vari software. Tree Sitter Graph \`e un'ulteriore libreria che usa Tree Sitter insieme ad un file con grammatica \textbf{T}ree \textbf{S}itter \textbf{G}raph per costruire un grafo qualsiasi a partire dal Concrete Syntax Tree realizzato da Tree Sitter.
 
-\paragraph{Stack Graph}
+% \paragraph{Stack Graph}
 
 Stack Graph \cite{StackGraph} \`e una nuova struttura dati presentata \cite{StackGraphNameResolutionAtScale} come evoluzione dello Scope Graph \cite{ScopeGraph}. Essa permette di risolvere le reference nel codice e si presta a scalare verticalmente per costruire il grafo in modo incrementale, file per file. Per generare un generico Stack Graph partendo dal codice sorgente \`e stata sviluppata Tree Sitter Stack Graph, una libreria che combina Tree Sitter Graph e Stack Graph per automatizzare il processo di costruzione.
 
-\section{L'approccio}
+\subsection{L'approccio}
 
-\paragraph{Stack Graph in azione}
+% \paragraph{Stack Graph in azione}
 
 Si vuole studiare la fattibilit\`a dell'impiego di Stack Graph per risolvere le reference di un codice sorgente e identificare le dipendenze di cui necessita Arcan impiegando il meno possibile soluzioni ad hoc ed evitando l'uso di software diversi per ogni linguaggio di programmazione. Il tutto limitando la dimensione degli asset language specific e ricercando le migliori prestazioni ottenibili con questo approccio. Il codice del prototipo realizzato secondo questo studio \`e disponibile presso il relativo repository Github \cite{SkullianRepository}.
 
-\paragraph{Valuzione dei risultati}
+% \paragraph{Valuzione dei risultati}
 
 Per verificare la qualit\`a dell'identificazione e le prestazioni del prototipo si usano una serie di test, fabbricati in base alle features del linguaggio da supportare, che aderiscono ad un formato definito ad hoc e una code base creata dal team di Arcan per accertare quali dipendenze vengano effettivamente rilevate con Java. La checklist delle dipendenze della code base verr\`a chiaramente trascritta nel formato gi\`a citato e fornir\`a anche un primo esempio di codice sorgente pi\`u ampio per controlli sulle prestazioni, i quali comunque verranno eseguiti con esempi di applicazione di feature pi\`u complessi per dimostrare fino a dove il prototipo riesca a spingersi nell'identificazione delle dipendenze. Quindi si proceder\`a con un confronto diretto con Arcan in termini di tempo, completezza e accuratezza.
 

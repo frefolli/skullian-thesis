@@ -2,18 +2,21 @@
 
 Questo capitolo contiene un elenco delle difficolt\`a riscontrate e le conclusioni dello studio.
 
-\paragraph{Dimensione dello Stack Graph}
+\section{Problemi Riscontrati}
+
+%\paragraph{Dimensione dello Stack Graph}
 
 La dimensione totale della grammatica TSG che costruisce lo Stack Graph rispecchia in pieno la dimensione finale di tale grafo. Si \`e notato sperimentalmente come anche con sorgenti di dimensione modesta o banale lo Stack Graph tende ad essere molto grande. Ne consegue che da una parte l'algoritmo di risoluzione delle reference sar\`a esponenzialmente pi\`u lento con l'aumentare lineare della dimensione della code base, dall'altra non sempre sar\`a in grado di risolverle con successo. L'euristica di riconoscimento dei cicli tender\`a a bloccare i percorsi che tornano alla radice del grafo perch\'e troppo sotto percorsi erano passati per quel nodo con le stesse condizioni di partenza. Aumentando la variabile \emph{MAX\_SIMILAR\_PATH\_COUNT} non migliora la situazione, il software finisce in stallo o termina la memoria primaria e viene ucciso dal sistema operativo. Questa \`e la ragione per cui alcune relazioni, nonostante sembrino funzionare nei test individuali, non vengono rilevate nel benchmark da parte del prototipo. L'unico modo per superare questo problema sarebbe reimplementare l'euristica che attualmente \`e implementata nel codice sorgente della libreria Stack Graph, ammesso e non concesso che ne esista una definita perfetta o almeno pi\`u efficiente.
 
-\paragraph{Analisi non Differenziali}
+%\paragraph{Analisi non Differenziali}
 
 Allo stato attuale la Tree Sitter Stack Graph non permette di generare il grafo usando il differenziale di un file, perch\`e invoca la costruzione del Concrete Syntax Tree con Tree Sitter creandone ogni volta uno diverso. Questo deficit elimina uno dei principali vantaggi dell'uso di Tree Sitter e anche in questo caso l'unica via per risolvere il problema \`e mettere mano al codice della libreria.
 
-\paragraph{Language Dependency}
+%\paragraph{Language Dependency}
 
 Nonostante non sia necessaria una libreria per ogni linguaggio, trascurando le varie librerie che implementano il parser Tree Sitter, \`e comunque un compito gravoso dover analizzare i linguaggi di programmazione da supportare ed implementare le varie grammatice TSG. La grammatica d'esempio \`e per Java e si pu\`o notare nel repository del prototipo quanto sia imponente. Chiaramente rimane il fatto di aver astratto gran parte dell'algoritmo di costruzione del grafo delle dipendenze in modo da essere sufficientemente certi da non dover mettere mano in modo sistematico al codice per implementare il supporto per un nuovo linguaggio.
 
-\paragraph{Sviluppi Futuri}
+\section{Sviluppi Futuri}
+%\paragraph{Sviluppi Futuri}
 
 Qualora questi limiti siano parzialmente o completamente superati si pu\`o ipotizzare lo sviluppo di un microservizio che utilizzi una versione eventualmente parallelizzata e raffinata del prototipo per analizzare on demand il codice sorgente. Come modello si presterebbe ad essere integrato agilmente nell'infrastruttura di Arcan, organizzata anch'essa per servizi.
