@@ -1,0 +1,5 @@
+user,repo,software,max,min,mean
+junit-team,junit4,Skullian,3.761, 2.264, 2.484
+junit-team,junit4,Arcan,17.079, 13.850, 14.611
+junit-team,junit5,Skullian,37.903, 21.575, 23.765
+junit-team,junit5,Arcan,47.613, 42.542, 44.186
