@@ -231,19 +231,35 @@ Per semplicit\`a di lettura sono indicate la classi o i package che fanno riferi
 \section{Performace}
 
 Oltre alla correttezza dell'analisi \`e opportuno tenere traccia delle performance del software e delle grammatiche che vengono utilizzare per costruire il grafo, quindi non solo di valuta la velocit\`a con cui viene generato ma anche la quantit\`a di memoria che viene consumata e la scalabilit\`a del processo.
-Per questo alternare test individuali con test pi\`u massivi per mette di stabilire quanto incide la complessit\`a di un progetto rispetto al tempo e alla spazio impiegati. La verifica delle prestazioni \`e effettuata tramite l'uso del comando unix \emph{time} come prologo del comando di lancio dei due software. Eseguendo il benchmark si pu\`o notare come il prototipo sia significativamente pi\'u veloce di Arcan. Tuttavia \`e bene considerare che il primo \`e scritto in un linguaggio di programmazione pi\`u efficiente del secondo: questo ha comunque un impatto dal punto di vista delle risorse utilizzate e del tempo impiegato, aumentato potenzialmente i margini di efficienza su input pi\`u grandi.
-Entrambi i test sono stati eseguiti nelle medesime condizioni sullo stesso hardware e sistema operativo: un portatile \emph{HP Pavilion Laptop 15-eg0xxx} con CPU \emph{11th Gen Intel i5-1135G7 (8) @ 2.420GHz}, GPU \emph{Intel(R) Iris(R) Xe Graphics}, RAM \emph{8 GB}, e sistema operativo \emph{Linux} distribuzione \emph{Arch Linux} con gli ultimi aggiornamenti possibili installati.
+Per questo alternare test individuali con test pi\`u massivi per mette di stabilire quanto incide la complessit\`a di un progetto rispetto al tempo e alla spazio impiegati. La verifica delle prestazioni \`e effettuata tramite l'uso del comando unix \emph{time} come prologo del comando di lancio dei due software.
+Entrambi i test sono stati eseguiti nelle medesime condizioni sullo stesso hardware e sistema operativo: un portatile \emph{HP Pavilion Laptop 15-eg0xxx} con CPU \emph{11th Gen Intel i5-1135G7 (4) @ 2.420GHz}, GPU \emph{Intel(R) Iris(R) Xe Graphics}, RAM \emph{4 GB}, e sistema operativo \emph{Linux} distribuzione \emph{Arch Linux} con gli ultimi aggiornamenti possibili installati.
+
+Eseguendo entrambi i software su 5 progetti java si pu\`o notare come il prototipo sia significativamente pi\'u veloce di Arcan nel caso medio (in verde). Tuttavia nel caso di fastjson viene molto rallentato dalla moltitudine di reference "a vuoto", (di cui si parler\`a nel prossimo capitolo). \`E anche bene considerare che il primo \`e s\`i scritto in un linguaggio di programmazione pi\`u efficiente del secondo, ma \`e anche privo di parallelizzazione: eventualmente sarebbe possibile aumentarne l'efficienza parallelizzando con un fatto pari a quello di Arcan.
+Infine non \`e stato possibile valutare in modo oggettivo il tempo di eseguzione di Arcan su guava perch\'e, sebbene segnali il termine dell'operazione circa dopo 2 minuti di esecuzione, il processo non termina regolarmente ma i thread java rimangono attivi in background.
 
 \begin{center}
-    \captionof{table}{Tempi di analisi del Benchmark del Prototipo e di Arcan}
-    \begin{tabular}{|l | c | c|}
+    \captionof{table}{Tempi di analisi (in secondi) di vari progetti da parte del Prototipo e di Arcan}
+    \begin{tabular}{|l|l|l|l|l|}
         \hline
-        Tempo & Prototipo & Arcan \\
+        progetto & software  & tempo minimo  & tempo massimo  & tempo medio \\ \hline
         \hline
-        real & 0m2.243s & 0m8.733s \\
-        user & 0m2.149s & 0m17.456s \\
-        sys & 0m0.063s & 0m0.886s \\
-        \hline
+        \rowcolor[HTML]{3531FF} 
+        guava    & Prototipo & 62.776 & 85.451 & 68.748 \\ \hline
+        \rowcolor[HTML]{34FF34} 
+        junit4   & Prototipo & 2.264  & 3.761  & 2.484\\ \hline
+        \rowcolor[HTML]{34FF34} 
+        junit4   & Arcan    & 13.850 & 17.079 & 14.611     \\ \hline
+        \rowcolor[HTML]{34FF34} 
+        junit5   & Prototipo & 21.575 & 37.903 & 23.765\\ \hline
+        \rowcolor[HTML]{34FF34} 
+        junit5   & Arcan    & 42.542 & 47.613  & 44.186\\ \hline
+        \rowcolor[HTML]{34FF34} 
+        antlr4   & Prototipo & 8.530  & 9.259  & 8.968       \\ \hline
+        \rowcolor[HTML]{34FF34} 
+        antlr4   & Arcan    & 19.222 & 20.140 & 19.691     \\ \hline
+        \rowcolor[HTML]{FE0000} 
+        fastjson & Prototipo & 182.036& 209.763& 191.507\\ \hline
+        \rowcolor[HTML]{FE0000} 
+        fastjson & Arcan    & 66.932 & 71.094 & 69.071     \\ \hline
     \end{tabular}
 \end{center}
-

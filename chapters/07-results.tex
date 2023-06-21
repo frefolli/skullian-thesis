@@ -4,6 +4,10 @@ Questo capitolo contiene un elenco delle difficolt\`a riscontrate e le conclusio
 
 \section{Problemi Riscontrati}
 
+%\paragraph{Conflitto di Reference Kind}
+
+%\paragraph{Reference Irrisolvibili}
+
 %\paragraph{Dimensione dello Stack Graph}
 
 La dimensione totale della grammatica TSG che costruisce lo Stack Graph rispecchia in pieno la dimensione finale di tale grafo. Si \`e notato sperimentalmente come anche con sorgenti di dimensione modesta o banale lo Stack Graph tende ad essere molto grande. Ne consegue che da una parte l'algoritmo di risoluzione delle reference sar\`a esponenzialmente pi\`u lento con l'aumentare lineare della dimensione della code base, dall'altra non sempre sar\`a in grado di risolverle con successo. L'euristica di riconoscimento dei cicli tender\`a a bloccare i percorsi che tornano alla radice del grafo perch\'e troppo sotto percorsi erano passati per quel nodo con le stesse condizioni di partenza. Aumentando la variabile \emph{MAX\_SIMILAR\_PATH\_COUNT} non migliora la situazione, il software finisce in stallo o termina la memoria primaria e viene ucciso dal sistema operativo. Questa \`e la ragione per cui alcune relazioni, nonostante sembrino funzionare nei test individuali, non vengono rilevate nel benchmark da parte del prototipo. L'unico modo per superare questo problema sarebbe reimplementare l'euristica che attualmente \`e implementata nel codice sorgente della libreria Stack Graph, ammesso e non concesso che ne esista una definita perfetta o almeno pi\`u efficiente.
