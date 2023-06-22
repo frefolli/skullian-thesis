@@ -4,21 +4,32 @@ Questo capitolo contiene un elenco delle difficolt\`a riscontrate e le conclusio
 
 \section{Problemi Riscontrati}
 
-%\paragraph{Conflitto di Reference Kind}
+\paragraph{Problemi affrontati}
 
-%\paragraph{Reference Irrisolvibili}
-
-%\paragraph{Dimensione dello Stack Graph}
-
-La dimensione totale della grammatica TSG che costruisce lo Stack Graph rispecchia in pieno la dimensione finale di tale grafo. Si \`e notato sperimentalmente come anche con sorgenti di dimensione modesta o banale lo Stack Graph tende ad essere molto grande. Ne consegue che da una parte l'algoritmo di risoluzione delle reference sar\`a esponenzialmente pi\`u lento con l'aumentare lineare della dimensione della code base, dall'altra non sempre sar\`a in grado di risolverle con successo. L'euristica di riconoscimento dei cicli tender\`a a bloccare i percorsi che tornano alla radice del grafo perch\'e troppo sotto percorsi erano passati per quel nodo con le stesse condizioni di partenza. Aumentando la variabile \emph{MAX\_SIMILAR\_PATH\_COUNT} non migliora la situazione, il software finisce in stallo o termina la memoria primaria e viene ucciso dal sistema operativo. Questa \`e la ragione per cui alcune relazioni, nonostante sembrino funzionare nei test individuali, non vengono rilevate nel benchmark da parte del prototipo. L'unico modo per superare questo problema sarebbe reimplementare l'euristica che attualmente \`e implementata nel codice sorgente della libreria Stack Graph, ammesso e non concesso che ne esista una definita perfetta o almeno pi\`u efficiente.
-
-%\paragraph{Analisi non Differenziali}
-
-Allo stato attuale la Tree Sitter Stack Graph non permette di generare il grafo usando il differenziale di un file, perch\`e invoca la costruzione del Concrete Syntax Tree con Tree Sitter creandone ogni volta uno diverso. Questo deficit elimina uno dei principali vantaggi dell'uso di Tree Sitter e anche in questo caso l'unica via per risolvere il problema \`e mettere mano al codice della libreria.
+%\paragraph{Parallelizzazione}
+Nell'ottica di scalare verticalmente le risorse impiegate dal prototipo si \`e posto il problema di ideare un processo che fosse parallelizzabile in modo sicuro. Ebbene la parte che si \`e sperimentalmente ricavata essere quella pi\`u impattante \`e la risoluzione delle reference: essa pu\`o essere parallelizzata senza problemi visto che l'unico uso \emph{mutable} di variabili non "locali" al thread \`e la fase di assegnazione del name binding tra i nodi dello Stack Graph. Si \`e scelto di non parallelizzare il processo all'interno del prototipo per semplicit\`a, ma \`e comunque fattibile senza troppe modifiche del codice.
 
 %\paragraph{Language Dependency}
 
 Nonostante non sia necessaria una libreria per ogni linguaggio, trascurando le varie librerie che implementano il parser Tree Sitter, \`e comunque un compito gravoso dover analizzare i linguaggi di programmazione da supportare ed implementare le varie grammatice TSG. La grammatica d'esempio \`e per Java e si pu\`o notare nel repository del prototipo quanto sia imponente. Chiaramente rimane il fatto di aver astratto gran parte dell'algoritmo di costruzione del grafo delle dipendenze in modo da essere sufficientemente certi da non dover mettere mano in modo sistematico al codice per implementare il supporto per un nuovo linguaggio.
+
+%\paragraph{Conflitto di Reference Kind}
+
+Una reference viene identificata come da risolvere in base al suo \emph{refkind}, il quale viene applicato dalla grammatica TSG quando assembla ricorsivamente lo Stack Graph. Esistono situazioni ambigue in cui concorrono pi\`u refkind allo stesso nodo, e non disponendo di una funzione nel DSL che permetta di stabilire n\`e se un nodo abbia un attributo n\`e il valore di un certo attributo \`e virtualmente impossibile risolvere questa problematica. Una soluzione potrebbe essere l'uso di attributi distinti per identificare i vari tipi di reference in modo da non avere conflitti nello stesso contesto, ma questo minerebbe alla scalabilit\`a del modello (code smell Shotgun Surgery) e alla leggibilit\`a della grammatica. Si \`e scelto di intervenire riducendo il pi\`u possibile questa eventualit\`a prestando maggiore attenzione della stesura della grammatica.
+
+%\paragraph{Reference Irrisolvibili}
+
+La risoluzione delle reference avviene tramite la ricerca di simboli all'interno del grafo per trovare dei nodi marcati come definizioni. Questo significa che le reference a simboli di librerie di terze parti o in generale di codice non definito nel sorgente analizzato non potranno mai essere identificati. L'unica soluzione ipotizzabile \`e caricare insieme al codice anche le definizioni in forma di Stack Graph di tutte le librerie dell'ecosistema del linguaggio utilizzate, siano esse di terze parti o builtin. Tuttavia questo violerebbe lo stesso scopo di analizzare il codice sorgente in maniera efficiente e con il minimo overhead possibile. Queste reference presentano anche un ulteriore problema prestazionale: ogni atto di risoluzione intentato da Stack Graph fallir\`a sprecando notevole tempo che potrebbe essere utilizzato per cercare reference veramente risolvibili.
+
+\paragraph{Problemi irrisolti}
+
+%\paragraph{Dimensione dello Stack Graph}
+
+La dimensione totale della grammatica TSG che costruisce lo Stack Graph rispecchia in pieno la dimensione finale di tale grafo. Si \`e notato sperimentalmente come anche con sorgenti di dimensione modesta o banale lo Stack Graph tende ad essere molto grande. Ne consegue che da una parte l'algoritmo di risoluzione delle reference sar\`a esponenzialmente pi\`u lento con l'aumentare lineare della dimensione della code base, dall'altra non sempre sar\`a in grado di risolverle con successo. L'euristica di riconoscimento dei cicli tender\`a a bloccare i percorsi che tornano alla radice del grafo perch\'e troppo sotto percorsi erano passati per quel nodo con le stesse condizioni di partenza. Aumentando la variabile \emph{MAX\_SIMILAR\_PATH\_COUNT} non migliora la situazione, il software finisce in stallo o termina la memoria primaria e viene ucciso dal sistema operativo. Questa \`e la ragione per cui alcune relazioni, nonostante sembrino funzionare nei test individuali, non vengono rilevate nel benchmark da parte del prototipo. L'unico modo per superare questo problema sarebbe reimplementare l'euristica che attualmente \`e implementata nel codice sorgente della libreria Stack Graph, ammesso e non concesso che ne esista una definita perfetta o almeno pi\`u efficace.
+
+%\paragraph{Analisi non Differenziali}
+
+Allo stato attuale la Tree Sitter Stack Graph non permette di generare il grafo usando il differenziale di un file, perch\`e invoca la costruzione del Concrete Syntax Tree con Tree Sitter creandone ogni volta uno diverso. Questo deficit elimina uno dei principali vantaggi dell'uso di Tree Sitter e anche in questo caso l'unica via per risolvere il problema \`e mettere mano al codice della libreria.
 
 \section{Sviluppi Futuri}
 %\paragraph{Sviluppi Futuri}
