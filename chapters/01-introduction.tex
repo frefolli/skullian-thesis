@@ -20,9 +20,13 @@ Con gli anni sono nati progressivamente nuovi strumenti e framework che permetto
 
 \paragraph{Tool Arcan}
 
-Arcan \`e uno strumento che permette di rilevare le violazioni architetturali di un progetto software tramite l'analisi delle dipendenze delle sue componenti. Esso prima costruisce il Grafo delle Dipendenze, quindi lo esplora identificando pattern che suggeriscono Architectural Smells.
+Arcan \`e uno strumento che permette di rilevare le violazioni architetturali di un progetto software tramite l'analisi delle dipendenze delle sue componenti. \`E in grado di costruire il grafo architetturale dal codice sorgente, calcolare le dipendenze da affiancare a esso, identificare tramite l'uso delle dipendenze e di varie metrice gli Architectural Smell e calcolare il Technical Debt di un progetto, ovvero il costo in termini umani della risoluzione di tutti i problemi che \`e stato in grado di riconoscere.
+
+Di seguito il modello del grafo delle dipendenze usato da Arcan. Ogni componente \`e distinta in tre tipi di nodo: unit\`a, funzione e container, che corrispondono in maniera intuitiva a classi / interfacce, funzioni e package / namespace. \`E stato studiato per rappresentare le relazioni di parentela, inclusione, implementazione e pi\`u genericamente dipendenza. Non distingue pedantemente tra i tipi di dipendenza nei vari usi dei costrutti, che del resto non \`e necessario per analizzare questo grafo alla ricerca di Architectural Smells.
 
 \putimage{diagrams/01/arcanDepgraph.png}{"Modello di Grafo delle Dipendenze costruito da Arcan - dal Manuale"}{fig:arcanDepgraph}
+
+Attualmente vengono rilevati quattro smell: Cyclic Dependencies, Unstable Dependencies, Hublike Depdendencies e God Components \cite{cuesta2018software}. I nodi componenti del precedente grafo vengono utilizzati per identificare i particepanti ai vari smell e per accedere agilmente ai due grafi. Tutte queste informazioni vengono sia salvate in file csv e graphml, sia sono visualizzabili pi\`u comodamente nella versione Dashboard di Arcan.
 
 \putimage{diagrams/01/arcanSmells.png}{"Modello degli Architectural Smells costruito da Arcan - dal Manuale"}{fig:arcanSmells}
 
