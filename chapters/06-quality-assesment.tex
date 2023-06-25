@@ -234,32 +234,34 @@ Oltre alla correttezza dell'analisi \`e opportuno tenere traccia delle performan
 Per questo alternare test individuali con test pi\`u massivi per mette di stabilire quanto incide la complessit\`a di un progetto rispetto al tempo e alla spazio impiegati. La verifica delle prestazioni \`e effettuata tramite l'uso del comando unix \emph{time} come prologo del comando di lancio dei due software.
 Entrambi i test sono stati eseguiti nelle medesime condizioni sullo stesso hardware e sistema operativo: un portatile \emph{HP Pavilion Laptop 15-eg0xxx} con CPU \emph{11th Gen Intel i5-1135G7 (4) @ 2.420GHz}, GPU \emph{Intel(R) Iris(R) Xe Graphics}, RAM \emph{4 GB}, e sistema operativo \emph{Linux} distribuzione \emph{Arch Linux} con gli ultimi aggiornamenti possibili installati.
 
-Eseguendo entrambi i software su 5 progetti java si pu\`o notare come il prototipo sia significativamente pi\'u veloce di Arcan nel caso medio (in verde). Tuttavia nel caso di fastjson viene molto rallentato dalla moltitudine di reference "a vuoto", (di cui si parler\`a nel prossimo capitolo). \`E anche bene considerare che il primo \`e s\`i scritto in un linguaggio di programmazione pi\`u efficiente del secondo, ma \`e anche privo di parallelizzazione: eventualmente sarebbe possibile aumentarne l'efficienza parallelizzando con un fatto pari a quello di Arcan.
+Eseguendo entrambi i software su 5 progetti java si pu\`o notare come il prototipo sia significativamente pi\'u lento di Arcan nel caso medio. Tanto che nel caso di fastjson e guava viene molto rallentato dalla moltitudine di reference "a vuoto", (di cui si parler\`a nel prossimo capitolo) e finisce per impiegare un tempo irragionevole. \`E anche bene considerare che il primo \`e s\`i scritto in un linguaggio di programmazione pi\`u efficiente del secondo, ma \`e anche privo di parallelizzazione: eventualmente sarebbe possibile aumentarne l'efficienza parallelizzando con un fatto pari a quello di Arcan, ma non influirebbe di molto se non nei casi pi\`u piccoli.
 Infine non \`e stato possibile valutare in modo oggettivo il tempo di eseguzione di Arcan su guava perch\'e, sebbene segnali il termine dell'operazione circa dopo 2 minuti di esecuzione, il processo non termina regolarmente ma i thread java rimangono attivi in background.
 
 \begin{center}
     \captionof{table}{Tempi di analisi (in secondi) di vari progetti da parte del Prototipo e di Arcan}
     \begin{tabular}{|l|l|l|l|l|}
         \hline
-        progetto & software  & tempo minimo  & tempo massimo  & tempo medio \\ \hline
+        progetto & software & tempo minimo & tempo massimo & tempo medio \\ \hline
         \hline
-        \rowcolor[HTML]{3531FF} 
-        guava    & Prototipo & 62.776 & 85.451 & 68.748 \\ \hline
+        \rowcolor[HTML]{FE0000}
+        guava    & Prototipo & N/A    & N/A    & N/A    \\ \hline
         \rowcolor[HTML]{34FF34} 
-        junit4   & Prototipo & 2.264  & 3.761  & 2.484\\ \hline
+        guava    & Arcan     & N/A    & N/A    & \~120   \\ \hline
+        \rowcolor[HTML]{F27805} 
+        junit4   & Prototipo & 65.82  & 69.07  & 65.88  \\ \hline
         \rowcolor[HTML]{34FF34} 
-        junit4   & Arcan    & 13.850 & 17.079 & 14.611     \\ \hline
+        junit4   & Arcan     & 13.850 & 17.079 & 14.611 \\ \hline
+        \rowcolor[HTML]{F27805} 
+        junit5   & Prototipo & 132.87 & 134.75 & 134.44 \\ \hline
         \rowcolor[HTML]{34FF34} 
-        junit5   & Prototipo & 21.575 & 37.903 & 23.765\\ \hline
+        junit5   & Arcan     & 42.542 & 47.613 & 44.186 \\ \hline
+        \rowcolor[HTML]{F27805} 
+        antlr4   & Prototipo & 171.65 & 175.49 & 172.64 \\ \hline
         \rowcolor[HTML]{34FF34} 
-        junit5   & Arcan    & 42.542 & 47.613  & 44.186\\ \hline
-        \rowcolor[HTML]{34FF34} 
-        antlr4   & Prototipo & 8.530  & 9.259  & 8.968       \\ \hline
-        \rowcolor[HTML]{34FF34} 
-        antlr4   & Arcan    & 19.222 & 20.140 & 19.691     \\ \hline
+        antlr4   & Arcan     & 19.222 & 20.140 & 19.691 \\ \hline
         \rowcolor[HTML]{FE0000} 
-        fastjson & Prototipo & 182.036& 209.763& 191.507\\ \hline
-        \rowcolor[HTML]{FE0000} 
-        fastjson & Arcan    & 66.932 & 71.094 & 69.071     \\ \hline
+        fastjson & Prototipo & N/A    & N/A    & N/A    \\ \hline
+        \rowcolor[HTML]{34FF34} 
+        fastjson & Arcan     & 66.932 & 71.094 & 69.071 \\ \hline
     \end{tabular}
 \end{center}
