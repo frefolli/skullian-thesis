@@ -265,3 +265,24 @@ Infine non \`e stato possibile valutare in modo oggettivo il tempo di eseguzione
         fastjson & Arcan     & 66.932 & 71.094 & 69.071 \\ \hline
     \end{tabular}
 \end{center}
+
+\begin{sloppypar}
+A proposito di questi progetti \`e interessante rilevare la similarit\`a dei grafi costruiti dai due software. Per fare questo ci si \`e serviti dell'indice di Jaccard, definito come $\frac {A \cap B} {A \cup B}$, ovvero la percentuale di elementi comuni tra due insiemi rispetto al totale degli elementi dell'unione. \`E stato necessario ridurre il grafo del prototipo in una forma comparabile con quello di Arcan: gli unici nodi considerati sono di tipo \emph{annotation}, \emph{class}, \emph{enum}, \emph{interface}, \emph{package}, mentre per le relazioni non verranno considerate due dipendenze di Arcan: \emph{unitIsAfferentOf} e \emph{containerIsAfferentOf}. Le relazioni tra nodi che non sono considerati vengono trasferite ai nodi avi considerati. Tutte le dipendenze vengono considerate uguali indipendentemente dalla label associata, visto che di base Arcan non effettua quasi distinzione.
+\end{sloppypar}
+\`E osservabile come la differenza tra l'accuratezza dei due software sia abissale (eccetto \emph{antlr4} dove comunque Arcan mantiene una schiacciante superiorit\`a), la qualit\`a dell'analisi del prototipo non giustifica minimamente la differenza prestazionale.
+
+\begin{center}
+    \captionof{table}{Indici di Jaccard su nodi, archi e grafi prodotti dal Prototipo e da Arcan su vari progetti}
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        progetto & Jaccard(nodi) & Jaccard(archi) & Jaccard(grafi) \\ \hline
+        \hline
+        \rowcolor[HTML]{FE0000} 
+        junit4 & 37.26\% & 23.19\% & 25.42\% \\ \hline
+        \rowcolor[HTML]{FE0000} 
+        junit5 & 47.41\% & 15.13\% & 19.73\% \\ \hline
+        \rowcolor[HTML]{F27805} 
+        antlr4 & 82.18\% & 44.25\% & 48.43\% \\ \hline
+    \end{tabular}
+\end{center}
+
