@@ -27,7 +27,7 @@ Si itera quindi su tutti i target, ed in particolare su tutti i file contenuti r
 
 Per semplicit\`a si pu\`o considerare l'analisi di progetti costituiti di un solo linguaggio di programmazione, ma il processo si adatta anche alla possibilit\`a di avere progetti misti. Prima di costruire lo Stack Graph \`e necessario caricare la grammatica TSG che Tree Sitter Graph user\`a per costruirlo: in Rust questa \`e una operazione onerosa, quindi si rende necessario l'uso di una \emph{cache} che non solo permetta di caricare dinamicamente e riutilizzare le grammatiche ma si presti bene a scalare il numero di linguaggi utilizzati nel progetto.
 
-\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura build_stack_graph"]
+\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura build\_stack\_graph"]
 def build_stack_graph(config):
     # inizializzazione delle strutture dati
     stack_graph = StackGraph.new()
@@ -53,7 +53,7 @@ Ogni nodo identificato in questo modo sar\`a passato alla procedura di risoluzio
 Per mantenere la lista delle risoluzioni avvenute con successo si utilizza una mappa che associa il nodo di reference al nodo di definizione corrispondente: sar\`a usata pi\`u avanti per sostituire velocemente i nodi esplorati.
 Visto che lo scopo \`e instaurare relazioni tra due nodi del Grafo delle Dipendenze e che i nodi di definizione con \emph{defkind} saranno nodi concreti di tale grafo, si aggiunge come requisito che il nodo trovato con la risoluzione abbia un defkind valido.
 
-\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura resolve_references"]
+\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura resolve\_references"]
 def resolve_references(stack_graph):
     # inizializzazione
     map: Map<Node, Node>.new()
@@ -79,7 +79,7 @@ Per stabilire relazioni di parentela nel codice \`e sufficiente badare all'ordin
 
 Oltre alla gi\'a citata relazione "definedBy" si user\'a anche la relazione "nestedTo": la prima quando i due nodi hanno defkind differente, l'altra nel caso opposto.
 
-\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura walk_step"]
+\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura walk\_step"]
 def walk_step(reference_map, dependency_graph,
               parent_node, current_node):
     if not_visited(current_node):
@@ -109,7 +109,7 @@ Quindi si crea il nodo del grafo in costruzione usano il nome composto e il defk
 Come ultima cosa si crea la relazione di parentela se il nodo "padre" \`e definito non nullo e si applica il passo ricorsivo.
 Esso consiste nell'esplorare tutti i nodi collegati con archi a esso usando come nodo padre il nodo del grafo delle dipendenze appena creato.
 
-\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura walk_step_definition"]
+\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura walk\_step\_definition"]
 def walk_step_definition(reference_map, dependency_graph,
                          parent_node, current_node):
     defkind = get_defkind(current_node)
@@ -141,7 +141,7 @@ Se un nodo di reference ha nella mappa delle reference risolte in precedenza un'
 
 Quindi si applica una variante del passo ricorsivo dei nodi di definizione: l'unica differenza sta nella conservazione del nodo padre.
 
-\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura walk_step_reference"]
+\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura walk\_step\_reference"]
 def translate(refkind):
     if refkind == "Extends":
         return "isChildOf"
@@ -167,7 +167,7 @@ def walk_step_reference(reference_map, dependency_graph,
 
 In tutti gli altri casi il nodo esplorato deve essere considerato come un nodo di transito: si applica solo il passo ricorsivo descritto per i nodi di reference.
 
-\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura walk_step_other"]
+\begin{lstlisting}[language=Python, caption="Pseudocodice della procedura walk\_step\_other"]
 def walk_step_other(reference_map, dependency_graph,
                          parent_node, current_node):
     # passo ricorsivo
