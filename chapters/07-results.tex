@@ -35,3 +35,43 @@ Allo stato attuale la Tree Sitter Stack Graph non permette di generare il grafo 
 
 Alla luce delle problematiche esplicitate in questo capitolo come dei risultati dei test del \textbf{Capitolo 6}, \`e infattibile la costruzione di un software che sfrutti efficientemente Stack Graph per estrarre le dipendenze dal codice sorgente. Non solo costruire le grammatiche \`e un compito gravoso ma i presunti vantaggi prestazionali sono inesistenti se non negativi, sia per mancanze dell'implementazione delle librerie, sia perch\`e questa struttura dati non scala bene come promesso nei paper quando si tratta di analisi di progetti non banali. Sebbene Stack Graph si presti mediamente bene alla ricerca di identificatori di un testo di modeste dimensioni (Github usa con relativo successo questa libreria per evidenziare termini all'interno di un solo file), si \`e visto sul campo quanto sia impraticabile impiegarla per analisi pi\`u complesse: la risoluzione delle reference \`e inaffidabile ed estremamente inefficiente.
 
+\section{Sviluppi Futuri}
+
+Se da una parte \`e stato mostrato come non possa essere impiegato per risolvere le reference, pu\`o comunque essere utile come rappresentazione intermedia nell'ottica di costruire il grafo dei componenti. A questo punto si pu\`o costruire un passo di risoluzione delle reference ad hoc che sar\`a indipendente dal linguaggio (astrazione fatta con Stack Graph) e pi\`u efficiente di una semplice visita di grafo. Il principio base di questa risoluzione non \`e molto diversa da quella attuata da Stack Graph: si risolve una catena di identificatori (es: "oggetto.metodo") ricercando per livelli tra gli oggetti definiti nel grafo delle componenti. La procedura per catena \`e semplice, per ogni identificatore si cerca nello scope (limitazione dall'alto) un oggetto con quel nome, quindi in base al suo tipo semantico possono essere trattati diversamente i restanti identificatori della ricerca. Una premessa importante \`e chiarire che quando si parla di \emph{nome} non si intende il \emph{fully qualified name} ma il nome \textbf{proprio} della componente.
+
+Per prima cosa serve una procedura che permetta di stabilire il punto iniziale della ricerca: questo \`e fatto cercando tra i gemelli della reference (pensata come un nodo figlio dello scope) e permettendo all'algoritmo di fluire verso l'alto sostituendo lo scope con il nodo padre dello scope. Chiaramente se in quest'ultimo passo ci si trovasse nella radice dei componenti (package estremo superiore o radice virtuale del progetto) la ricerca sarebbe interrotta con "insuccesso", e si passerebbe alla prossima reference. Per garantire la risalita e la discesa nei termini di nodi del grafo delle componenti \`e necessario che il collegamento tra nodi figli e padri sia bidirezionale.
+
+\begin{lstlisting}[caption="Pseudocodice della procedura di ricerca senza limite superiore", language=Python]
+def identify_going_up(scope: Node, identifier: str):
+    while True:
+        for child in children(scope):
+            if name(child) == identifier:
+                return child
+        scope = parent(scope)
+    return None
+\end{lstlisting}
+
+In questa versione semplificata della procedura \emph{identify_going_up}, si controlla solo tra i nodi figli dello scope al fine di identificarne uno con lo stesso nome dell'identificatore della catena che si sta processando. Anche in questo caso, se non esiste un nodo figlio la risoluzione registrer\`a un insuccesso.
+
+\begin{lstlisting}[caption="Pseudocodice della procedura di ricerca con scope", language=Python]
+def identify_simple(scope: Node, identifier: str):
+    for child in children(scope):
+        if name(child) == identifier:
+            return child
+    return None
+\end{lstlisting}
+
+Il primo passo \`e identificazione del punto d'inizio della ricerca, quindi ad ogni iterazione di ciclo (una per simbolo della catena di reference) si valuter\`a il tipo semantico del nodo di scope. Qualora ci fossero ulteriori identificatori rimanenti da cercare, e lo scope corrispondesse ad un attributo o ad una variabile, esso \`e sostituito con il tipo della variabile. Per fare questo \`e necessario che le reference di tipo \emph{usesType} vengano risolte prima delle altre, altrimenti non si avrebbe accesso a questa informazione.
+
+\begin{lstlisting}[caption="Pseudocodice della procedura di risoluzione delle reference", language=Python]
+def solve(scope: Node, reference: list[str]):
+    scope = identify_going_up(reference.pop())
+    while len(reference) > 0:
+        if kind(scope) == (ATTRIBUTE | FIELD):
+            scope = type(scope)
+        else:
+            scope = identify_simple(scope, reference.pop())
+    return scope
+\end{lstlisting}
+
+Per poter usare queste procedure l'algoritmo di costruzione del grafo delle dipendenze attualmente implementato deve essere modificato per mantenere una lista delle tuple \emph{(source, reference, kind)}, le quali devono essere successivamente ordinate in base al \emph{kind} per poter risolvere prima le dichiarazioni di tipo, e garantire i collegamente bidirezionali fra nodi nella gerarchia (per ora implementata con le dipendenze verso l'alto \emph{definedBy} e \emph{nestedTo}).
