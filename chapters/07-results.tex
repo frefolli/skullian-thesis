@@ -61,7 +61,7 @@ def identify_simple(scope: Node, identifier: str):
     return None
 \end{lstlisting}
 
-Il primo passo \`e identificazione del punto d'inizio della ricerca, quindi ad ogni iterazione di ciclo (una per simbolo della catena di reference) si valuter\`a il tipo semantico del nodo di scope. Qualora ci fossero ulteriori identificatori rimanenti da cercare, e lo scope corrispondesse ad un attributo o ad una variabile, esso \`e sostituito con il tipo della variabile. Per fare questo \`e necessario che le reference di tipo \emph{usesType} vengano risolte prima delle altre, altrimenti non si avrebbe accesso a questa informazione.
+Il primo passo \`e l'identificazione del punto d'inizio della ricerca, quindi ad ogni iterazione di ciclo (una per simbolo della catena di reference) si valuter\`a il tipo semantico del nodo di scope. Qualora ci fossero ulteriori identificatori rimanenti da cercare, e lo scope corrispondesse ad un attributo o ad una variabile, esso \`e sostituito con il tipo della variabile. Per fare questo \`e necessario che le reference di tipo \emph{usesType} vengano risolte prima delle altre, altrimenti non si avrebbe accesso a questa informazione.
 
 \begin{lstlisting}[caption="Pseudocodice della procedura di risoluzione delle reference", language=Python]
 def solve(scope: Node, reference: list[str]):
