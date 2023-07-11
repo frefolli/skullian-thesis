@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LAYOUT=dagre
+LAYOUT=elk
 # layouts: elk, dagre
 
 FORCE="false"
